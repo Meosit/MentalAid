@@ -1,0 +1,12 @@
+# IDEA Files #
+.idea/
+*.iml
+
+# Outputs #
+*.class
+target/
+
+# Package Files #
+*.jar
+*.war
+*.ear
