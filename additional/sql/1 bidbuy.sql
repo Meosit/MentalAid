@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS `bidbuy`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `bidbuy`.`user` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID of a user',
-  `username` VARCHAR(45) NOT NULL COMMENT 'Unique name of user, that will be shown on site, case-sensitive',
+  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'email of a user',
+  `username` VARCHAR(45) NOT NULL UNIQUE COMMENT 'Unique name of user, that will be shown on site, case-sensitive',
   `pass_hash` CHAR(60) NOT NULL COMMENT 'Hash of user password, created by bcrypt hash algorithm (fixed 60 char length)',
   `role` TINYINT(0) NOT NULL DEFAULT 0 COMMENT 'Represents role of a user, can be one of specified values:\n0 - client\n1 - administrator\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
   `created_at` DATETIME NOT NULL COMMENT 'Time when current user was created',
@@ -37,20 +38,20 @@ COMMENT = 'This table stores all users in system, including clients and administ
 
 CREATE UNIQUE INDEX `username_UNIQUE` ON `bidbuy`.`user` (`username` ASC);
 
+CREATE UNIQUE INDEX `email_UNIQUE` ON `bidbuy`.`user` (`email` ASC);
+
 
 -- -----------------------------------------------------
--- Table `bidbuy`.`user_info`
+-- Table `bidbuy`.`shipment_address`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `bidbuy`.`user_info` ;
+DROP TABLE IF EXISTS `bidbuy`.`shipment_address` ;
 
-CREATE TABLE IF NOT EXISTS `bidbuy`.`user_info` (
-  `user_id` INT UNSIGNED NOT NULL COMMENT 'ID of a user,  ',
-  `modified_at` DATETIME NOT NULL COMMENT 'Time when user profile was modified last time',
-  `address` VARCHAR(500) NULL DEFAULT NULL COMMENT 'Live address of user, used for shipment',
-  `first_name` VARCHAR(100) NULL DEFAULT NULL COMMENT 'First name of a user',
-  `last_name` VARCHAR(100) NULL DEFAULT NULL COMMENT 'Last name of a user',
-  `phone_number` VARCHAR(10) NULL DEFAULT NULL COMMENT 'phone number of a user',
-  `email` VARCHAR(255) NULL DEFAULT NULL COMMENT 'email of a user',
+CREATE TABLE IF NOT EXISTS `bidbuy`.`shipment_address` (
+  `user_id` INT UNSIGNED NOT NULL COMMENT 'ID of a user',
+  `address` VARCHAR(500) NOT NULL COMMENT 'Live address of user, used for shipment',
+  `first_name` VARCHAR(100) NOT NULL COMMENT 'First name of a user',
+  `last_name` VARCHAR(100) NOT NULL COMMENT 'Last name of a user',
+  `phone_number` VARCHAR(10) NOT NULL COMMENT 'phone number of a user',
   PRIMARY KEY (`user_id`),
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`user_id`)
@@ -184,22 +185,6 @@ END$$
 DROP TRIGGER IF EXISTS `bidbuy`.`user_BEFORE_UPDATE`$$
 
 CREATE TRIGGER `bidbuy`.`user_BEFORE_UPDATE` BEFORE UPDATE ON `user` FOR EACH ROW
-BEGIN
-	SET NEW.`modified_at` = NOW();
-END$$
-
-
-DROP TRIGGER IF EXISTS `bidbuy`.`user_info_BEFORE_INSERT`$$
-
-CREATE TRIGGER `bidbuy`.`user_info_BEFORE_INSERT` BEFORE INSERT ON `user_info` FOR EACH ROW
-BEGIN
-	SET NEW.`modified_at` = NOW();
-END$$
-
-
-DROP TRIGGER IF EXISTS `bidbuy`.`user_info_BEFORE_UPDATE`$$
-
-CREATE TRIGGER `bidbuy`.`user_info_BEFORE_UPDATE` BEFORE UPDATE ON `user_info` FOR EACH ROW
 BEGIN
 	SET NEW.`modified_at` = NOW();
 END$$

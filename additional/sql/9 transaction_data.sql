@@ -2,6 +2,7 @@
 -- Transactions
 -- -----------------------------------------------------
 USE `bidbuy`;
+SET NAMES 'utf8';
 
 INSERT INTO `transaction`(`lot_id`, `seller_id`, `customer_id`) 
 	SELECT `lot`.`id`, `lot`.`owner_id`, `bid`.`client_id`  

@@ -2,6 +2,7 @@
 -- Imitation of auction-lottery process
 -- -----------------------------------------------------
 USE `bidbuy`;
+SET NAMES 'utf8';
 
 INSERT INTO `lot`(`owner_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`)
 VALUES(
