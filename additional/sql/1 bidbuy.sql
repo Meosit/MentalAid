@@ -24,14 +24,19 @@ CREATE SCHEMA IF NOT EXISTS `bidbuy` ;
 DROP TABLE IF EXISTS `bidbuy`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `bidbuy`.`user` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID of a user',
-  `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'email of a user',
-  `username` VARCHAR(45) NOT NULL UNIQUE COMMENT 'Unique name of user, that will be shown on site, case-sensitive',
-  `pass_hash` CHAR(60) NOT NULL COMMENT 'Hash of user password, created by bcrypt hash algorithm (fixed 60 char length)',
-  `role` TINYINT(0) NOT NULL DEFAULT 0 COMMENT 'Represents role of a user, can be one of specified values:\n0 - client\n1 - administrator\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
-  `created_at` DATETIME NOT NULL COMMENT 'Time when current user was created',
-  `modified_at` DATETIME NOT NULL COMMENT 'Time when current user credentials was updated',
-  `status` TINYINT(0) NOT NULL DEFAULT 1 COMMENT 'Represents current status of user, can be one of specified values:\n-1 - deleted\n 0 - banned\n 1 - active\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID of a user',
+  `email`       VARCHAR(255) NOT NULL UNIQUE COMMENT 'email of a user',
+  `username`    VARCHAR(45)  NOT NULL UNIQUE COMMENT 'Unique name of user, that will be shown on site, case-sensitive',
+  `pass_hash`   CHAR(60)     NOT NULL COMMENT 'Hash of user password, created by bcrypt hash algorithm (fixed 60 char length)',
+  `role`        TINYINT(0)   NOT NULL DEFAULT 0
+  COMMENT 'Represents role of a user, can be one of specified values:\n0 - client\n1 - administrator\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
+  `created_at`  DATETIME     NOT NULL
+  COMMENT 'Time when current user was created',
+  `modified_at` DATETIME     NOT NULL COMMENT 'Time when current user credentials was updated',
+  `status`      TINYINT(0)   NOT NULL DEFAULT 1
+  COMMENT 'Represents current status of user, can be one of specified values:\n-1 - deleted\n 0 - banned\n 1 - active\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
+  `locale`      CHAR(2)               DEFAULT NULL
+  COMMENT 'Represents default locale for this user. If NULL then default locale is used.',
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 COMMENT = 'This table stores all users in system, including clients and administrators';

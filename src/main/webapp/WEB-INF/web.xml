@@ -2,5 +2,12 @@
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="WebApp_ID" version="3.0">
-    <display-name>BidBuy</display-name>
+  <display-name>BidBuy</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>log4jConfigLocation</param-name>
+    <param-value>/log4j.properties</param-value>
+  </context-param>
 </web-app>
