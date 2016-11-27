@@ -9,20 +9,21 @@ public class CommandFactory {
 
     private static final Logger logger = Logger.getLogger(CommandFactory.class);
 
-    private static final String COMMAND_PARAM = "command";
+    private static final String COMMAND_PARAMETER = "cmd";
 
     public static Command defineCommand(HttpServletRequest request) {
-        String actionName = request.getParameter(COMMAND_PARAM);
-        if (isNullOrEmpty(actionName)) {
-            logger.debug("Command name null or empty (value: " + actionName + ")");
-            return null;
-        }
+        String actionName = request.getParameter(COMMAND_PARAMETER);
+        Command resultCommand = new EmptyCommand();
         try {
-            return CommandEnum.valueOf(actionName.toUpperCase()).getCommand();
+            if (!isNullOrEmpty(actionName)) {
+                resultCommand = CommandEnum.valueOf(actionName.toUpperCase()).getCommand();
+            } else {
+                logger.warn("Command name null or empty (value: " + actionName + ")");
+            }
         } catch (IllegalArgumentException e) {
-            logger.debug("Command not found (name: " + actionName + ")");
-            return null;
+            logger.warn("Command with specified name not found. (name: " + actionName + ")");
         }
+        return resultCommand;
     }
 
     public static boolean isNullOrEmpty(String string) {
