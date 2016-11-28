@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.command.controller;
+package by.mksn.epam.bidbuy.controller;
 
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
