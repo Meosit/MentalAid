@@ -5,12 +5,24 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Provides factory method which creates {@link Command} instance
+ * based on {@link #COMMAND_PARAMETER} in {@link HttpServletRequest} specified
+ */
 public class CommandFactory {
 
     private static final Logger logger = Logger.getLogger(CommandFactory.class);
 
     private static final String COMMAND_PARAMETER = "cmd";
 
+    /**
+     * Defines Concrete {@link Command} implementation based on
+     * {@link #COMMAND_PARAMETER} in {@link HttpServletRequest} specified.
+     * {@link CommandEnum} used for mapping
+     *
+     * @param request request for concrete command implementation
+     * @return Concrete command implementation
+     */
     public static Command defineCommand(HttpServletRequest request) {
         String actionName = request.getParameter(COMMAND_PARAMETER);
         Command resultCommand = new EmptyCommand();

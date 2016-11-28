@@ -2,8 +2,14 @@ package by.mksn.epam.bidbuy.manager;
 
 import java.util.ResourceBundle;
 
+/**
+ * Class which provides handy access to jsp paths properties
+ */
 public class PathManager {
 
+    /**
+     * Path of index page (web app entry point)
+     */
     public static final String INDEX = "page.index";
 
     private static final String RESOURCE_NAME = "path";

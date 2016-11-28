@@ -21,18 +21,17 @@ public class ConnectionPool {
 
     // non-lazy initialization because web app cannot work without DB and lazy init is redundant
     private static final ConnectionPool instance = new ConnectionPool();
-    private ArrayBlockingQueue<WrapperConnection> connections;
-
     /**
      * Maximum amount of connections in pool
      */
     public final int poolSize;
-
     /**
      * Maximum time in milliseconds which provides to user to take free connection,
      * otherwise {@link PoolException} happens
      */
     public final int pollTimeout;
+    private ArrayBlockingQueue<WrapperConnection> connections;
+    private volatile boolean isPoolReleased = false;
 
     private ConnectionPool() {
         try {
@@ -60,6 +59,15 @@ public class ConnectionPool {
         logger.debug("Connection pool created successfully");
     }
 
+    /**
+     * Provides instance of connection pool
+     *
+     * @return instance of connection pool
+     */
+    public static ConnectionPool getInstance() {
+        return instance;
+    }
+
     private Properties getDatabaseProperties() {
         Properties properties = new Properties();
         properties.put(DatabaseManager.USER, DatabaseManager.getProperty(DatabaseManager.USER));
@@ -71,26 +79,24 @@ public class ConnectionPool {
     }
 
     /**
-     * Provides instance of connection pool
-     * @return instance of connection pool
-     */
-    public static ConnectionPool getInstance() {
-        return instance;
-    }
-
-    /**
      * Provides main access to database connections
      * @return {@link WrapperConnection} to work with database
-     * @throws PoolException if there is no free connections in pool for {@link #pollTimeout} milliseconds
+     * @throws PoolException if there is no free connections in pool
+     * for {@link #pollTimeout} milliseconds or pool is released
      */
     public WrapperConnection pollConnection() throws PoolException {
-        try {
-            WrapperConnection connection = connections.poll(pollTimeout, TimeUnit.MILLISECONDS);
-            logger.trace("Connection taken successfully");
-            return connection;
-        } catch (InterruptedException e) {
-            logger.warn("Free connection timeout is over.");
-            throw new PoolException("Connection timeout is over.");
+        if (!isPoolReleased) {
+            try {
+                WrapperConnection connection = connections.poll(pollTimeout, TimeUnit.MILLISECONDS);
+                logger.trace("Connection taken successfully");
+                return connection;
+            } catch (InterruptedException e) {
+                logger.warn("Free connection timeout is over.");
+                throw new PoolException("Connection timeout is over.");
+            }
+        } else {
+            logger.warn("Trying to poll from realized pool.");
+            throw new PoolException("Pool is already realized.");
         }
     }
 
@@ -106,6 +112,29 @@ public class ConnectionPool {
         } catch (InterruptedException e) {
             logger.warn("Cannot return connection to pool\n", e);
             throw new PoolException("Cannot return connection to pool.", e);
+        }
+    }
+
+    /**
+     * Indicates is connection pool is released and all connections are closed
+     *
+     * @return true if pool is released
+     */
+    public boolean isPoolReleased() {
+        return isPoolReleased;
+    }
+
+    /**
+     * Releases connection pool and closes all connections
+     */
+    public void releasePool() {
+        isPoolReleased = true;
+        try {
+            for (WrapperConnection connection : connections) {
+                connection.closeConnection();
+            }
+        } catch (SQLException e) {
+            logger.error("Cannot close connection.\n", e);
         }
     }
 

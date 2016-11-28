@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 public class EmptyCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(EmptyCommand.class);

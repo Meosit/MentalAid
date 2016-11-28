@@ -1,5 +1,11 @@
 package by.mksn.epam.bidbuy.command.exception;
 
+import by.mksn.epam.bidbuy.command.Command;
+
+/**
+ * Thrown to indicate that a {@link Command} cannot be executed
+ * or something went wrong while executing
+ */
 public class CommandException extends Exception {
 
     public CommandException() {

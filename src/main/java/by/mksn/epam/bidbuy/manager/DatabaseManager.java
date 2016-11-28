@@ -3,7 +3,7 @@ package by.mksn.epam.bidbuy.manager;
 import java.util.ResourceBundle;
 
 /**
- * Class which grants access to database properties
+ * Class which provides handy access to database properties
  */
 public class DatabaseManager {
 
