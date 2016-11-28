@@ -1,6 +1,6 @@
 package by.mksn.epam.bidbuy.pool;
 
-import by.mksn.epam.bidbuy.pool.exception.WrapperConnectionException;
+import by.mksn.epam.bidbuy.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -8,7 +8,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class WrapperConnection {
+/**
+ * Represents wrapper for database connection which disallow to close it.
+ * Methods {@link Connection#close()} and {@link Connection#abort(Executor)} are hidden.
+ * User can only return connection to {@link ConnectionPool}.
+ * {@link #close()} method returns connection to pool.
+ */
+public class WrapperConnection implements Connection {
 
     private static final Logger logger = Logger.getLogger(WrapperConnection.class);
     private Connection connection;
@@ -133,8 +139,18 @@ public class WrapperConnection {
         return connection.isValid(timeout);
     }
 
+    /**
+     * Returns connection to {@link ConnectionPool} instead of closing it.
+     * This method is not recommended, use {@link #returnConnectionToPool()} instead.
+     *
+     * @throws SQLException if cannot return connection to pool
+     */
     public void close() throws SQLException {
-        connection.close();
+        try {
+            ConnectionPool.getInstance().putConnection(this);
+        } catch (PoolException e) {
+            throw new SQLException("Cannot return connection to pool", e);
+        }
     }
 
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
@@ -189,8 +205,14 @@ public class WrapperConnection {
         connection.setAutoCommit(autoCommit);
     }
 
+    /**
+     * Call of this method always fails because user cannot
+     * close connection by himself. Use {@link #returnConnectionToPool()} instead.
+     *
+     * @throws SQLException always if method calls.
+     */
     public void abort(Executor executor) throws SQLException {
-        connection.abort(executor);
+        throw new SQLException("Cannot abort connection");
     }
 
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
@@ -233,41 +255,19 @@ public class WrapperConnection {
         return connection.getClientInfo(name);
     }
 
-    public PreparedStatement getStatement(String preparedString) throws WrapperConnectionException {
-        if (connection != null) {
-            PreparedStatement statement;
-            try {
-                statement = connection.prepareStatement(preparedString);
-            } catch (SQLException e) {
-                throw new WrapperConnectionException("Cannot create PreparedStatement\n", e);
-            }
-            if (statement != null) {
-                logger.debug("Statement taken");
-                return statement;
-            }
-        }
-        throw new WrapperConnectionException("Connection or statement is null");
+    /**
+     * Return this connection to {@link ConnectionPool}, this method is equal to
+     * {@link ConnectionPool#putConnection(WrapperConnection)}
+     */
+    public void returnConnectionToPool() throws PoolException {
+        ConnectionPool.getInstance().putConnection(this);
     }
 
-    public void closeStatement(Statement statement) throws WrapperConnectionException {
-        if (statement != null) {
-            try {
-                statement.close();
-                logger.debug("Statement closed");
-            } catch (SQLException e) {
-                throw new WrapperConnectionException("Cannot close statement\n", e);
-            }
-        }
-    }
-
-    void closeConnection() throws WrapperConnectionException {
-        if (connection != null) {
-            try {
-                connection.close();
-                logger.debug("Connection closed");
-            } catch (SQLException e) {
-                throw new WrapperConnectionException("SQL exception\n", e);
-            }
-        }
+    /**
+     * Really closes this connection, used to realise {@link ConnectionPool}
+     */
+    void closeConnection() throws SQLException {
+        connection.close();
+        logger.debug("Connection closed");
     }
 }
