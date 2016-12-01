@@ -1,8 +1,8 @@
 package by.mksn.epam.bidbuy.dao.pool;
 
+import by.mksn.epam.bidbuy.dao.manager.DatabaseManager;
 import by.mksn.epam.bidbuy.dao.pool.exception.FatalPoolException;
 import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
-import by.mksn.epam.bidbuy.manager.DatabaseManager;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -36,6 +36,8 @@ public class ConnectionPool {
 
     private ConnectionPool() {
         try {
+            Class.forName(DatabaseManager.getProperty(DatabaseManager.DRIVER_NAME));
+
             poolSize = Integer.parseInt(DatabaseManager.getProperty(DatabaseManager.POOL_SIZE));
             pollTimeout = Integer.parseInt(DatabaseManager.getProperty(DatabaseManager.POLL_TIMEOUT));
 
@@ -57,6 +59,9 @@ public class ConnectionPool {
             }
         } catch (SQLException e) {
             logger.fatal("Cannot create connection pool: SQL Exception\n", e);
+            throw new FatalPoolException("Cannot create connection pool\n", e);
+        } catch (ClassNotFoundException e) {
+            logger.fatal("Cannot create connection pool: failed loading driver\n", e);
             throw new FatalPoolException("Cannot create connection pool\n", e);
         }
         logger.debug("Connection pool created successfully");
