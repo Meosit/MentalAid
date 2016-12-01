@@ -1,8 +1,8 @@
-package by.mksn.epam.bidbuy.pool;
+package by.mksn.epam.bidbuy.dao.pool;
 
+import by.mksn.epam.bidbuy.dao.pool.exception.FatalPoolException;
+import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import by.mksn.epam.bidbuy.manager.DatabaseManager;
-import by.mksn.epam.bidbuy.pool.exception.FatalPoolException;
-import by.mksn.epam.bidbuy.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -22,7 +22,7 @@ public class ConnectionPool {
     // non-lazy initialization because web app cannot work without DB and lazy init is redundant
     private static final ConnectionPool instance = new ConnectionPool();
     /**
-     * Maximum amount of connections in pool
+     * Maximum amount of avaliableConnections in pool
      */
     public final int poolSize;
     /**
@@ -30,7 +30,8 @@ public class ConnectionPool {
      * otherwise {@link PoolException} happens
      */
     public final int pollTimeout;
-    private ArrayBlockingQueue<WrapperConnection> connections;
+    private ArrayBlockingQueue<PooledConnection> avaliableConnections;
+    private PooledConnection[] allConnections;
     private volatile boolean isPoolReleased = false;
 
     private ConnectionPool() {
@@ -40,17 +41,19 @@ public class ConnectionPool {
 
             Properties properties = getDatabaseProperties();
             String url = DatabaseManager.getProperty(DatabaseManager.URL);
-            connections = new ArrayBlockingQueue<>(poolSize);
+            avaliableConnections = new ArrayBlockingQueue<>(poolSize);
+            allConnections = new PooledConnection[poolSize];
             for (int i = 0; i < poolSize; i++) {
                 Connection conn = DriverManager.getConnection(url, properties);
-                WrapperConnection connection = new WrapperConnection(conn);
-                connections.offer(connection);
+                PooledConnection connection = new PooledConnection(conn);
+                avaliableConnections.offer(connection);
+                allConnections[i] = connection;
             }
-            if (connections.size() != poolSize) {
-                logger.fatal("Cannot create connection pool: not enough connections created (expected: " +
-                        poolSize + ", actual: " + connections.size() + ")");
-                throw new FatalPoolException("Not enough connections created (expected: " +
-                        poolSize + ", actual: " + connections.size() + ")");
+            if (avaliableConnections.size() != poolSize) {
+                logger.fatal("Cannot create connection pool: not enough avaliableConnections created (expected: " +
+                        poolSize + ", actual: " + avaliableConnections.size() + ")");
+                throw new FatalPoolException("Not enough avaliableConnections created (expected: " +
+                        poolSize + ", actual: " + avaliableConnections.size() + ")");
             }
         } catch (SQLException e) {
             logger.fatal("Cannot create connection pool: SQL Exception\n", e);
@@ -79,15 +82,15 @@ public class ConnectionPool {
     }
 
     /**
-     * Provides main access to database connections
-     * @return {@link WrapperConnection} to work with database
-     * @throws PoolException if there is no free connections in pool
+     * Provides main access to database avaliableConnections
+     * @return {@link PooledConnection} to work with database
+     * @throws PoolException if there is no free avaliableConnections in pool
      * for {@link #pollTimeout} milliseconds or pool is released
      */
-    public WrapperConnection pollConnection() throws PoolException {
+    public PooledConnection pollConnection() throws PoolException {
         if (!isPoolReleased) {
             try {
-                WrapperConnection connection = connections.poll(pollTimeout, TimeUnit.MILLISECONDS);
+                PooledConnection connection = avaliableConnections.poll(pollTimeout, TimeUnit.MILLISECONDS);
                 logger.trace("Connection taken successfully");
                 return connection;
             } catch (InterruptedException e) {
@@ -105,9 +108,9 @@ public class ConnectionPool {
      * @param connection which will be returned to pool
      * @throws PoolException if cannot return connection to pool
      */
-    public void putConnection(WrapperConnection connection) throws PoolException {
+    public void putConnection(PooledConnection connection) throws PoolException {
         try {
-            connections.put(connection);
+            avaliableConnections.put(connection);
             logger.trace("Connection returned to pool");
         } catch (InterruptedException e) {
             logger.warn("Cannot return connection to pool\n", e);
@@ -116,7 +119,7 @@ public class ConnectionPool {
     }
 
     /**
-     * Indicates is connection pool is released and all connections are closed
+     * Indicates is connection pool is released and all avaliableConnections are closed
      *
      * @return true if pool is released
      */
@@ -125,12 +128,12 @@ public class ConnectionPool {
     }
 
     /**
-     * Releases connection pool and closes all connections
+     * Releases connection pool and closes all avaliableConnections
      */
     public void releasePool() {
         isPoolReleased = true;
         try {
-            for (WrapperConnection connection : connections) {
+            for (PooledConnection connection : allConnections) {
                 connection.closeConnection();
             }
         } catch (SQLException e) {

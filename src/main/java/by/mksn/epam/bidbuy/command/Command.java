@@ -1,9 +1,11 @@
 package by.mksn.epam.bidbuy.command;
 
 import by.mksn.epam.bidbuy.command.exception.CommandException;
-import by.mksn.epam.bidbuy.manager.PathManager;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Main interface of Command pattern which used to delegate
@@ -16,9 +18,10 @@ public interface Command {
      * Executes command using {@link HttpServletRequest} specified
      *
      * @param request request from the user with necessary data to execute
-     * @return path of the jsp page for dispatch, see also {@link PathManager}
+     * @param response response to the user for future actions
      * @throws CommandException if command cannot be executed or execution failed
+     * @throws ServletException if something with servlet occurs
      */
-    String execute(HttpServletRequest request) throws CommandException;
+    void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, ServletException, IOException;
 
 }

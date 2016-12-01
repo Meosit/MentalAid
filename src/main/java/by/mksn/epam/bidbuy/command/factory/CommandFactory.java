@@ -25,7 +25,7 @@ public class CommandFactory {
      */
     public static Command defineCommand(HttpServletRequest request) {
         String actionName = request.getParameter(COMMAND_PARAMETER);
-        Command resultCommand = new EmptyCommand();
+        Command resultCommand = new UnresolvedCommand();
         try {
             if (!isNullOrEmpty(actionName)) {
                 resultCommand = CommandEnum.valueOf(actionName.toUpperCase()).getCommand();

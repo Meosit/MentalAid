@@ -1,6 +1,6 @@
-package by.mksn.epam.bidbuy.pool;
+package by.mksn.epam.bidbuy.dao.pool;
 
-import by.mksn.epam.bidbuy.pool.exception.PoolException;
+import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -14,12 +14,12 @@ import java.util.concurrent.Executor;
  * User can only return connection to {@link ConnectionPool}.
  * {@link #close()} method returns connection to pool.
  */
-public class WrapperConnection implements Connection {
+public class PooledConnection implements Connection {
 
-    private static final Logger logger = Logger.getLogger(WrapperConnection.class);
+    private static final Logger logger = Logger.getLogger(PooledConnection.class);
     private Connection connection;
 
-    WrapperConnection(Connection connection) {
+    PooledConnection(Connection connection) {
         this.connection = connection;
     }
 
@@ -257,7 +257,7 @@ public class WrapperConnection implements Connection {
 
     /**
      * Return this connection to {@link ConnectionPool}, this method is equal to
-     * {@link ConnectionPool#putConnection(WrapperConnection)}
+     * {@link ConnectionPool#putConnection(PooledConnection)}
      */
     public void returnConnectionToPool() throws PoolException {
         ConnectionPool.getInstance().putConnection(this);
