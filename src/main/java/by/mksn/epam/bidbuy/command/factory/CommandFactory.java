@@ -30,7 +30,7 @@ public class CommandFactory {
             if (!isNullOrEmpty(actionName)) {
                 resultCommand = CommandEnum.valueOf(actionName.toUpperCase()).getCommand();
             } else {
-                logger.warn("Command name null or empty (value: " + actionName + ")");
+                logger.warn("Command name null or empty (value: \"" + actionName + "\")");
             }
         } catch (IllegalArgumentException e) {
             logger.warn("Command with specified name not found. (name: " + actionName + ")");

@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * Main Controller of web app
  */
-@WebServlet("/controller")
+@WebServlet(name = "FrontController", urlPatterns = {"/controller"})
 public class FrontController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(FrontController.class);
