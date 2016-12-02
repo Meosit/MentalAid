@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static by.mksn.epam.bidbuy.util.StringUtil.isNullOrEmpty;
+
 /**
  * Provides factory method which creates {@link Command} instance
  * based on {@link #COMMAND_PARAMETER} in {@link HttpServletRequest} specified
@@ -38,7 +40,4 @@ public class CommandFactory {
         return resultCommand;
     }
 
-    public static boolean isNullOrEmpty(String string) {
-        return (string == null) || (string.isEmpty());
-    }
 }

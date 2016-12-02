@@ -52,12 +52,19 @@ CREATE UNIQUE INDEX `email_UNIQUE` ON `bidbuy`.`user` (`email` ASC);
 DROP TABLE IF EXISTS `bidbuy`.`shipment_address` ;
 
 CREATE TABLE IF NOT EXISTS `bidbuy`.`shipment_address` (
-  `user_id` INT UNSIGNED NOT NULL COMMENT 'ID of a user',
-  `address` VARCHAR(500) NOT NULL COMMENT 'Live address of user, used for shipment',
-  `first_name` VARCHAR(100) NOT NULL COMMENT 'First name of a user',
-  `last_name` VARCHAR(100) NOT NULL COMMENT 'Last name of a user',
-  `phone_number` VARCHAR(10) NOT NULL COMMENT 'phone number of a user',
-  PRIMARY KEY (`user_id`),
+  `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT
+  COMMENT 'ID of a shipment_address',
+  `user_id`      INT UNSIGNED NOT NULL
+  COMMENT 'ID of a user',
+  `address`      VARCHAR(500) NOT NULL
+  COMMENT 'Live address of user, used for shipment',
+  `first_name`   VARCHAR(100) NOT NULL
+  COMMENT 'First name of a user',
+  `last_name`    VARCHAR(100) NOT NULL
+  COMMENT 'Last name of a user',
+  `phone_number` VARCHAR(15)  NOT NULL
+  COMMENT 'phone number of a user',
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (`user_id`)
     REFERENCES `bidbuy`.`user` (`id`)
