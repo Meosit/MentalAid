@@ -1,10 +1,9 @@
 package by.mksn.epam.bidbuy.dao;
 
 import by.mksn.epam.bidbuy.dao.exception.DaoException;
-import by.mksn.epam.bidbuy.dao.pool.PooledConnection;
 import by.mksn.epam.bidbuy.entity.Entity;
-import org.apache.log4j.Logger;
 
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -14,11 +13,9 @@ import java.util.List;
  */
 public abstract class AbstractDAO<E extends Entity> {
 
-    private static final Logger logger = Logger.getLogger(AbstractDAO.class);
+    protected Connection connection;
 
-    protected PooledConnection connection;
-
-    protected AbstractDAO(PooledConnection connection) {
+    protected AbstractDAO(Connection connection) {
         this.connection = connection;
     }
 
@@ -37,7 +34,7 @@ public abstract class AbstractDAO<E extends Entity> {
      * @return Entity with the specified id
      * @throws DaoException if something went wrong
      */
-    public abstract E selectEntityById(long id) throws DaoException;
+    public abstract E selectById(long id) throws DaoException;
 
     /**
      * Updates entity in the database with the updated one

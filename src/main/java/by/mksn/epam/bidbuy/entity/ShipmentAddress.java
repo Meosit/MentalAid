@@ -65,11 +65,13 @@ public final class ShipmentAddress extends Entity {
         result = 31 * result + (isNull(firstName) ? 0 : firstName.hashCode());
         result = 17 * result + (isNull(lastName) ? 0 : lastName.hashCode());
         result = 31 * result + (isNull(phoneNumber) ? 0 : phoneNumber.hashCode());
+        User user = new User();
+        User user1 = user.clone();
         return result;
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected ShipmentAddress clone() {
         return new ShipmentAddress(id, userId, address, firstName, lastName, phoneNumber);
     }
 

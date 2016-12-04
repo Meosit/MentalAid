@@ -152,7 +152,7 @@ public class User extends Entity {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected User clone() {
         return new User(id, email, username, passHash, role, createdAt, modifiedAt, status, locale);
     }
 
