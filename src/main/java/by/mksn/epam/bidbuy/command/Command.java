@@ -20,8 +20,7 @@ public interface Command {
      * @param request request from the user with necessary data to execute
      * @param response response to the user for future actions
      * @throws CommandException if command cannot be executed or execution failed
-     * @throws ServletException if something with servlet occurs
      */
-    void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException, ServletException, IOException;
+    void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException;
 
 }

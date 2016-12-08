@@ -10,11 +10,11 @@ import java.util.concurrent.Executor;
 
 /**
  * Represents wrapper for database connection which disallow to close it.
- * Methods {@link Connection#close()} and {@link Connection#abort(Executor)} are hidden.
+ * Methods {@link Connection#close()} and {@link Connection#abort(Executor)} are changed.
  * User can only return connection to {@link ConnectionPool}.
  * {@link #close()} method returns connection to pool.
  */
-public class PooledConnection implements Connection {
+class PooledConnection implements Connection {
 
     private static final Logger logger = Logger.getLogger(PooledConnection.class);
     private Connection connection;
@@ -141,7 +141,7 @@ public class PooledConnection implements Connection {
 
     /**
      * Returns connection to {@link ConnectionPool} instead of closing it.
-     * This method is not recommended, use {@link #returnConnectionToPool()} instead.
+     * This method is not recommended, use {@link ConnectionPool#putConnection(Connection)} instead.
      *
      * @throws SQLException if cannot return connection to pool
      */
@@ -207,7 +207,7 @@ public class PooledConnection implements Connection {
 
     /**
      * Call of this method always fails because user cannot
-     * close connection by himself. Use {@link #returnConnectionToPool()} instead.
+     * close connection by himself. Use {@link ConnectionPool#putConnection(Connection)} instead.
      *
      * @throws SQLException always if method calls.
      */
@@ -253,14 +253,6 @@ public class PooledConnection implements Connection {
 
     public String getClientInfo(String name) throws SQLException {
         return connection.getClientInfo(name);
-    }
-
-    /**
-     * Return this connection to {@link ConnectionPool}, this method is equal to
-     * {@link ConnectionPool#putConnection(PooledConnection)}
-     */
-    public void returnConnectionToPool() throws PoolException {
-        ConnectionPool.getInstance().putConnection(this);
     }
 
     /**

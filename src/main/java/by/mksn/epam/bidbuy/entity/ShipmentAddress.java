@@ -1,8 +1,5 @@
 package by.mksn.epam.bidbuy.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import static by.mksn.epam.bidbuy.util.StringUtil.isNull;
 import static by.mksn.epam.bidbuy.util.StringUtil.nullableEquals;
 
@@ -11,23 +8,11 @@ import static by.mksn.epam.bidbuy.util.StringUtil.nullableEquals;
  */
 public final class ShipmentAddress extends Entity {
 
-    @Getter
-    @Setter
     private long id;
-    @Getter
-    @Setter
     private long userId;
-    @Getter
-    @Setter
     private String address;
-    @Getter
-    @Setter
     private String firstName;
-    @Getter
-    @Setter
     private String lastName;
-    @Getter
-    @Setter
     private String phoneNumber;
 
     public ShipmentAddress() {
@@ -39,6 +24,54 @@ public final class ShipmentAddress extends Entity {
         this.address = address;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -65,11 +98,13 @@ public final class ShipmentAddress extends Entity {
         result = 31 * result + (isNull(firstName) ? 0 : firstName.hashCode());
         result = 17 * result + (isNull(lastName) ? 0 : lastName.hashCode());
         result = 31 * result + (isNull(phoneNumber) ? 0 : phoneNumber.hashCode());
+        User user = new User();
+        User user1 = user.clone();
         return result;
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected ShipmentAddress clone() {
         return new ShipmentAddress(id, userId, address, firstName, lastName, phoneNumber);
     }
 

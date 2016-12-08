@@ -22,7 +22,7 @@ public class ConnectionPool {
     // non-lazy initialization because web app cannot work without DB and lazy init is redundant
     private static final ConnectionPool instance = new ConnectionPool();
     /**
-     * Maximum amount of avaliableConnections in pool
+     * Maximum amount of available Connections in pool
      */
     public final int poolSize;
     /**
@@ -30,7 +30,7 @@ public class ConnectionPool {
      * otherwise {@link PoolException} happens
      */
     public final int pollTimeout;
-    private ArrayBlockingQueue<PooledConnection> avaliableConnections;
+    private ArrayBlockingQueue<PooledConnection> availableConnections;
     private PooledConnection[] allConnections;
     private volatile boolean isPoolReleased = false;
 
@@ -43,19 +43,19 @@ public class ConnectionPool {
 
             Properties properties = getDatabaseProperties();
             String url = DatabaseManager.getProperty(DatabaseManager.URL);
-            avaliableConnections = new ArrayBlockingQueue<>(poolSize);
+            availableConnections = new ArrayBlockingQueue<>(poolSize);
             allConnections = new PooledConnection[poolSize];
             for (int i = 0; i < poolSize; i++) {
                 Connection conn = DriverManager.getConnection(url, properties);
                 PooledConnection connection = new PooledConnection(conn);
-                avaliableConnections.offer(connection);
+                availableConnections.offer(connection);
                 allConnections[i] = connection;
             }
-            if (avaliableConnections.size() != poolSize) {
-                logger.fatal("Cannot create connection pool: not enough avaliableConnections created (expected: " +
-                        poolSize + ", actual: " + avaliableConnections.size() + ")");
-                throw new FatalPoolException("Not enough avaliableConnections created (expected: " +
-                        poolSize + ", actual: " + avaliableConnections.size() + ")");
+            if (availableConnections.size() != poolSize) {
+                logger.fatal("Cannot create connection pool: not enough availableConnections created (expected: " +
+                        poolSize + ", actual: " + availableConnections.size() + ")");
+                throw new FatalPoolException("Not enough availableConnections created (expected: " +
+                        poolSize + ", actual: " + availableConnections.size() + ")");
             }
         } catch (SQLException e) {
             logger.fatal("Cannot create connection pool: SQL Exception\n", e);
@@ -87,15 +87,15 @@ public class ConnectionPool {
     }
 
     /**
-     * Provides main access to database avaliableConnections
-     * @return {@link PooledConnection} to work with database
-     * @throws PoolException if there is no free avaliableConnections in pool
+     * Provides main access to database availableConnections
+     * @return {@link Connection} to work with database
+     * @throws PoolException if there is no free availableConnections in pool
      * for {@link #pollTimeout} milliseconds or pool is released
      */
-    public PooledConnection pollConnection() throws PoolException {
+    public Connection pollConnection() throws PoolException {
         if (!isPoolReleased) {
             try {
-                PooledConnection connection = avaliableConnections.poll(pollTimeout, TimeUnit.MILLISECONDS);
+                PooledConnection connection = availableConnections.poll(pollTimeout, TimeUnit.MILLISECONDS);
                 logger.trace("Connection taken successfully");
                 return connection;
             } catch (InterruptedException e) {
@@ -109,22 +109,34 @@ public class ConnectionPool {
     }
 
     /**
-     * Returns connection to pool to reusing it by another user
+     * Returns connection to pool to reusing it by another user,
+     * also reset AutoCommit, Holdability and TransactionIsolation to defaults
      * @param connection which will be returned to pool
      * @throws PoolException if cannot return connection to pool
      */
-    public void putConnection(PooledConnection connection) throws PoolException {
-        try {
-            avaliableConnections.put(connection);
-            logger.trace("Connection returned to pool");
-        } catch (InterruptedException e) {
-            logger.warn("Cannot return connection to pool\n", e);
-            throw new PoolException("Cannot return connection to pool.", e);
+    public void putConnection(Connection connection) throws PoolException {
+        if (connection instanceof PooledConnection) {
+            try {
+                connection.setAutoCommit(true);
+                connection.setHoldability(connection.getMetaData().getResultSetHoldability());
+                connection.setTransactionIsolation(connection.getMetaData().getDefaultTransactionIsolation());
+                availableConnections.put((PooledConnection) connection);
+                logger.trace("Connection returned to pool");
+            } catch (InterruptedException e) {
+                logger.warn("Cannot return connection to pool\n", e);
+                throw new PoolException("Cannot return connection to pool.", e);
+            } catch (SQLException e) {
+                logger.warn("Cannot reset to connection defaults\n", e);
+                throw new PoolException("Cannot reset to connection defaults\n", e);
+            }
+        } else {
+            logger.warn("Someone trying to put connection which was created outside the pool: " + connection);
+            throw new PoolException("Cannot put connection which was created outside the pool.");
         }
     }
 
     /**
-     * Indicates is connection pool is released and all avaliableConnections are closed
+     * Indicates is connection pool is released and all availableConnections are closed
      *
      * @return true if pool is released
      */
@@ -133,16 +145,16 @@ public class ConnectionPool {
     }
 
     /**
-     * Releases connection pool and closes all avaliableConnections
+     * Releases connection pool and closes all available Connections
      */
     public void releasePool() {
         isPoolReleased = true;
-        try {
-            for (PooledConnection connection : allConnections) {
+        for (PooledConnection connection : allConnections) {
+            try {
                 connection.closeConnection();
+            } catch (SQLException e) {
+                logger.error("Cannot close connection.\n", e);
             }
-        } catch (SQLException e) {
-            logger.error("Cannot close connection.\n", e);
         }
     }
 

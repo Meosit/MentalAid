@@ -1,8 +1,6 @@
 package by.mksn.epam.bidbuy.entity;
 
 import by.mksn.epam.bidbuy.entity.exception.EntityArgumentException;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -40,30 +38,15 @@ public class User extends Entity {
      */
     public static final int STATUS_DELETED = -1;
     private static final Logger logger = Logger.getLogger(User.class);
-    @Getter
-    @Setter
+
     private long id;
-    @Getter
-    @Setter
     private String email;
-    @Getter
-    @Setter
     private String username;
-    @Getter
-    @Setter
     private String passHash;
-    @Getter
     private int role;
-    @Getter
-    @Setter
     private Timestamp createdAt;
-    @Getter
-    @Setter
     private Timestamp modifiedAt;
-    @Getter
     private int status;
-    @Getter
-    @Setter
     private String locale;
 
     public User() {
@@ -83,6 +66,42 @@ public class User extends Entity {
         this.locale = locale;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassHash() {
+        return passHash;
+    }
+
+    public void setPassHash(String passHash) {
+        this.passHash = passHash;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
     /**
      * Sets role of the user
      *
@@ -98,6 +117,26 @@ public class User extends Entity {
             logger.error("Illegal role code passed. (" + role + ")");
             throw new EntityArgumentException("Illegal role code passed. (" + role + ")");
         }
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getModifiedAt() {
+        return modifiedAt;
+    }
+
+    public void setModifiedAt(Timestamp modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    public int getStatus() {
+        return status;
     }
 
     /**
@@ -116,6 +155,14 @@ public class User extends Entity {
             logger.error("Illegal status code passed. (" + status + ")");
             throw new EntityArgumentException("Illegal status code passed. (" + status + ")");
         }
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     @Override
@@ -152,7 +199,7 @@ public class User extends Entity {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected User clone() {
         return new User(id, email, username, passHash, role, createdAt, modifiedAt, status, locale);
     }
 
