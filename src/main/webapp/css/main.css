@@ -1,0 +1,160 @@
+body {
+    background-color: #eee;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+    background-color: #336699;
+}
+
+.carousel-inner img {
+    width: 100%; /* Set width to 100% */
+    margin: auto;
+    min-height: 200px;
+}
+
+/* Hide the carousel text when the screen is less than 600 pixels wide */
+@media (max-width: 600px) {
+    .carousel-caption {
+        display: none;
+    }
+}
+
+.navbar-default {
+    border-color: #ffc423;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #ffc423;
+}
+
+.navbar-default .navbar-toggle:hover {
+    border-color: #ffc423;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffc423;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #2182bd;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #ffc423;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #fff550;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #ffc423;
+    background-color: #2182bd;
+}
+
+.navbar-default .navbar-nav > .active > a:hover {
+    color: #fff550;
+    background-color: #2182bd;
+}
+
+.navbar-default .navbar-nav > li.dropdown:hover > a,
+.navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+.navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+    background-color: #2182bd;
+    color: #ffc423;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    color: #fff550;
+    background-color: #2182bd;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: #2182bd;
+    color: #ffc423;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: #2182bd;
+    color: #ffc423;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        background-color: #2182bd;
+        color: #fff550;
+    }
+}
+
+.dropdown-menu > li > a {
+    background-color: #2182bd;
+    color: #ffc423;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        background-color: #336699;
+        color: #ffc423;
+    }
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    background-color: #336699;
+    color: #fff550;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: #2182bd;
+}
+
+.dropdown-menu .divider {
+    background-color: #ffc423;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+.navbar-brand > img {
+    height: 100%;
+    padding: 4px;
+    width: auto;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 30px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 30px;
+    line-height: 30px;
+    color: #ffc423;
+    background-color: #336699;
+}
+
+.footer > p {
+    margin: 0;
+}

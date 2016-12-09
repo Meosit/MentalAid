@@ -1,0 +1,5 @@
+.required-mark::after {
+    display: inline;
+    content: "*";
+    color: red;
+}
