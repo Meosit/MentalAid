@@ -3,6 +3,7 @@ package by.mksn.epam.bidbuy.controller;
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
 import by.mksn.epam.bidbuy.command.factory.CommandFactory;
+import by.mksn.epam.bidbuy.command.manager.PathManager;
 import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -38,13 +39,15 @@ public class FrontController extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         Command command = CommandFactory.defineCommand(request);
         try {
             command.execute(request, response);
         } catch (CommandException e) {
             logger.error("Cannot execute command.\n", e);
-            //TODO: add error message sending
+            request.setAttribute("errorCode", "command.code");
+            request.setAttribute("errorCode", "command.message");
+            String pagePath = PathManager.getProperty(PathManager.ERROR);
+            request.getRequestDispatcher(pagePath).forward(request, response);
         }
     }
 }
