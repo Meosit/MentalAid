@@ -1,6 +1,6 @@
-package by.mksn.epam.bidbuy.dao.pool;
+package by.mksn.epam.bidbuy.dao.impl.pool;
 
-import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
+import by.mksn.epam.bidbuy.dao.impl.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -141,13 +141,13 @@ class PooledConnection implements Connection {
 
     /**
      * Returns connection to {@link ConnectionPool} instead of closing it.
-     * This method is not recommended, use {@link ConnectionPool#putConnection(Connection)} instead.
+     * This method is not recommended, use {@link ConnectionPool#returnConnection(Connection)} instead.
      *
      * @throws SQLException if cannot return connection to pool
      */
     public void close() throws SQLException {
         try {
-            ConnectionPool.getInstance().putConnection(this);
+            ConnectionPool.getInstance().returnConnection(this);
         } catch (PoolException e) {
             throw new SQLException("Cannot return connection to pool", e);
         }
@@ -207,7 +207,7 @@ class PooledConnection implements Connection {
 
     /**
      * Call of this method always fails because user cannot
-     * close connection by himself. Use {@link ConnectionPool#putConnection(Connection)} instead.
+     * close connection by himself. Use {@link ConnectionPool#returnConnection(Connection)} instead.
      *
      * @throws SQLException always if method calls.
      */

@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.dao.manager;
+package by.mksn.epam.bidbuy.dao.impl.manager;
 
 import java.util.ResourceBundle;
 

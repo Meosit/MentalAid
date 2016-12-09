@@ -1,15 +1,18 @@
-package by.mksn.epam.bidbuy.command.display;
+package by.mksn.epam.bidbuy.command.impl.content;
 
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
-import by.mksn.epam.bidbuy.command.manager.PathManager;
+import by.mksn.epam.bidbuy.command.impl.manager.PathManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ShowLoginPageCommand implements Command {
+/**
+ * Returns to client page with login form
+ */
+public class GetLoginPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         String pagePath = PathManager.getProperty(PathManager.LOGIN);

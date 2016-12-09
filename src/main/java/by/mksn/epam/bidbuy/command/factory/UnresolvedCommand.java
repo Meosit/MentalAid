@@ -2,7 +2,7 @@ package by.mksn.epam.bidbuy.command.factory;
 
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
-import by.mksn.epam.bidbuy.command.manager.PathManager;
+import by.mksn.epam.bidbuy.command.impl.manager.PathManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

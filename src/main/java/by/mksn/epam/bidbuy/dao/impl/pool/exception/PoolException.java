@@ -1,6 +1,6 @@
-package by.mksn.epam.bidbuy.dao.pool.exception;
+package by.mksn.epam.bidbuy.dao.impl.pool.exception;
 
-import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
+import by.mksn.epam.bidbuy.dao.impl.pool.ConnectionPool;
 
 /**
  * Exception which represents not normal behaviour of {@link ConnectionPool}, something

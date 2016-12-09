@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.filter;
+package by.mksn.epam.bidbuy.controller.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

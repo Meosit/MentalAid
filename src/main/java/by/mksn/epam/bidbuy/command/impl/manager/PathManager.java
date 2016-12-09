@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.command.manager;
+package by.mksn.epam.bidbuy.command.impl.manager;
 
 import java.util.ResourceBundle;
 

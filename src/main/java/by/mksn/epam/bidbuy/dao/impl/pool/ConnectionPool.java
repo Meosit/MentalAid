@@ -1,8 +1,8 @@
-package by.mksn.epam.bidbuy.dao.pool;
+package by.mksn.epam.bidbuy.dao.impl.pool;
 
-import by.mksn.epam.bidbuy.dao.manager.DatabaseManager;
-import by.mksn.epam.bidbuy.dao.pool.exception.FatalPoolException;
-import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
+import by.mksn.epam.bidbuy.dao.impl.manager.DatabaseManager;
+import by.mksn.epam.bidbuy.dao.impl.pool.exception.FatalPoolException;
+import by.mksn.epam.bidbuy.dao.impl.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -87,12 +87,12 @@ public class ConnectionPool {
     }
 
     /**
-     * Provides main access to database availableConnections
+     * Provides main access to database available Connections
      * @return {@link Connection} to work with database
      * @throws PoolException if there is no free availableConnections in pool
      * for {@link #pollTimeout} milliseconds or pool is released
      */
-    public Connection pollConnection() throws PoolException {
+    public Connection getConnection() throws PoolException {
         if (!isPoolReleased) {
             try {
                 PooledConnection connection = availableConnections.poll(pollTimeout, TimeUnit.MILLISECONDS);
@@ -112,9 +112,13 @@ public class ConnectionPool {
      * Returns connection to pool to reusing it by another user,
      * also reset AutoCommit, Holdability and TransactionIsolation to defaults
      * @param connection which will be returned to pool
-     * @throws PoolException if cannot return connection to pool
+     * @throws PoolException if cannot return connection, if connection created outside the pool, or if null passed.
      */
-    public void putConnection(Connection connection) throws PoolException {
+    public void returnConnection(Connection connection) throws PoolException {
+        if (connection == null) {
+            logger.warn("Someone trying to return null connection.");
+            throw new PoolException("Null connection passed.");
+        }
         if (connection instanceof PooledConnection) {
             try {
                 connection.setAutoCommit(true);
@@ -142,6 +146,15 @@ public class ConnectionPool {
      */
     public boolean isPoolReleased() {
         return isPoolReleased;
+    }
+
+    /**
+     * Provides count of available connections which can be picked from this pool now
+     *
+     * @return available connection count
+     */
+    public int getAvailableConnectionsCount() {
+        return availableConnections.size();
     }
 
     /**

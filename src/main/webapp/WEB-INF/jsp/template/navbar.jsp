@@ -43,9 +43,10 @@
               </li>
             </c:when>
             <c:otherwise>
-              <li><a href="<c:url value="/controller?cmd=show_register"/>"><span
+              <li><a href="<c:url value="/controller?cmd=get_register_page"/>"><span
                   class="glyphicon glyphicon-plus"></span> <fmt:message key="button.signUp"/></a></li>
-              <li><a href="<c:url value="/controller?cmd=show_login"/>"><span class="glyphicon glyphicon-log-in"></span>
+              <li><a href="<c:url value="/controller?cmd=get_login_page"/>"><span
+                  class="glyphicon glyphicon-log-in"></span>
                 <fmt:message key="button.login"/></a></li>
             </c:otherwise>
           </c:choose>
