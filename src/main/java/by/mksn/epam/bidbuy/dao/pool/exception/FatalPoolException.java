@@ -1,6 +1,6 @@
-package by.mksn.epam.bidbuy.dao.impl.pool.exception;
+package by.mksn.epam.bidbuy.dao.pool.exception;
 
-import by.mksn.epam.bidbuy.dao.impl.pool.ConnectionPool;
+import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
 
 /**
  * Exception which represents that {@link ConnectionPool} cannot work or even been created.

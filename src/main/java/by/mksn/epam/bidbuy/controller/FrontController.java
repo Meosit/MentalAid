@@ -4,7 +4,7 @@ import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
 import by.mksn.epam.bidbuy.command.factory.CommandFactory;
 import by.mksn.epam.bidbuy.command.impl.manager.PathManager;
-import by.mksn.epam.bidbuy.dao.impl.pool.ConnectionPool;
+import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;

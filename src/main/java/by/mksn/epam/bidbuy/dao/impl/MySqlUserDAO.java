@@ -2,8 +2,8 @@ package by.mksn.epam.bidbuy.dao.impl;
 
 import by.mksn.epam.bidbuy.dao.UserDAO;
 import by.mksn.epam.bidbuy.dao.exception.DAOException;
-import by.mksn.epam.bidbuy.dao.impl.pool.ConnectionPool;
-import by.mksn.epam.bidbuy.dao.impl.pool.exception.PoolException;
+import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
+import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import by.mksn.epam.bidbuy.entity.User;
 import org.apache.log4j.Logger;
 

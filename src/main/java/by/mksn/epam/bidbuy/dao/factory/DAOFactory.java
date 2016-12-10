@@ -12,7 +12,6 @@ public abstract class DAOFactory {
 
     public static final int MY_SQL = 1;
     private static final Logger logger = Logger.getLogger(DAOFactory.class);
-    // another databases here
 
     /**
      * Returns instance of concrete factory with for the specified type of database

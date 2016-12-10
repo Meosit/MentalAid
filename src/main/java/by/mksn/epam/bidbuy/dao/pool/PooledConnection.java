@@ -1,6 +1,6 @@
-package by.mksn.epam.bidbuy.dao.impl.pool;
+package by.mksn.epam.bidbuy.dao.pool;
 
-import by.mksn.epam.bidbuy.dao.impl.pool.exception.PoolException;
+import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 
 import java.sql.*;

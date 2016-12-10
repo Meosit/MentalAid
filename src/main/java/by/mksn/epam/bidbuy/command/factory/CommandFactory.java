@@ -15,6 +15,9 @@ public class CommandFactory {
 
     private static final Logger logger = Logger.getLogger(CommandFactory.class);
 
+    /**
+     * Name of request parameter which must contain command name
+     */
     private static final String COMMAND_PARAMETER = "cmd";
 
     /**
