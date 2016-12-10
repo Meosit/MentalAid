@@ -8,10 +8,19 @@ public interface UserDAO {
      * Selects user from the database with specified ID
      *
      * @param id of an entity
-     * @return {@link User) with the specified id, {@code null} if entity not found
+     * @return - {@link User} with the specified id <br> - {@code null} if entity not found
      * @throws DAOException if something went wrong
      */
     User selectById(long id) throws DAOException;
+
+    /**
+     * Selects user from the database with specified username
+     *
+     * @param username of an entity
+     * @return - {@link User} with the specified id <br> - {@code null} if entity not found
+     * @throws DAOException if something went wrong
+     */
+    User selectByUsername(String username) throws DAOException;
 
     /**
      * Updates user in the database with the updated one
@@ -31,11 +40,14 @@ public interface UserDAO {
     void delete(long id) throws DAOException;
 
     /**
-     * Inserts user to the database
+     * Inserts user into the database
      *
-     * @param user user to insert
+     * @param username username of new user
+     * @param email email of new user
+     * @param passHash of new user
+     * @return {@link User} full entity of inserted row.
      * @throws DAOException if something went wrong
      */
-    void insert(User user) throws DAOException;
+    User insert(String username, String email, String passHash) throws DAOException;
 
 }

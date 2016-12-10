@@ -5,7 +5,7 @@
 <fmt:bundle basename="pagecontent" prefix="register.">
   <html>
     <head>
-      <title><fmt:message key="title"/><fmt:message key="title"/></title>
+      <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>
       <link rel="stylesheet" href="<c:url value="/css/register.css"/>">
     </head>
