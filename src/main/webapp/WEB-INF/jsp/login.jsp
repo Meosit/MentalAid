@@ -10,21 +10,30 @@
       <link rel="stylesheet" href="<c:url value="/css/login.css"/>">
     </head>
     <body>
-      <jsp:include page="template/navbar_empty.jsp"/>
+      <jsp:include page="template/navbar.jsp">
+        <jsp:param name="isNavbarLess" value="true"/>
+      </jsp:include>
       <div class="container">
         <div class="wrapper">
-          <form action="" method="post" name="login_form" class="form-signin">
+          <form id="login-form" class="form-signin">
             <h3 class="form-signin-heading"><fmt:message key="welcomeBack"/></h3>
             <hr class="colorgraph">
             <br>
-            <input type="text" class="form-control" name="username" placeholder="Username" required autofocus/>
-            <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
-            <button class="btn btn-lg btn-primary btn-block" name="submit" value="Login" type="submit"><fmt:message
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required
+                   autofocus/>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                   required=""/>
+            <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" value="Login" type="submit">
+              <fmt:message
                 key="button.login"/></button>
           </form>
+          <div id="error-alert" class="alert alert-danger hidden">
+            <strong id="error-title"></strong> <span id="error-message"></span>
+          </div>
         </div>
       </div>
       <jsp:include page="template/footer.jsp"/>
     </body>
   </html>
+  <script src="<c:url value="/js/login.js"/>"></script>
 </fmt:bundle>

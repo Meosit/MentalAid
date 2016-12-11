@@ -17,7 +17,7 @@ public interface UserDAO {
      * Selects user from the database with specified username
      *
      * @param username of an entity
-     * @return - {@link User} with the specified id <br> - {@code null} if entity not found
+     * @return - {@link User} with the specified username <br> - {@code null} if entity not found
      * @throws DAOException if something went wrong
      */
     User selectByUsername(String username) throws DAOException;

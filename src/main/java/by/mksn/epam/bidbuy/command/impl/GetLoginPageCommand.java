@@ -1,8 +1,8 @@
-package by.mksn.epam.bidbuy.command.impl.content;
+package by.mksn.epam.bidbuy.command.impl;
 
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
-import by.mksn.epam.bidbuy.command.impl.manager.PathManager;
+import by.mksn.epam.bidbuy.command.resource.PathManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Returns to client page with registration form
+ * Returns to client page with login form
  */
-public class GetRegisterPageCommand implements Command {
+public class GetLoginPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
-        String pagePath = PathManager.getProperty(PathManager.REGISTER);
+        String pagePath = PathManager.getProperty(PathManager.LOGIN);
         try {
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {

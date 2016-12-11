@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.command.impl.manager;
+package by.mksn.epam.bidbuy.command.resource;
 
 import java.util.ResourceBundle;
 
@@ -27,6 +27,10 @@ public class PathManager {
      * Path of page with register form
      */
     public static final String REGISTER = "page.register";
+    /**
+     * Path of page with ajax responce object
+     */
+    public static final String AJAX_RESPONSE = "page.ajax_response";
 
     private static final String RESOURCE_NAME = "path";
     private final static ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);

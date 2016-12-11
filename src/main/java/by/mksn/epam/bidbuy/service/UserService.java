@@ -27,7 +27,7 @@ public interface UserService {
      * @param username username of a user
      * @param password password of a user
      * @return - {@code null} if user with the given credentials does not exists <br> - {@link User} entity of authorized user.
-     * @throws ServiceUserException if login or password does not match
+     * @throws ServiceUserException if password does not match
      * @throws ServiceException     if error happens during execution
      */
     User login(String username, String password) throws ServiceException;

@@ -9,7 +9,9 @@
       <jsp:include page="template/links.jsp"/>
     </head>
     <body>
-      <jsp:include page="template/navbar.jsp"/>
+      <jsp:include page="template/navbar.jsp">
+        <jsp:param name="isNavbarLess" value="false"/>
+      </jsp:include>
       <div>
 
 

@@ -52,6 +52,18 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.3m</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.livesense</groupId>
+      <artifactId>org.liveSense.scripting.jsp.taglib.jsonatg</artifactId>
+      <version>1.0.5</version>
+    </dependency>
   </dependencies>
 
   <build>

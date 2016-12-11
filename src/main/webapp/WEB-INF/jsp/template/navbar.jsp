@@ -24,38 +24,41 @@
               href="#"><span class="glyphicon glyphicon-list-alt"></span> <fmt:message key="button.itemList"/></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <c:choose>
-            <c:when test="${0 != 0}">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
-                    class="glyphicon glyphicon-user"></span> Username <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#"><span class="glyphicon glyphicon-user"></span> <fmt:message key="button.profile"/></a>
-                  </li>
-                  <li><a href="#"><span class="glyphicon glyphicon-king"></span> <fmt:message
-                      key="button.winnings"/></a></li>
-                  <li><a href="#"><span class="glyphicon glyphicon-piggy-bank"></span> <fmt:message
-                      key="button.myLots"/></a></li>
-                  <li class="divider"></li>
-                  <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> <fmt:message
-                      key="button.logout"/></a></li>
-                </ul>
-              </li>
-            </c:when>
-            <c:otherwise>
-              <li><a href="<c:url value="/controller?cmd=get_register_page"/>"><span
-                  class="glyphicon glyphicon-plus"></span> <fmt:message key="button.signUp"/></a></li>
-              <li><a href="<c:url value="/controller?cmd=get_login_page"/>"><span
-                  class="glyphicon glyphicon-log-in"></span>
-                <fmt:message key="button.login"/></a></li>
-            </c:otherwise>
-          </c:choose>
+          <c:if test="${not param.isNavbarLess}">
+            <c:choose>
+              <c:when test="${not empty sessionScope.user}">
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
+                      class="glyphicon glyphicon-user"></span> ${sessionScope.user.username} <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> <fmt:message
+                        key="button.profile"/></a>
+                    </li>
+                    <li><a href="#"><span class="glyphicon glyphicon-king"></span> <fmt:message
+                        key="button.winnings"/></a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-piggy-bank"></span> <fmt:message
+                        key="button.myLots"/></a></li>
+                    <li class="divider"></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> <fmt:message
+                        key="button.logout"/></a></li>
+                  </ul>
+                </li>
+              </c:when>
+              <c:otherwise>
+                <li><a href="<c:url value="/controller?cmd=get_register_page"/>"><span
+                    class="glyphicon glyphicon-plus"></span> <fmt:message key="button.signUp"/></a></li>
+                <li><a href="<c:url value="/controller?cmd=get_login_page"/>"><span
+                    class="glyphicon glyphicon-log-in"></span>
+                  <fmt:message key="button.login"/></a></li>
+              </c:otherwise>
+            </c:choose>
+          </c:if>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">${fn:toUpperCase(sessionScope.locale)} <b
                 class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="#">English</a></li>
-              <li><a href="#">Русский</a></li>
+              <li><a href="<c:url value="/controller?cmd=set_locale&locale=en"/>">English</a></li>
+              <li><a href="<c:url value="/controller?cmd=set_locale&locale=ru"/>">Русский</a></li>
             </ul>
           </li>
         </ul>

@@ -3,7 +3,7 @@ package by.mksn.epam.bidbuy.controller;
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
 import by.mksn.epam.bidbuy.command.factory.CommandFactory;
-import by.mksn.epam.bidbuy.command.impl.manager.PathManager;
+import by.mksn.epam.bidbuy.command.resource.PathManager;
 import by.mksn.epam.bidbuy.dao.pool.ConnectionPool;
 import org.apache.log4j.Logger;
 
@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static by.mksn.epam.bidbuy.command.resource.Constants.*;
 
 /**
  * Main Controller of web app
@@ -44,8 +46,8 @@ public class FrontController extends HttpServlet {
             command.execute(request, response);
         } catch (CommandException e) {
             logger.error("Cannot execute command.\n", e);
-            request.setAttribute("errorCode", "command.code");
-            request.setAttribute("errorCode", "command.message");
+            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_COMMAND);
+            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_COMMAND);
             String pagePath = PathManager.getProperty(PathManager.ERROR);
             request.getRequestDispatcher(pagePath).forward(request, response);
         }

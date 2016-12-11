@@ -10,7 +10,9 @@
       <link rel="stylesheet" href="<c:url value="/css/register.css"/>">
     </head>
     <body>
-      <jsp:include page="template/navbar_empty.jsp"/>
+      <jsp:include page="template/navbar.jsp">
+        <jsp:param name="isNavbarLess" value="true"/>
+      </jsp:include>
       <div class="container">
         <div class="wrapper">
           <fieldset>

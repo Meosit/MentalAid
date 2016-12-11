@@ -3,7 +3,7 @@ package by.mksn.epam.bidbuy.dao.pool;
 import by.mksn.epam.bidbuy.dao.manager.DatabaseManager;
 import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import org.apache.log4j.Logger;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +79,7 @@ public class ConnectionPoolTest {
         }
     }
 
-    @After
+    @AfterClass
     public void tearDown() {
         poolToTest.releasePool();
     }
