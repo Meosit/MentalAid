@@ -106,7 +106,7 @@ public class MySqlUserDAO implements UserDAO {
             statement.setString(3, updatedUser.getPassHash());
             statement.setInt(4, updatedUser.getStatus());
             statement.setString(5, updatedUser.getLocale());
-
+            statement.setLong(6, updatedUser.getId());
             statement.executeUpdate();
         }
     }

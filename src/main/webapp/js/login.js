@@ -5,13 +5,12 @@ $('#login-form').submit(function (e) {
         dataType: 'text json',
         data: $('#login-form').serialize(),
         success: function (response) {
-            response = JSON.parse(response);
             if (response.status == "fail") {
                 $('#error-alert').removeClass('hidden');
                 $('#error-title').text(response.errorTitle);
                 $('#error-message').text(response.errorMessage);
             } else {
-                window.location.replace(response.redirectUrl);
+                window.location.replace("index.jsp");
             }
         }
     });

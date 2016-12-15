@@ -1,4 +1,4 @@
-package by.mksn.epam.bidbuy.command.impl.acync;
+package by.mksn.epam.bidbuy.command.impl;
 
 import by.mksn.epam.bidbuy.command.Command;
 import by.mksn.epam.bidbuy.command.exception.CommandException;
@@ -26,7 +26,7 @@ public class LoginCommand implements Command {
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
     private static final String USERNAME_PARAMETER = "username";
     private static final String PASSWORD_PARAMETER = "password";
-    private static final String AJAX_STATUS_ATTRIBUTE = "status";
+    private static final String AJAX_STATUS_ATTRIBUTE = "responseStatus";
     private static final String AJAX_STATUS_OK = "ok";
     private static final String AJAX_STATUS_FAIL = "fail";
 
@@ -36,16 +36,24 @@ public class LoginCommand implements Command {
         String username = request.getParameter(USERNAME_PARAMETER);
         String password = request.getParameter(PASSWORD_PARAMETER);
         try {
-            User user = userService.login(username, password);
-
-            request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
             HttpSession session = request.getSession();
-            session.setAttribute(USER_ATTRIBUTE, user);
+            User user = (User) session.getAttribute(USER_ATTRIBUTE);
+            if (user == null) {
+                user = userService.login(username, password);
+                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
+                session.setAttribute(USER_ATTRIBUTE, user);
+                session.setAttribute(LOCALE_ATTRIBUTE, user.getLocale());
+            } else {
+                logger.debug("User trying to login twice without logout.");
+                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
+                request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN_TWICE);
+                request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_TWICE);
+            }
         } catch (ServiceUserException e) {
-            logger.debug("Authorization failed for user \"" + username + "\"");
+            logger.debug("Authorization failed for user \"" + username + "\" (incorrect password)");
             request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN);
+            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN_PASSWORD);
+            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_PASSWORD);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

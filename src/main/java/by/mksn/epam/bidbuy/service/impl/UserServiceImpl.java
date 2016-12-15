@@ -54,4 +54,14 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
+
+    @Override
+    public void updateUser(User updatedUser) throws ServiceException {
+        UserDAO userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
+        try {
+            userDAO.update(updatedUser);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+    }
 }

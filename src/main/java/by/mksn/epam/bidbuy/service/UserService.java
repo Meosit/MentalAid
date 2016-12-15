@@ -32,4 +32,12 @@ public interface UserService {
      */
     User login(String username, String password) throws ServiceException;
 
+    /**
+     * Updates user data
+     *
+     * @param updatedUser updated user entity which will be stored into database
+     * @throws ServiceException if error happens during execution
+     */
+    void updateUser(User updatedUser) throws ServiceException;
+
 }

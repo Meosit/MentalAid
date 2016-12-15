@@ -39,7 +39,8 @@
                     <li><a href="#"><span class="glyphicon glyphicon-piggy-bank"></span> <fmt:message
                         key="button.myLots"/></a></li>
                     <li class="divider"></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-log-out"></span> <fmt:message
+                    <li><a href="<c:url value="/controller?cmd=logout"/>"><span
+                        class="glyphicon glyphicon-log-out"></span> <fmt:message
                         key="button.logout"/></a></li>
                   </ul>
                 </li>
