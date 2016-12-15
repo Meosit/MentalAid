@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:bundle basename="pagecontent" prefix="login.">
-  <html>
+  <html lang="${sessionScope.locale}">
     <head>
       <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>

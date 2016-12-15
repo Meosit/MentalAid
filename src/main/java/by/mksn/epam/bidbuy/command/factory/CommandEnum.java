@@ -30,7 +30,11 @@ public enum CommandEnum {
     /**
      * Logs out user from the site
      */
-    LOGOUT(new LogoutCommand());
+    LOGOUT(new LogoutCommand()),
+    /**
+     * Registers new user on site
+     */
+    REGISTER(new RegisterCommand());
 
     private Command command;
 

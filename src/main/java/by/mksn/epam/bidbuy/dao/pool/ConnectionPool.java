@@ -64,7 +64,7 @@ public class ConnectionPool {
             logger.fatal("Cannot create connection pool: failed loading driver\n", e);
             throw new FatalPoolException("Cannot create connection pool\n", e);
         }
-        logger.debug("Connection pool created successfully");
+        logger.info("Connection pool created successfully");
     }
 
     /**
@@ -169,6 +169,7 @@ public class ConnectionPool {
                 logger.error("Cannot close connection.\n", e);
             }
         }
+        logger.info("Connection pool successfully released");
     }
 
 }

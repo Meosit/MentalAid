@@ -23,7 +23,13 @@ public class UserServiceImpl implements UserService {
             user = userDAO.selectByUsername(username);
             if (user != null) {
                 logger.debug("Registration failed: user with username \"" + username + "\" is already exists.");
-                throw new ServiceUserException("User with that username is already exists");
+                throw new ServiceUserException("User with that username is already exists", ServiceUserException.USER_EXISTS);
+            }
+
+            user = userDAO.selectByEmail(email);
+            if (user != null) {
+                logger.debug("Registration failed: user with email \"" + email + "\" is already exists.");
+                throw new ServiceUserException("User with that email is already exists", ServiceUserException.EMAIL_EXISTS);
             }
 
             password = BCrypt.hashpw(password, BCrypt.gensalt(HASH_ROUNDS));
@@ -44,10 +50,11 @@ public class UserServiceImpl implements UserService {
             if (user != null) {
                 if (!BCrypt.checkpw(password, user.getPassHash())) {
                     logger.debug("Authorization failed: user with username \"" + username + "\" .");
-                    throw new ServiceUserException("Incorrect password.");
+                    throw new ServiceUserException("Incorrect password.", ServiceUserException.INCORRECT_PASSWORD);
                 }
             } else {
                 logger.debug("Authorization failed: user with username \"" + username + "\" doesn't exists.");
+                throw new ServiceUserException("Incorrect password.", ServiceUserException.USER_NOT_EXIST);
             }
         } catch (DAOException e) {
             throw new ServiceException(e);

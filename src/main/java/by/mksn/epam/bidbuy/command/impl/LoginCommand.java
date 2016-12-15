@@ -50,10 +50,22 @@ public class LoginCommand implements Command {
                 request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_TWICE);
             }
         } catch (ServiceUserException e) {
-            logger.debug("Authorization failed for user \"" + username + "\" (incorrect password)");
+            logger.debug("Authorization failed for \"" + username + "\"");
+            String errorTitle = null;
+            String errorMessage = null;
+            switch (e.getCauseCode()) {
+                case ServiceUserException.INCORRECT_PASSWORD:
+                    errorTitle = ERROR_TITLE_LOGIN_PASSWORD;
+                    errorMessage = ERROR_MESSAGE_LOGIN_PASSWORD;
+                    break;
+                case ServiceUserException.USER_NOT_EXIST:
+                    errorTitle = ERROR_TITLE_LOGIN_NOT_EXISTS;
+                    errorMessage = ERROR_MESSAGE_LOGIN_NOT_EXISTS;
+                    break;
+            }
             request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN_PASSWORD);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_PASSWORD);
+            request.setAttribute(ERROR_TITLE_ATTRIBUTE, errorTitle);
+            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, errorMessage);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

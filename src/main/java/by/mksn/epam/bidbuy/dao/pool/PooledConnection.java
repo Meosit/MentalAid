@@ -260,6 +260,5 @@ class PooledConnection implements Connection {
      */
     void closeConnection() throws SQLException {
         connection.close();
-        logger.debug("Connection closed");
     }
 }

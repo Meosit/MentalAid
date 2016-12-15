@@ -7,3 +7,5 @@
 <link rel="stylesheet" href="<c:url value="/css/main.css"/>">
 <script src="<c:url value="/js/lib/jquery-3.1.1.js"/>"></script>
 <script src="<c:url value="/js/lib/bootstrap.js"/>"></script>
+<script src="<c:url value="/js/localization/${sessionScope.locale}.js"/>"></script>
+

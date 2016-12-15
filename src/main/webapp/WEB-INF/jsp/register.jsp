@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:bundle basename="pagecontent" prefix="register.">
-  <html>
+  <html lang="${sessionScope.locale}">
     <head>
       <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>
@@ -22,7 +22,7 @@
                 <label class="control-label col-sm-2 required-mark" for="username"><fmt:message
                     key="username.label"/></label>
                 <div class="col-sm-10">
-                  <input required type="text" class="bg-danger form-control" id="username"
+                  <input required type="text" class="bg-danger form-control" id="username" name="username"
                          title="<fmt:message key="username.hint"/>"
                          placeholder="User1233">
                 </div>
@@ -37,7 +37,7 @@
                 <label class="control-label col-sm-2 required-mark" for="password"><fmt:message
                     key="password.label"/></label>
                 <div class="col-sm-10">
-                  <input required type="password" class="form-control" id="password"
+                  <input required type="password" class="form-control" id="password" name="password"
                          title="<fmt:message key="password.hint"/>"
                          placeholder="<fmt:message key="password.placeholder"/>">
                 </div>
@@ -50,7 +50,7 @@
                          placeholder="<fmt:message key="password.confirm.placeholder"/>">
                 </div>
               </div>
-              <div class="control-group">
+              <div class="form-group">
                 <!-- Button -->
                 <div class="col-sm-offset-2 col-sm-10">
                   <button class="btn btn-lg btn-primary btn-block" name="submit" type="submit"><fmt:message
@@ -58,6 +58,11 @@
                 </div>
               </div>
             </form>
+            <div id="error-div">
+              <div id="error-alert" class="alert alert-danger hidden">
+                <strong id="error-title"></strong> <span id="error-message"></span>
+              </div>
+            </div>
           </fieldset>
         </div>
       </div>

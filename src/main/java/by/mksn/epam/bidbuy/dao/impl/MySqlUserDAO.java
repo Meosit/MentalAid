@@ -20,6 +20,7 @@ public class MySqlUserDAO implements UserDAO {
     private static final Logger logger = Logger.getLogger(MySqlUserDAO.class);
     private static final String QUERY_SELECT_BY_ID = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`id` = ?) AND (`status` <> -1);";
     private static final String QUERY_SELECT_BY_USERNAME = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`username` = ?) AND (`status` <> -1);";
+    private static final String QUERY_SELECT_BY_EMAIL = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`email` = ?) AND (`status` <> -1);";
     private static final String QUERY_UPDATE = "UPDATE `user` SET `email` = ?, `username` = ?, `pass_hash` = ?, `status` = ?, `locale` = ? WHERE `id` = ?";
     private static final String QUERY_INSERT = "INSERT INTO `user` (`email`, `username`, `pass_hash`, `locale`) VALUES (?, ?, ?, ?)";
     private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE `id` = ?";
@@ -50,6 +51,23 @@ public class MySqlUserDAO implements UserDAO {
         User user;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             user = selectByUsername(connection, username);
+        } catch (SQLException e) {
+            logger.error("Cannot execute statement or close connection\n", e);
+            throw new DAOException("Cannot execute statement or close connection", e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+        return user;
+    }
+
+    @Override
+    public User selectByEmail(String email) throws DAOException {
+        User user;
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_EMAIL)) {
+                statement.setString(1, email);
+                user = parseUserResultSet(statement);
+            }
         } catch (SQLException e) {
             logger.error("Cannot execute statement or close connection\n", e);
             throw new DAOException("Cannot execute statement or close connection", e);

@@ -23,6 +23,15 @@ public interface UserDAO {
     User selectByUsername(String username) throws DAOException;
 
     /**
+     * Selects user from the database with specified email
+     *
+     * @param email of an entity
+     * @return - {@link User} with the specified email <br> - {@code null} if entity not found
+     * @throws DAOException if something went wrong
+     */
+    User selectByEmail(String email) throws DAOException;
+
+    /**
      * Updates user in the database with the updated one
      * Updating uses primary key.
      *
