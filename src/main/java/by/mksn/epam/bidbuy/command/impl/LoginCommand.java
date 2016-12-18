@@ -6,7 +6,7 @@ import by.mksn.epam.bidbuy.command.resource.PathManager;
 import by.mksn.epam.bidbuy.entity.User;
 import by.mksn.epam.bidbuy.service.UserService;
 import by.mksn.epam.bidbuy.service.exception.ServiceException;
-import by.mksn.epam.bidbuy.service.exception.ServiceUserException;
+import by.mksn.epam.bidbuy.service.exception.UserServiceException;
 import by.mksn.epam.bidbuy.service.factory.ServiceFactory;
 import org.apache.log4j.Logger;
 
@@ -32,9 +32,10 @@ public class LoginCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
-        UserService userService = ServiceFactory.getInstance().getUserService();
         String username = request.getParameter(USERNAME_PARAMETER);
         String password = request.getParameter(PASSWORD_PARAMETER);
+
+        UserService userService = ServiceFactory.getInstance().getUserService();
         try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute(USER_ATTRIBUTE);
@@ -49,16 +50,16 @@ public class LoginCommand implements Command {
                 request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN_TWICE);
                 request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_TWICE);
             }
-        } catch (ServiceUserException e) {
+        } catch (UserServiceException e) {
             logger.debug("Authorization failed for \"" + username + "\"");
             String errorTitle = null;
             String errorMessage = null;
             switch (e.getCauseCode()) {
-                case ServiceUserException.INCORRECT_PASSWORD:
+                case UserServiceException.INCORRECT_PASSWORD:
                     errorTitle = ERROR_TITLE_LOGIN_PASSWORD;
                     errorMessage = ERROR_MESSAGE_LOGIN_PASSWORD;
                     break;
-                case ServiceUserException.USER_NOT_EXIST:
+                case UserServiceException.USER_NOT_EXIST:
                     errorTitle = ERROR_TITLE_LOGIN_NOT_EXISTS;
                     errorMessage = ERROR_MESSAGE_LOGIN_NOT_EXISTS;
                     break;

@@ -23,5 +23,14 @@ public final class Constants {
     public static final String ERROR_TITLE_LOGIN_NOT_EXISTS = "login.notExists.title";
     public static final String ERROR_MESSAGE_LOGIN_NOT_EXISTS = "login.notExists.message";
 
+    public static final String ERROR_TITLE_REGISTER_EXISTS_USERNAME = "register.exists.username.title";
+    public static final String ERROR_MESSAGE_REGISTER_EXISTS_USERNAME = "register.exists.username.message";
+
+    public static final String ERROR_TITLE_REGISTER_EXISTS_EMAIL = "register.exists.email.title";
+    public static final String ERROR_MESSAGE_REGISTER_EXISTS_EMAIL = "register.exists.email.message";
+
+    public static final String ERROR_TITLE_REGISTER_FORMAT = "register.format.title";
+    public static final String ERROR_MESSAGE_REGISTER_FORMAT = "register.format.message";
+
 
 }
