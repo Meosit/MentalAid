@@ -31,23 +31,23 @@ public class UserServiceImpl implements UserService {
         User user;
         try {
             if (!isValidEmail(email)) {
-                logger.debug("Registration failed: invalid email format \"" + email + "\"");
+                logger.debug("Invalid email format of \"" + email + "\"");
                 throw new UserServiceException("Invalid email format", UserServiceException.WRONG_INPUT);
             }
             if (!isValidUsername(username)) {
-                logger.debug("Registration failed: invalid username format \"" + email + "\"");
+                logger.debug("Invalid username format of \"" + username + "\"");
                 throw new UserServiceException("Invalid username format", UserServiceException.WRONG_INPUT);
             }
 
             user = userDAO.selectByUsername(username);
             if (user != null) {
-                logger.debug("Registration failed: user with username \"" + username + "\" is already exists.");
+                logger.debug("This username \"" + username + "\" is already exists.");
                 throw new UserServiceException("User with that username is already exists", UserServiceException.USER_EXISTS);
             }
 
             user = userDAO.selectByEmail(email);
             if (user != null) {
-                logger.debug("Registration failed: user with email \"" + email + "\" is already exists.");
+                logger.debug("This email \"" + email + "\" is already exists.");
                 throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
             }
 
@@ -68,11 +68,11 @@ public class UserServiceImpl implements UserService {
             user = userDAO.selectByUsername(username);
             if (user != null && (user.getStatus() != User.STATUS_DELETED)) {
                 if (!BCrypt.checkpw(password, user.getPassHash())) {
-                    logger.debug("Authorization failed: user with username \"" + username + "\" .");
+                    logger.debug("Incorrect password for username \"" + username + "\"");
                     throw new UserServiceException("Incorrect password.", UserServiceException.INCORRECT_PASSWORD);
                 }
             } else {
-                logger.debug("Authorization failed: user with username \"" + username + "\" doesn't exists.");
+                logger.debug("User with username \"" + username + "\" doesn't exists.");
                 throw new UserServiceException("Incorrect password.", UserServiceException.USER_NOT_EXIST);
             }
         } catch (DAOException e) {

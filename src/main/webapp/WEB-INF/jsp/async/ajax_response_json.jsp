@@ -8,7 +8,7 @@
     <c:when test="${requestScope.responseStatus eq 'fail'}">
       <fmt:setLocale value="${sessionScope.locale}"/>
       <fmt:bundle basename="pagecontent" prefix="error.">
-        <json:property name="errorTtile" trim="true">
+        <json:property name="errorTitle" trim="true">
           <fmt:message key="${requestScope.errorTitle}"/>
         </json:property>
         <json:property name="errorMessage" trim="true">

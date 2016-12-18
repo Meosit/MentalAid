@@ -46,9 +46,15 @@ public class FrontController extends HttpServlet {
             command.execute(request, response);
         } catch (CommandException e) {
             logger.error("Cannot execute command.\n", e);
+            String pagePath;
+            if (e.isAsync()) {
+                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
+                pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
+            } else {
+                pagePath = PathManager.getProperty(PathManager.ERROR);
+            }
             request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_COMMAND);
             request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_COMMAND);
-            String pagePath = PathManager.getProperty(PathManager.ERROR);
             request.getRequestDispatcher(pagePath).forward(request, response);
         }
     }

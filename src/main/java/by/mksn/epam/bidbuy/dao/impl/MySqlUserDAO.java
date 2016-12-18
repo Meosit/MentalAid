@@ -22,7 +22,7 @@ public class MySqlUserDAO implements UserDAO {
     private static final String QUERY_SELECT_BY_USERNAME = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`username` = ?);";
     private static final String QUERY_SELECT_BY_EMAIL = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`email` = ?);";
     private static final String QUERY_UPDATE = "UPDATE `user` SET `email` = ?, `username` = ?, `pass_hash` = ?, `status` = ?, `locale` = ? WHERE `id` = ?";
-    private static final String QUERY_INSERT = "INSERT INTO `user` (`email`, `username`, `pass_hash`, `locale`) VALUES (?, ?, ?, ?)";
+    private static final String QUERY_INSERT = "INSERT INTO `user` (`email`, `username`, `pass_hash`) VALUES (?, ?, ?)";
     private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE `id` = ?";
 
     @Override

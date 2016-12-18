@@ -8,6 +8,7 @@
       <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>
       <link rel="stylesheet" href="<c:url value="/css/register.css"/>">
+      <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     </head>
     <body>
       <jsp:include page="template/navbar.jsp">
@@ -19,41 +20,44 @@
             <h2 class="text-center"><fmt:message key="header"/></h2>
             <form class="form-horizontal" id="registration-form">
               <div class="form-group">
-                <label class="control-label col-sm-2 required-mark" for="username"><fmt:message
+                <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="username"><fmt:message
                     key="username.label"/></label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                   <input required type="text" class="bg-danger form-control" id="username" name="username"
                          title="<fmt:message key="username.hint"/>"
                          placeholder="User1233">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-2 required-mark" for="email"><fmt:message key="email.label"/></label>
-                <div class="col-sm-10">
+                <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="email"><fmt:message
+                    key="email.label"/></label>
+                <div class="col-sm-6">
                   <input type="email" class="form-control" name="email" id="email" placeholder="example@example.com">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-2 required-mark" for="password"><fmt:message
+                <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="password"><fmt:message
                     key="password.label"/></label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                   <input required type="password" class="form-control" id="password" name="password"
                          title="<fmt:message key="password.hint"/>"
                          placeholder="<fmt:message key="password.placeholder"/>">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-2 required-mark" for="password-confirm"><fmt:message
+                <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="password-confirm"><fmt:message
                     key="password.confirm.label"/></label>
-                <div class="col-sm-10">
+                <div class="col-sm-6">
                   <input required type="password" class="form-control" id="password-confirm"
+                         title="<fmt:message key="password.hint"/>"
                          placeholder="<fmt:message key="password.confirm.placeholder"/>">
                 </div>
               </div>
               <div class="form-group">
                 <!-- Button -->
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button class="btn btn-lg btn-primary btn-block" name="submit" type="submit"><fmt:message
+                <div class="col-sm-offset-2 col-sm-8">
+                  <button class="btn btn-lg btn-primary btn-block" id="register-button" name="submit" type="submit">
+                    <fmt:message
                       key="button.register"/></button>
                 </div>
               </div>

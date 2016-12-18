@@ -17,3 +17,15 @@ $('#login-form').submit(function (e) {
     e.preventDefault();
     return false;
 });
+
+$(document).ajaxSend(function () {
+    var button = $('#login-button');
+    button.attr('type', 'button');
+    button.html("<span class=\"fa fa-spinner fa-spin\"></span> " + button.html());
+});
+
+$(document).ajaxComplete(function () {
+    var button = $('#login-button');
+    button.attr('type', 'submit');
+    button.html(button.html().replace("<span class=\"fa fa-spinner fa-spin\"></span> ", ""));
+});

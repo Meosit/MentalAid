@@ -8,6 +8,7 @@
       <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>
       <link rel="stylesheet" href="<c:url value="/css/login.css"/>">
+      <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     </head>
     <body>
       <jsp:include page="template/navbar.jsp">
@@ -23,7 +24,8 @@
                    autofocus/>
             <input type="password" class="form-control" id="password" name="password" placeholder="Password"
                    required=""/>
-            <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" value="Login" type="submit">
+            <button class="btn btn-lg btn-primary btn-block" id="login-button" name="submit" value="Login"
+                    type="submit">
               <fmt:message
                 key="button.login"/></button>
           </form>

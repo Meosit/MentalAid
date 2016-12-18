@@ -56,6 +56,18 @@ document.getElementById("registration-form").addEventListener("submit", function
     return false;
 });
 
+$(document).ajaxSend(function () {
+    var button = $('#register-button');
+    button.attr('type', 'button');
+    button.html("<span class=\"fa fa-spinner fa-spin\"></span> " + button.html());
+});
+
+$(document).ajaxComplete(function () {
+    var button = $('#register-button');
+    button.attr('type', 'submit');
+    button.html(button.html().replace("<span class=\"fa fa-spinner fa-spin\"></span> ", ""));
+});
+
 function validateInputByRegex(inputElement, errorMessage, regex) {
     if (regex.test(inputElement.value.trim()) || inputElement.value.trim() === "") {
         if (inputElement.value.trim() === "") {

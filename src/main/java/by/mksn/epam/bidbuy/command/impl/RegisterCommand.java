@@ -27,9 +27,6 @@ public class RegisterCommand implements Command {
     private static final String USERNAME_PARAMETER = "username";
     private static final String EMAIL_PARAMETER = "email";
     private static final String PASSWORD_PARAMETER = "password";
-    private static final String AJAX_STATUS_ATTRIBUTE = "responseStatus";
-    private static final String AJAX_STATUS_OK = "ok";
-    private static final String AJAX_STATUS_FAIL = "fail";
 
 
     @Override
@@ -66,16 +63,16 @@ public class RegisterCommand implements Command {
             request.setAttribute(ERROR_TITLE_ATTRIBUTE, errorTitle);
             request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, errorMessage);
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            throw new CommandException(e, true);
         }
 
         try {
             String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {
-            throw new CommandException("Servlet exception occurs. ", e);
+            throw new CommandException("Servlet exception occurs. ", e, true);
         } catch (IOException e) {
-            throw new CommandException("IOException exception occurs. ", e);
+            throw new CommandException("IOException exception occurs. ", e, true);
         }
     }
 }
