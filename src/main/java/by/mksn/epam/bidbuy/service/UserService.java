@@ -5,7 +5,7 @@ import by.mksn.epam.bidbuy.service.exception.ServiceException;
 import by.mksn.epam.bidbuy.service.exception.UserServiceException;
 
 /**
- * Service which provides authorization and registration api for users.
+ * Service which provides all needed user methods.
  */
 public interface UserService {
 
