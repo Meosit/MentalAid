@@ -21,11 +21,15 @@ $('#login-form').submit(function (e) {
 $(document).ajaxSend(function () {
     var button = $('#login-button');
     button.attr('type', 'button');
+    button.removeClass('btn-primary');
+    button.addClass('btn-info');
     button.html("<span class=\"fa fa-spinner fa-spin\"></span> " + button.html());
 });
 
 $(document).ajaxComplete(function () {
     var button = $('#login-button');
     button.attr('type', 'submit');
+    button.removeClass('btn-primary');
+    button.addClass('btn-info');
     button.html(button.html().replace("<span class=\"fa fa-spinner fa-spin\"></span> ", ""));
 });

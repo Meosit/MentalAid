@@ -59,12 +59,16 @@ document.getElementById("registration-form").addEventListener("submit", function
 $(document).ajaxSend(function () {
     var button = $('#register-button');
     button.attr('type', 'button');
+    button.removeClass('btn-primary');
+    button.addClass('btn-info');
     button.html("<span class=\"fa fa-spinner fa-spin\"></span> " + button.html());
 });
 
 $(document).ajaxComplete(function () {
     var button = $('#register-button');
     button.attr('type', 'submit');
+    button.addClass('btn-primary');
+    button.removeClass('btn-info');
     button.html(button.html().replace("<span class=\"fa fa-spinner fa-spin\"></span> ", ""));
 });
 

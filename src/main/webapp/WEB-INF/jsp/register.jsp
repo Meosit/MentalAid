@@ -57,8 +57,7 @@
             <!-- Button -->
             <div class="col-sm-offset-2 col-sm-8">
               <button class="btn btn-lg btn-primary btn-block" id="register-button" name="submit" type="submit">
-                <fmt:message
-                    key="button.register"/></button>
+                <fmt:message key="button.register"/></button>
             </div>
           </div>
         </form>

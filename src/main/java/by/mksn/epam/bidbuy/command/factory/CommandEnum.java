@@ -20,6 +20,10 @@ public enum CommandEnum {
      */
     GET_HOME_PAGE(new GetLoginPageCommand()),
     /**
+     * This command provides page with active lots
+     */
+    GET_LOT_LIST_PAGE(new GetLotListPageCommand()),
+    /**
      * Changes site content locale and saves it in database if user is signed in
      */
     SET_LOCALE(new SetLocaleCommand()),

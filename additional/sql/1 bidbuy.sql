@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `bidbuy`.`user` (
   COMMENT 'Hash of user password, created by bcrypt hash algorithm (fixed 60 char length)',
   `role`        TINYINT(0)   NOT NULL DEFAULT 0
   COMMENT 'Represents role of a user, can be one of specified values:\n0 - client\n1 - administrator\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
-  `created_at`  DATETIME     NOT NULL
+  `created_at`  DATETIME              DEFAULT NULL
   COMMENT 'Time when current user was created',
-  `modified_at` DATETIME     NOT NULL
+  `modified_at` DATETIME              DEFAULT NULL
   COMMENT 'Time when current user credentials was updated',
   `status`      TINYINT(0)   NOT NULL DEFAULT 1
   COMMENT 'Represents current status of user, can be one of specified values:\n-1 - deleted\n 0 - banned\n 1 - active\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `bidbuy`.`bid` (
   COMMENT 'ID of a user, who make this bid',
   `sum`       DECIMAL(13, 4) UNSIGNED NOT NULL
   COMMENT 'Sum of a bid',
-  `time`      DATETIME                NOT NULL
+  `time`      DATETIME                         DEFAULT NULL
   COMMENT 'Time moment when this bid occurs',
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_client_id`
@@ -150,11 +150,11 @@ CREATE TABLE IF NOT EXISTS `bidbuy`.`lot` (
   COMMENT 'Path of the lot image on server hdd, optional',
   `status`            TINYINT(0)                       NOT NULL DEFAULT 0
   COMMENT 'Represents current status of lot, and can  be one of specified values:\n-1 - lot deleted, but not sold\n 0 - lot created\n 1 - lot approved and can be published\n 2 - lot published and opened\n 3 - lot closed\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
-  `status_changed_at` DATETIME                         NOT NULL
+  `status_changed_at` DATETIME                                  DEFAULT NULL
   COMMENT 'Represents time when status of lot was changed',
-  `modified_at`       DATETIME                         NOT NULL
+  `modified_at`       DATETIME                                  DEFAULT NULL
   COMMENT 'Represents time when status of lot was changed',
-  `created_at`        DATETIME                         NOT NULL
+  `created_at`        DATETIME                                  DEFAULT NULL
   COMMENT 'Represents time when status of lot was changed',
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_owner_id`
@@ -185,7 +185,7 @@ DROP TABLE IF EXISTS `bidbuy`.`transaction`;
 CREATE TABLE IF NOT EXISTS `bidbuy`.`transaction` (
   `lot_id`      INT UNSIGNED NOT NULL
   COMMENT 'ID of the lot that is transferred',
-  `time`        DATETIME     NOT NULL
+  `time`        DATETIME          DEFAULT NULL
   COMMENT 'Time when this transaction occured',
   `comment`     VARCHAR(300) NULL DEFAULT NULL
   COMMENT 'Additional information of transaction, optional',

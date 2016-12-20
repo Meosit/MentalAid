@@ -41,6 +41,7 @@ public class LoginCommand implements Command {
                 request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
                 session.setAttribute(USER_ATTRIBUTE, user);
                 session.setAttribute(LOCALE_ATTRIBUTE, user.getLocale());
+                logger.debug("User \"" + username + "\" logged in");
             } else {
                 logger.debug("User trying to login twice without logout.");
                 request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);

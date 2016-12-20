@@ -21,7 +21,8 @@
               href="<c:url value="/index.jsp"/>"><span class="glyphicon glyphicon-home"></span> <fmt:message
               key="button.home"/></a></li>
           <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/lot_list.jsp' ? 'active' : ''}"><a
-              href="#"><span class="glyphicon glyphicon-list-alt"></span> <fmt:message key="button.itemList"/></a></li>
+              href="<c:url value="/controller?cmd=get_lot_list_page"/>"><span
+              class="glyphicon glyphicon-list-alt"></span> <fmt:message key="button.itemList"/></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <c:if test="${not param.isNavbarLess}">
