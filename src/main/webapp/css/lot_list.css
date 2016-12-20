@@ -55,7 +55,7 @@
 .list-group-item-text {
     margin: 0 0 11px;
     overflow: hidden;
-    height: 120px;
+    height: 100px;
     line-height: 20px;
     text-overflow: ellipsis;
 }
@@ -66,7 +66,7 @@
     text-overflow: ellipsis;
 }
 
-.col-xs-12 .col-md-6 > a {
+.col-xs-12.col-md-6 > a {
     width: 150px;
     margin: 5px;
 }
@@ -81,36 +81,10 @@
     text-decoration: underline;
 }
 
-#custom-search-input {
-    margin: 10px 0 0;
-    padding: 0;
+.item-details:hover {
+    color: #ffc423;
 }
 
-#custom-search-input .search-query {
-    padding-right: 4px;
-    padding-left: 4px;
-    margin-bottom: 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-
-#custom-search-input button {
-    border: 0;
-    background: none;
-    /** belows styles are working good */
-    padding: 2px 5px;
-    margin-top: 2px;
-    position: relative;
-    left: -28px;
-    /* IE7-8 doesn't have border-radius, so don't indent the padding */
-    margin-bottom: 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    color: #D9230F;
-}
-
-.search-query:focus + button {
-    z-index: 3;
+.lead {
+    color: #336699;
 }

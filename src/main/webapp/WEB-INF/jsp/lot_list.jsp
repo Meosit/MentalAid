@@ -25,16 +25,6 @@
               <span class="glyphicon glyphicon-th"></span> Grid
             </a>
           </div>
-          <div id="custom-search-input">
-            <div class="input-group col-md-12">
-              <input type="text" class="  search-query form-control" placeholder="Search"/>
-              <span class="input-group-btn">
-                <button class="btn btn-danger" type="button">
-                    <span class=" glyphicon glyphicon-search"></span>
-                </button>
-              </span>
-            </div>
-          </div>
         </div>
         <div id="products" class="row list-group">
           <div class="item list-group-item  col-xs-4 col-lg-4">
@@ -62,7 +52,7 @@
                   sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
                 <div class="row">
                   <div class="col-xs-12 col-md-6">
-                    <p class="lead">Current price: $21.000</p>
+                    <p class="lead">Current price: $21.000 (Reversive auction)</p>
                   </div>
                   <div class="col-xs-12 col-md-6">
                     <a class="btn btn-primary" href="#">Bid! $11.500</a>
