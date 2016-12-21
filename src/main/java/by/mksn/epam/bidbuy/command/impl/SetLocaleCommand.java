@@ -43,7 +43,7 @@ public class SetLocaleCommand implements Command {
             }
         }
         logger.debug("Locale was set to \"" + newLocale + "\"");
-        String pagePath = PathManager.getProperty(PathManager.HOME);
+        String pagePath = PathManager.getProperty(PathManager.INDEX);
         try {
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {

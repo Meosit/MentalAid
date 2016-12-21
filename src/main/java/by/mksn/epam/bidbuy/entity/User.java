@@ -1,6 +1,5 @@
 package by.mksn.epam.bidbuy.entity;
 
-import by.mksn.epam.bidbuy.entity.exception.EntityArgumentException;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -34,7 +33,6 @@ public class User extends Entity {
     /**
      * Represents that this User entity is deleted.
      * Setting this status equals to deleting this user from the app.
-     * Access only directly from the database.
      */
     public static final int STATUS_DELETED = -1;
     private static final Logger logger = Logger.getLogger(User.class);
@@ -102,21 +100,8 @@ public class User extends Entity {
         return role;
     }
 
-    /**
-     * Sets role of the user
-     *
-     * @param role one of following items:
-     *             {@link #ROLE_CLIENT};
-     *             {@link #ROLE_ADMIN}
-     * @throws EntityArgumentException if passed undefined role code
-     */
     public void setRole(int role) {
-        if (role == ROLE_ADMIN || role == ROLE_CLIENT) {
-            this.role = role;
-        } else {
-            logger.error("Illegal role code passed. (" + role + ")");
-            throw new EntityArgumentException("Illegal role code passed. (" + role + ")");
-        }
+        this.role = role;
     }
 
     public Timestamp getCreatedAt() {
@@ -139,22 +124,8 @@ public class User extends Entity {
         return status;
     }
 
-    /**
-     * Sets status of the user
-     *
-     * @param status one of following items :
-     *               {@link #STATUS_ACTIVE};
-     *               {@link #STATUS_BANNED};
-     *               {@link #STATUS_DELETED}
-     * @throws EntityArgumentException if passed undefined status code
-     */
     public void setStatus(int status) {
-        if (status == STATUS_ACTIVE || status == STATUS_BANNED || status == STATUS_DELETED) {
-            this.status = status;
-        } else {
-            logger.error("Illegal status code passed. (" + status + ")");
-            throw new EntityArgumentException("Illegal status code passed. (" + status + ")");
-        }
+        this.status = status;
     }
 
     public String getLocale() {

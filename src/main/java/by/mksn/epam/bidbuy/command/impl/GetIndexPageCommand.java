@@ -12,10 +12,10 @@ import java.io.IOException;
 /**
  * Returns to client home page
  */
-public class GetHomePageCommand implements Command {
+public class GetIndexPageCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
-        String pagePath = PathManager.getProperty(PathManager.HOME);
+        String pagePath = PathManager.getProperty(PathManager.INDEX);
         try {
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {

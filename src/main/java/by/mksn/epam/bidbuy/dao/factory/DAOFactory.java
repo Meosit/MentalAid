@@ -1,5 +1,6 @@
 package by.mksn.epam.bidbuy.dao.factory;
 
+import by.mksn.epam.bidbuy.dao.LotDAO;
 import by.mksn.epam.bidbuy.dao.UserDAO;
 import by.mksn.epam.bidbuy.dao.exception.DAOFactoryNotFoundException;
 import by.mksn.epam.bidbuy.dao.factory.impl.MySqlDAOFactory;
@@ -38,6 +39,13 @@ public abstract class DAOFactory {
      * @return concrete {@link UserDAO}
      */
     public abstract UserDAO getUserDAO();
+
+    /**
+     * Returns concrete implementation of LotDAO for appropriate database
+     *
+     * @return concrete {@link LotDAO}
+     */
+    public abstract LotDAO getLotDAO();
 
 
 }

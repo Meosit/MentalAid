@@ -24,7 +24,7 @@ public class LogoutCommand implements Command {
         request.getSession().removeAttribute(USER_ATTRIBUTE);
         logger.debug("User logged out");
         try {
-            String pagePath = PathManager.getProperty(PathManager.HOME);
+            String pagePath = PathManager.getProperty(PathManager.INDEX);
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {
             throw new CommandException("Servlet exception occurs. ", e);

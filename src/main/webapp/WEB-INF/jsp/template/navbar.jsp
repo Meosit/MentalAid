@@ -17,12 +17,16 @@
       </div>
       <div class="collapse navbar-collapse" id="nav">
         <ul class="nav navbar-nav">
-          <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/home.jsp' ? 'active' : ''}"><a
-              href="<c:url value="/index.jsp"/>"><span class="glyphicon glyphicon-home"></span> <fmt:message
-              key="button.home"/></a></li>
+          <li class="${((pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/home.jsp') or (pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/admin_home.jsp')) ? 'active' : ''}">
+            <a href="<c:url value="/index.jsp"/>"><span class="glyphicon glyphicon-home"></span> <fmt:message
+                key="button.home"/></a></li>
           <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/lot_list.jsp' ? 'active' : ''}"><a
               href="<c:url value="/controller?cmd=get_lot_list_page"/>"><span
               class="glyphicon glyphicon-list-alt"></span> <fmt:message key="button.itemList"/></a></li>
+          <c:if test="${(not empty sessionScope.user) and (sessionScope.user.role eq 1)}">
+            <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/user_list.jsp' ? 'active' : ''}"><a
+                href="#"><span class="glyphicon glyphicon-home"></span> User list</a></li>
+          </c:if>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <c:if test="${not param.isNavbarLess}">
@@ -35,11 +39,13 @@
                     <li><a href="#"><span class="glyphicon glyphicon-user"></span> <fmt:message
                         key="button.profile"/></a>
                     </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-king"></span> <fmt:message
-                        key="button.winnings"/></a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-piggy-bank"></span> <fmt:message
-                        key="button.myLots"/></a></li>
-                    <li class="divider"></li>
+                    <c:if test="${sessionScope.user.role eq 0}">
+                      <li><a href="#"><span class="glyphicon glyphicon-king"></span> <fmt:message
+                          key="button.winnings"/></a></li>
+                      <li><a href="#"><span class="glyphicon glyphicon-piggy-bank"></span> <fmt:message
+                          key="button.myLots"/></a></li>
+                      <li class="divider"></li>
+                    </c:if>
                     <li><a href="<c:url value="/controller?cmd=logout"/>"><span
                         class="glyphicon glyphicon-log-out"></span> <fmt:message
                         key="button.logout"/></a></li>

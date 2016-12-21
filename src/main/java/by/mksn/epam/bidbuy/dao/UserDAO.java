@@ -32,8 +32,8 @@ public interface UserDAO {
     User selectByEmail(String email) throws DAOException;
 
     /**
-     * Updates user in the database with the updated one
-     * Updating uses primary key.
+     * Updates user in the database with the updated one.
+     * Updating by {@link User#id}.
      *
      * @param updatedUser entity to update
      * @throws DAOException if something went wrong

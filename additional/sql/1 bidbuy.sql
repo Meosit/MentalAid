@@ -139,13 +139,13 @@ CREATE TABLE IF NOT EXISTS `bidbuy`.`lot` (
   `max_price`         DECIMAL(13, 4) UNSIGNED ZEROFILL NOT NULL
   COMMENT 'Represents maximum price of a lot, which setting up by user',
   `bid_step`          DECIMAL(13, 4) UNSIGNED          NOT NULL
-  COMMENT 'Sum delta bidween two nearest bids, or fixed bid for auction-lottery',
+  COMMENT 'Sum delta between two nearest bids, or fixed bid for auction-lottery',
   `duration_time`     INT UNSIGNED                     NOT NULL
-  COMMENT 'Represents time bidween auction will be opened and closed, in seconds',
+  COMMENT 'Represents time between auction will be opened and closed, in seconds',
   `name`              VARCHAR(200)                     NOT NULL
   COMMENT 'Short name of a lot which will be shown in lot list',
   `description`       VARCHAR(1000)                    NOT NULL
-  COMMENT 'Detaied description of a lot',
+  COMMENT 'Detailed description of a lot',
   `image_path`        VARCHAR(255)                     NULL     DEFAULT NULL
   COMMENT 'Path of the lot image on server hdd, optional',
   `status`            TINYINT(0)                       NOT NULL DEFAULT 0
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `bidbuy`.`transaction` (
     ON UPDATE CASCADE
 )
   ENGINE = InnoDB
-  COMMENT = 'Represents transaction bidween two clients: one of them sells lot, another wins it by bid';
+  COMMENT = 'Represents transaction between two clients: one of them sells lot, another wins it by bid';
 
 CREATE INDEX `seller_id_FK_INDEX`
   ON `bidbuy`.`transaction` (`seller_id` ASC);
