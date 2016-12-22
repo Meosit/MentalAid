@@ -1,7 +1,7 @@
 package by.mksn.epam.bidbuy.entity;
 
-import static by.mksn.epam.bidbuy.util.StringUtil.isNull;
-import static by.mksn.epam.bidbuy.util.StringUtil.nullableEquals;
+import static by.mksn.epam.bidbuy.util.NullUtil.isNull;
+import static by.mksn.epam.bidbuy.util.NullUtil.nullableEquals;
 
 /**
  * Represents table `shipment_address` in database
@@ -98,8 +98,6 @@ public final class ShipmentAddress extends Entity {
         result = 31 * result + (isNull(firstName) ? 0 : firstName.hashCode());
         result = 17 * result + (isNull(lastName) ? 0 : lastName.hashCode());
         result = 31 * result + (isNull(phoneNumber) ? 0 : phoneNumber.hashCode());
-        User user = new User();
-        User user1 = user.clone();
         return result;
     }
 

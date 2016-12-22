@@ -7,7 +7,6 @@ import by.mksn.epam.bidbuy.dao.pool.exception.PoolException;
 import by.mksn.epam.bidbuy.entity.Lot;
 import org.apache.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +22,8 @@ public class MySqlLotDAO implements LotDAO {
     private static final Logger logger = Logger.getLogger(MySqlLotDAO.class);
     private static final String QUERY_SELECT_BY_ID = "SELECT `id`, `owner_id`, `leader_bid_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`, `image_path`, `status`, `status_changed_at`, `created_at`, `modified_at` FROM `lot` WHERE (`id` = ?)";
     private static final String QUERY_SELECT_BY_STATUS = "SELECT `id`, `owner_id`, `leader_bid_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`, `image_path`, `status`, `status_changed_at`, `created_at`, `modified_at` FROM `lot` WHERE (`status` = ?)";
-    private static final String QUERY_SELECT_BY_TYPE = "SELECT `id`, `owner_id`, `leader_bid_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`, `image_path`, `status`, `status_changed_at`, `created_at`, `modified_at` FROM `lot` WHERE (`auction_type` = ?)";
-    private static final String QUERY_UPDATE = "UPDATE `lot` SET `owner_id` = ?, `leader_bid_id` = ?, `auction_type` = ?, `min_price` = ?, `current_price` = ?, `max_price` = ?, `bid_step` = ?, `duration_time` = ?, `name` = ?, `description` = ?, `image_path` = ?, `status` = ? WHERE (`id` = ?)";
+    private static final String QUERY_SELECT_BY_OWNER_ID = "SELECT `id`, `owner_id`, `leader_bid_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`, `image_path`, `status`, `status_changed_at`, `created_at`, `modified_at` FROM `lot` WHERE (`owner_id` = ?)";
+    private static final String QUERY_UPDATE = "UPDATE `lot` SET `leader_bid_id` = ?, `auction_type` = ?, `min_price` = ?, `current_price` = ?, `max_price` = ?, `bid_step` = ?, `duration_time` = ?, `name` = ?, `description` = ?, `image_path` = ?, `status` = ? WHERE (`id` = ?)";
     private static final String QUERY_INSERT = "INSERT INTO `lot` (`owner_id`, `auction_type`, `min_price`, `current_price`, `max_price`, `bid_step`, `duration_time`, `name`, `description`, `image_path`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String QUERY_DELETE = "UPDATE `lot` SET `status` = -1 WHERE `id` = ?";
 
@@ -57,11 +56,11 @@ public class MySqlLotDAO implements LotDAO {
     }
 
     @Override
-    public List<Lot> selectByType(int type) throws DAOException {
+    public List<Lot> selectByOwnerId(long id) throws DAOException {
         List<Lot> lots;
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_TYPE)) {
-            statement.setLong(1, type);
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_OWNER_ID)) {
+            statement.setLong(1, id);
             lots = parseLotListResultSet(statement);
         } catch (SQLException e) {
             throw new DAOException("Cannot execute statement or close connection", e);
@@ -75,20 +74,19 @@ public class MySqlLotDAO implements LotDAO {
     public void update(Lot updatedLot) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE)) {
-            statement.setLong(1, updatedLot.getOwnerId());
-            statement.setLong(2, updatedLot.getLeaderBetId());
-            statement.setInt(3, updatedLot.getAuctionType());
-            statement.setBigDecimal(4, updatedLot.getMinPrice());
-            statement.setBigDecimal(5, updatedLot.getCurrentPrice());
-            statement.setBigDecimal(6, updatedLot.getMaxPrice());
-            statement.setBigDecimal(7, updatedLot.getBidStep());
-            statement.setLong(8, updatedLot.getDurationTime());
-            statement.setString(9, updatedLot.getName());
-            statement.setString(10, updatedLot.getDescription());
-            statement.setString(11, updatedLot.getImagePath());
-            statement.setInt(12, updatedLot.getStatus());
+            statement.setLong(1, updatedLot.getLeaderBetId());
+            statement.setInt(2, updatedLot.getAuctionType());
+            statement.setBigDecimal(3, updatedLot.getMinPrice());
+            statement.setBigDecimal(4, updatedLot.getCurrentPrice());
+            statement.setBigDecimal(5, updatedLot.getMaxPrice());
+            statement.setBigDecimal(6, updatedLot.getBidStep());
+            statement.setLong(7, updatedLot.getDurationTime());
+            statement.setString(8, updatedLot.getName());
+            statement.setString(9, updatedLot.getDescription());
+            statement.setString(10, updatedLot.getImagePath());
+            statement.setInt(11, updatedLot.getStatus());
 
-            statement.setLong(13, updatedLot.getId());
+            statement.setLong(12, updatedLot.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -113,31 +111,31 @@ public class MySqlLotDAO implements LotDAO {
     }
 
     @Override
-    public void insert(String name, String description, long ownerId, int auctionType, BigDecimal minPrice, BigDecimal maxPrice, BigDecimal bidStep, int durationTime, String imagePath) throws DAOException {
+    public void insert(Lot entity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(QUERY_INSERT)) {
 
-            statement.setLong(1, ownerId);
-            statement.setInt(2, auctionType);
-            statement.setBigDecimal(3, minPrice);
-            switch (auctionType) {
+            statement.setLong(1, entity.getOwnerId());
+            statement.setInt(2, entity.getAuctionType());
+            statement.setBigDecimal(3, entity.getMinPrice());
+            switch (entity.getAuctionType()) {
                 case Lot.TYPE_ENGLISH:
                 case Lot.TYPE_LOTTERY:
-                    statement.setBigDecimal(4, minPrice);
+                    statement.setBigDecimal(4, entity.getMinPrice());
                     break;
                 case Lot.TYPE_REVERSIVE:
-                    statement.setBigDecimal(4, maxPrice);
+                    statement.setBigDecimal(4, entity.getMaxPrice());
                     break;
                 default:
-                    logger.error("Cannot resolve auction type (" + auctionType + ")");
+                    logger.error("Cannot resolve auction type (" + entity.getAuctionType() + ")");
                     throw new DAOException("Cannot resolve auction type");
             }
-            statement.setBigDecimal(5, maxPrice);
-            statement.setBigDecimal(6, bidStep);
-            statement.setLong(7, durationTime);
-            statement.setString(8, name);
-            statement.setString(9, description);
-            statement.setString(10, imagePath);
+            statement.setBigDecimal(5, entity.getMaxPrice());
+            statement.setBigDecimal(6, entity.getBidStep());
+            statement.setLong(7, entity.getDurationTime());
+            statement.setString(8, entity.getName());
+            statement.setString(9, entity.getDescription());
+            statement.setString(10, entity.getImagePath());
 
             statement.executeUpdate();
         } catch (SQLException e) {

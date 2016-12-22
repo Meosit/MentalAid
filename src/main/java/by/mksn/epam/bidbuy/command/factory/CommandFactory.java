@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static by.mksn.epam.bidbuy.util.StringUtil.isNullOrEmpty;
+import static by.mksn.epam.bidbuy.util.NullUtil.isNullOrEmpty;
 
 /**
  * Provides factory method which creates {@link Command} instance

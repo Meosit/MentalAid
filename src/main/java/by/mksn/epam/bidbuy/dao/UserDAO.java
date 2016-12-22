@@ -4,6 +4,19 @@ import by.mksn.epam.bidbuy.dao.exception.DAOException;
 import by.mksn.epam.bidbuy.entity.User;
 
 public interface UserDAO {
+
+    /**
+     * Inserts user into the database
+     *
+     * @param entity user with the where must be set following properties:
+     *               <br> - {@link User#username} of new user
+     *               <br> - {@link User#email} of new user
+     *               <br> - {@link User#passHash} of new user
+     * @return {@link User} full entity of inserted row
+     * @throws DAOException if something went wrong
+     */
+    User insert(User entity) throws DAOException;
+
     /**
      * Selects user from the database with specified ID
      *
@@ -35,10 +48,10 @@ public interface UserDAO {
      * Updates user in the database with the updated one.
      * Updating by {@link User#id}.
      *
-     * @param updatedUser entity to update
+     * @param updatedEntity entity to update
      * @throws DAOException if something went wrong
      */
-    void update(User updatedUser) throws DAOException;
+    void update(User updatedEntity) throws DAOException;
 
     /**
      * Deletes the user with the specified id
@@ -47,16 +60,5 @@ public interface UserDAO {
      * @throws DAOException if something went wrong
      */
     void delete(long id) throws DAOException;
-
-    /**
-     * Inserts user into the database
-     *
-     * @param username username of new user
-     * @param email email of new user
-     * @param passHash of new user
-     * @return {@link User} full entity of inserted row.
-     * @throws DAOException if something went wrong
-     */
-    User insert(String username, String email, String passHash) throws DAOException;
 
 }

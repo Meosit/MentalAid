@@ -3,8 +3,12 @@ package by.mksn.epam.bidbuy.entity;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import static by.mksn.epam.bidbuy.util.StringUtil.nullableEquals;
+import static by.mksn.epam.bidbuy.util.NullUtil.isNull;
+import static by.mksn.epam.bidbuy.util.NullUtil.nullableEquals;
 
+/**
+ * Represents table `lot` in database
+ */
 public class Lot extends Entity {
 
     /**
@@ -223,16 +227,16 @@ public class Lot extends Entity {
                 && auctionType == lot.getAuctionType()
                 && durationTime == lot.getDurationTime()
                 && status == lot.getStatus()
-                && nullableEquals(minPrice.toPlainString(), lot.getMinPrice().toPlainString())
-                && nullableEquals(currentPrice.toPlainString(), lot.getCurrentPrice().toPlainString())
-                && nullableEquals(maxPrice.toPlainString(), lot.getMaxPrice().toPlainString())
-                && nullableEquals(bidStep.toPlainString(), lot.getBidStep().toPlainString())
+                && nullableEquals(minPrice, lot.getMinPrice())
+                && nullableEquals(currentPrice, lot.getCurrentPrice())
+                && nullableEquals(maxPrice, lot.getMaxPrice())
+                && nullableEquals(bidStep, lot.getBidStep())
                 && nullableEquals(name, lot.getName())
                 && nullableEquals(description, lot.getDescription())
                 && nullableEquals(imagePath, lot.getImagePath())
-                && nullableEquals(statusChangedAt.toString(), lot.getStatusChangedAt().toString())
-                && nullableEquals(createdAt.toString(), lot.getCreatedAt().toString())
-                && nullableEquals(modifiedAt.toString(), lot.getModifiedAt().toString());
+                && nullableEquals(statusChangedAt, lot.getStatusChangedAt())
+                && nullableEquals(createdAt, lot.getCreatedAt())
+                && nullableEquals(modifiedAt, lot.getModifiedAt());
     }
 
     @Override
@@ -240,19 +244,19 @@ public class Lot extends Entity {
         int result = (int) (getId() ^ (getId() >>> 32));
         result = 31 * result + (int) (getOwnerId() ^ (getOwnerId() >>> 32));
         result = 17 * result + (int) (getLeaderBetId() ^ (getLeaderBetId() >>> 32));
-        result = 31 * result + getAuctionType();
-        result = 17 * result + (getMinPrice() != null ? getMinPrice().hashCode() : 0);
-        result = 31 * result + (getCurrentPrice() != null ? getCurrentPrice().hashCode() : 0);
-        result = 17 * result + (getMaxPrice() != null ? getMaxPrice().hashCode() : 0);
-        result = 31 * result + (getBidStep() != null ? getBidStep().hashCode() : 0);
-        result = 17 * result + (int) getDurationTime();
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 17 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + (getImagePath() != null ? getImagePath().hashCode() : 0);
-        result = 17 * result + getStatus();
-        result = 31 * result + (getStatusChangedAt() != null ? getStatusChangedAt().hashCode() : 0);
-        result = 17 * result + (getCreatedAt() != null ? getCreatedAt().hashCode() : 0);
-        result = 31 * result + (getModifiedAt() != null ? getModifiedAt().hashCode() : 0);
+        result = 31 * result + auctionType;
+        result = 17 * result + (!isNull(minPrice) ? minPrice.hashCode() : 0);
+        result = 31 * result + (!isNull(currentPrice) ? currentPrice.hashCode() : 0);
+        result = 17 * result + (!isNull(maxPrice) ? maxPrice.hashCode() : 0);
+        result = 31 * result + (!isNull(bidStep) ? bidStep.hashCode() : 0);
+        result = 17 * result + (int) durationTime;
+        result = 31 * result + (!isNull(name) ? name.hashCode() : 0);
+        result = 17 * result + (!isNull(description) ? description.hashCode() : 0);
+        result = 31 * result + (!isNull(imagePath) ? imagePath.hashCode() : 0);
+        result = 17 * result + status;
+        result = 31 * result + (!isNull(statusChangedAt) ? statusChangedAt.hashCode() : 0);
+        result = 17 * result + (!isNull(createdAt) ? createdAt.hashCode() : 0);
+        result = 31 * result + (!isNull(modifiedAt) ? modifiedAt.hashCode() : 0);
         return result;
     }
 

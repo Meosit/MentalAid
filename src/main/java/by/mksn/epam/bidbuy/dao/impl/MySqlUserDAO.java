@@ -26,6 +26,24 @@ public class MySqlUserDAO implements UserDAO {
     private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE `id` = ?";
 
     @Override
+    public User insert(User user) throws DAOException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT)) {
+            statement.setString(1, user.getEmail());
+            statement.setString(2, user.getUsername());
+            statement.setString(3, user.getPassHash());
+            statement.executeUpdate();
+
+            user = selectByUsername(connection, user.getUsername());
+        } catch (SQLException e) {
+            throw new DAOException("Cannot execute statement or close connection", e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+        return user;
+    }
+
+    @Override
     public User selectById(long id) throws DAOException {
         User user;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
@@ -68,16 +86,16 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     @Override
-    public void update(User updatedUser) throws DAOException {
+    public void update(User updatedEntity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE)) {
-            statement.setString(1, updatedUser.getEmail());
-            statement.setString(2, updatedUser.getUsername());
-            statement.setString(3, updatedUser.getPassHash());
-            statement.setInt(4, updatedUser.getStatus());
-            statement.setString(5, updatedUser.getLocale());
+            statement.setString(1, updatedEntity.getEmail());
+            statement.setString(2, updatedEntity.getUsername());
+            statement.setString(3, updatedEntity.getPassHash());
+            statement.setInt(4, updatedEntity.getStatus());
+            statement.setString(5, updatedEntity.getLocale());
 
-            statement.setLong(6, updatedUser.getId());
+            statement.setLong(6, updatedEntity.getId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -99,25 +117,6 @@ public class MySqlUserDAO implements UserDAO {
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
-    }
-
-    @Override
-    public User insert(String username, String email, String passHash) throws DAOException {
-        User user;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT)) {
-            statement.setString(1, email);
-            statement.setString(2, username);
-            statement.setString(3, passHash);
-            statement.executeUpdate();
-
-            user = selectByUsername(connection, username);
-        } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
-        return user;
     }
 
     private User selectById(Connection connection, long id) throws SQLException {

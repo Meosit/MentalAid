@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
 
-import static by.mksn.epam.bidbuy.util.StringUtil.isNull;
-import static by.mksn.epam.bidbuy.util.StringUtil.nullableEquals;
+import static by.mksn.epam.bidbuy.util.NullUtil.isNull;
+import static by.mksn.epam.bidbuy.util.NullUtil.nullableEquals;
 
 /**
  * Represents table `user` in database
@@ -149,8 +149,8 @@ public class User extends Entity {
                 nullableEquals(email, user.getEmail()) &&
                 nullableEquals(username, user.getUsername()) &&
                 nullableEquals(passHash, user.getPassHash()) &&
-                nullableEquals(createdAt.toString(), user.getCreatedAt().toString()) &&
-                nullableEquals(modifiedAt.toString(), user.getModifiedAt().toString()) &&
+                nullableEquals(createdAt, user.getCreatedAt()) &&
+                nullableEquals(modifiedAt, user.getModifiedAt()) &&
                 nullableEquals(locale, user.getLocale());
 
     }
@@ -162,8 +162,8 @@ public class User extends Entity {
         result = 17 * result + (isNull(username) ? 0 : username.hashCode());
         result = 31 * result + (isNull(passHash) ? 0 : passHash.hashCode());
         result = 17 * result + role;
-        result = 31 * result + (createdAt == null ? 0 : createdAt.hashCode());
-        result = 17 * result + (modifiedAt == null ? 0 : modifiedAt.hashCode());
+        result = 31 * result + (isNull(createdAt) ? 0 : createdAt.hashCode());
+        result = 17 * result + (isNull(modifiedAt) ? 0 : modifiedAt.hashCode());
         result = 31 * result + status;
         result = 17 * result + (isNull(locale) ? 0 : locale.hashCode());
         return result;

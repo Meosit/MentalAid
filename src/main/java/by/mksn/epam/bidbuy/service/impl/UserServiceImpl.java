@@ -7,12 +7,11 @@ import by.mksn.epam.bidbuy.entity.User;
 import by.mksn.epam.bidbuy.service.UserService;
 import by.mksn.epam.bidbuy.service.exception.ServiceException;
 import by.mksn.epam.bidbuy.service.exception.UserServiceException;
+import by.mksn.epam.bidbuy.util.HashUtil;
 import org.apache.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UserServiceImpl implements UserService {
 
-    public static final int HASH_ROUNDS = 12;
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
     private static final String EMAIL_REGEX = "^[a-zA-Z_0-9]+@[a-zA-Z_0-9]+\\.[a-zA-Z_0-9]+$";
     private static final String USERNAME_REGEX = "^[a-zA-Z_0-9]{5,45}$";
@@ -51,9 +50,14 @@ public class UserServiceImpl implements UserService {
                 throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
             }
 
-            password = BCrypt.hashpw(password, BCrypt.gensalt(HASH_ROUNDS));
+            password = HashUtil.hashString(password);
 
-            user = userDAO.insert(username, email, password);
+            user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassHash(password);
+
+            user = userDAO.insert(user);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -67,7 +71,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userDAO.selectByUsername(username);
             if (user != null && (user.getStatus() != User.STATUS_DELETED)) {
-                if (!BCrypt.checkpw(password, user.getPassHash())) {
+                if (!HashUtil.isValidHash(password, user.getPassHash())) {
                     logger.debug("Incorrect password for username \"" + username + "\"");
                     throw new UserServiceException("Incorrect password.", UserServiceException.INCORRECT_PASSWORD);
                 }

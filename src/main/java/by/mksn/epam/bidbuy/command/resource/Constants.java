@@ -4,6 +4,7 @@ public final class Constants {
 
     public static final String USER_ATTRIBUTE = "user";
     public static final String LOCALE_ATTRIBUTE = "locale";
+    public static final String LOT_LIST_ATTRIBUTE = "lotList";
 
     public static final String AJAX_STATUS_ATTRIBUTE = "responseStatus";
     public static final String AJAX_STATUS_OK = "ok";
