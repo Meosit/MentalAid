@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`user_info` (
   COMMENT 'phone number of a user',
   `website`      VARCHAR(255) NULL
   COMMENT 'Personal website of a user, maybe facebook profile or smth like this',
+  `image_uri`    VARCHAR(255) NULL
+  COMMENT 'Avatar if an user',
   PRIMARY KEY (`user_id`)
     COMMENT 'Primary index',
   CONSTRAINT `fk_user_id`

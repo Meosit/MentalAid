@@ -20,10 +20,6 @@ public class PathManager {
      */
     public static final String HOME = "page.home";
     /**
-     * Path of page with lot list
-     */
-    public static final String LOT_LIST = "page.lot_list";
-    /**
      * Path of page with login form
      */
     public static final String LOGIN = "page.login";
