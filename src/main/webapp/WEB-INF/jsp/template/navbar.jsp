@@ -20,7 +20,7 @@
           <li class="${((pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/home.jsp') or (pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/admin_home.jsp')) ? 'active' : ''}">
             <a href="<c:url value="/index.jsp"/>"><span class="glyphicon glyphicon-home"></span> <fmt:message
                 key="button.home"/></a></li>
-          <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/lot_list.jsp' ? 'active' : ''}"><a
+          <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/question_list.jsp' ? 'active' : ''}"><a
               href="<c:url value="/controller?cmd=get_lot_list_page"/>"><span
               class="glyphicon glyphicon-list-alt"></span> <fmt:message key="button.itemList"/></a></li>
           <c:if test="${(not empty sessionScope.user) and (sessionScope.user.role eq 1)}">

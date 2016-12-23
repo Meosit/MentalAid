@@ -88,3 +88,18 @@
 .lead {
     color: #336699;
 }
+
+.info-label {
+    font-size: x-large;
+    line-height: 34px;
+
+    font-style: italic;
+}
+
+.info-own {
+    color: #5cb85c;
+}
+
+.info-sold {
+    color: #f0ad4e;
+}

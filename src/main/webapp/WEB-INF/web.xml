@@ -22,4 +22,11 @@
     <exception-type>java.lang.Throwable</exception-type>
     <location>/WEB-INF/jsp/error/error500.jsp</location>
   </error-page>
+
+  <jsp-config>
+    <taglib>
+      <taglib-uri>http://epam.mksn.by/MentalAid/tag/msTags</taglib-uri>
+      <taglib-location>/WEB-INF/tag/price.tld</taglib-location>
+    </taglib>
+  </jsp-config>
 </web-app>

@@ -1,5 +1,4 @@
-USE `bidbuy`;
-SET NAMES 'utf8';
+USE `mentalaid`;
 
 -- admin@12345 (administrator)
 INSERT INTO `user` (`id`, `email`, `username`, `pass_hash`, `role`)
