@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.NullUtil.nullableEquals;
+import static by.mksn.epam.mentalaid.util.NullUtil.nullableHashCode;
 
 /**
  * Represents table `user` in database
@@ -158,20 +158,15 @@ public class User extends Entity {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (isNull(email) ? 0 : email.hashCode());
-        result = 17 * result + (isNull(username) ? 0 : username.hashCode());
-        result = 31 * result + (isNull(passHash) ? 0 : passHash.hashCode());
+        result = 31 * result + nullableHashCode(email);
+        result = 17 * result + nullableHashCode(username);
+        result = 31 * result + nullableHashCode(passHash);
         result = 17 * result + role;
-        result = 31 * result + (isNull(createdAt) ? 0 : createdAt.hashCode());
-        result = 17 * result + (isNull(modifiedAt) ? 0 : modifiedAt.hashCode());
+        result = 31 * result + nullableHashCode(createdAt);
+        result = 17 * result + nullableHashCode(modifiedAt);
         result = 31 * result + status;
-        result = 17 * result + (isNull(locale) ? 0 : locale.hashCode());
+        result = 17 * result + nullableHashCode(locale);
         return result;
-    }
-
-    @Override
-    protected User clone() {
-        return new User(id, email, username, passHash, role, createdAt, modifiedAt, status, locale);
     }
 
     @Override

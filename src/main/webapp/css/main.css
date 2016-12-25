@@ -146,3 +146,11 @@ body {
 .footer > p {
     margin: 0;
 }
+
+.navbar-default .navbar-nav > li > a.logo-label {
+    padding-left: 0;
+}
+
+.navbar-default .navbar-nav > li > a.logo-label:hover {
+    background-color: inherit;
+}

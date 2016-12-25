@@ -54,4 +54,14 @@ public final class NullUtil {
         return (object == null) ? defaultValue : object;
     }
 
+    /**
+     * Calculates hashCode of object with possible null value.
+     *
+     * @param object object to calculate hashCode
+     * @return {@code object.hashCode()} if object is not null, {@code 0} otherwise
+     */
+    public static <T> int nullableHashCode(T object) {
+        return (object != null) ? object.hashCode() : 0;
+    }
+
 }

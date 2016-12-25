@@ -1,20 +1,75 @@
-.carousel-inner img {
-    width: 100%; /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
+/* Martin Wolf CodePen Standard */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,700);
+
+* {
+    margin: 0;
+    padding: 0;
+@include box-sizing(border-box);
 }
 
-.carousel-caption {
-    color: black;
-    text-shadow: -1px -1px 0 white,
-    1px -1px 0 white,
-    -1px 1px 0 white,
-    1px 1px 0 white;
+/* END Martin Wolf CodePen Standard */
+
+.fade-long {
+    position: relative;
+    height: 3.6em;
+    overflow: hidden;
+    line-height: 1.2em;
 }
 
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
+.fade-long:after {
+    content: "";
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30%;
+    height: 1.2em;
+    background: linear-gradient(to right, rgba(0, 0, 0, .0001), rgb(238, 238, 238) 99%);
 }
+
+.question {
+    margin: 10px;
+}
+
+hr {
+    border-top: 1px solid #336699;
+}
+
+#custom-search-input {
+    margin: 10px;
+    padding: 3px;
+    border: solid 1px #336699;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+#custom-search-input input {
+    border: 0;
+    box-shadow: none;
+}
+
+#custom-search-input button {
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #336699;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #336699;
+}
+
+#custom-search-input button:focus {
+    outline: none;
+}
+
+#custom-search-input button:hover {
+    border: 0;
+    box-shadow: none;
+    color: #ffc423;
+    border-left: solid 1px #336699;
+}
+
+#custom-search-input .glyphicon-search {
+    font-size: 23px;
+}
+

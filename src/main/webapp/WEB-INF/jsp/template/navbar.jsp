@@ -12,14 +12,13 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<c:url value="/index.jsp"/>"><img
-            src="<c:url value="/img/logo.png"/>"></a>
+        <a class="navbar-brand" href="<c:url value="/index.jsp"/>"><img id="logo-image"
+                                                                        src="<c:url value="/img/logo.png"/>"></a>
       </div>
       <div class="collapse navbar-collapse" id="nav">
         <ul class="nav navbar-nav">
-          <li class="${(pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/home.jsp') ? 'active' : ''}">
-            <a href="<c:url value="/index.jsp"/>"><span class="glyphicon glyphicon-home"></span> <fmt:message
-                key="button.home"/></a></li>
+          <li>
+            <a class="logo-label" href="<c:url value="/index.jsp"/>"><fmt:message key="app.name"/></a></li>
           <c:if test="${sessionScope.user.role eq 0}">
             <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/my_questions.jsp' ? 'active' : ''}"><a
                 href="<c:url value="/controller?cmd=get_my_questions"/>"><span

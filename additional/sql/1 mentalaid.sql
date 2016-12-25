@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`answer` (
   COMMENT 'ID of a question this answer for',
   `creator_id`  INT UNSIGNED  NOT NULL
   COMMENT 'ID of a user who created this answer',
-  `text`        VARCHAR(1000) NOT NULL
+  `text`        VARCHAR(2000) NOT NULL
   COMMENT 'text of an answer',
   `created_at`  DATETIME      NULL     DEFAULT NULL,
   `modified_at` DATETIME      NULL     DEFAULT NULL,
