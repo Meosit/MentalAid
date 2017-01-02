@@ -36,7 +36,7 @@ public class MySqlUserDAO implements UserDAO {
 
             user = selectByUsername(connection, user.getUsername());
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
@@ -49,7 +49,7 @@ public class MySqlUserDAO implements UserDAO {
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             user = selectById(connection, id);
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
@@ -62,7 +62,7 @@ public class MySqlUserDAO implements UserDAO {
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             user = selectByUsername(connection, username);
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
@@ -75,10 +75,10 @@ public class MySqlUserDAO implements UserDAO {
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_EMAIL)) {
                 statement.setString(1, email);
-                user = parseUserResultSet(statement);
+                user = executeStatementAndParseResultSet(statement);
             }
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
@@ -99,12 +99,13 @@ public class MySqlUserDAO implements UserDAO {
 
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void delete(long id) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -113,7 +114,7 @@ public class MySqlUserDAO implements UserDAO {
 
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot execute statement or close connection", e);
+            throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
@@ -122,18 +123,18 @@ public class MySqlUserDAO implements UserDAO {
     private User selectById(Connection connection, long id) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_ID)) {
             statement.setLong(1, id);
-            return parseUserResultSet(statement);
+            return executeStatementAndParseResultSet(statement);
         }
     }
 
     private User selectByUsername(Connection connection, String username) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_USERNAME)) {
             statement.setString(1, username);
-            return parseUserResultSet(statement);
+            return executeStatementAndParseResultSet(statement);
         }
     }
 
-    private User parseUserResultSet(PreparedStatement statement) throws SQLException {
+    private User executeStatementAndParseResultSet(PreparedStatement statement) throws SQLException {
         User user;
         try (ResultSet resultSet = statement.executeQuery()) {
             if (resultSet.next()) {

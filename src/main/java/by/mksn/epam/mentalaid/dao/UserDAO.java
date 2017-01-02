@@ -8,7 +8,7 @@ public interface UserDAO {
     /**
      * Inserts user into the database
      *
-     * @param entity user with the where must be set following properties:
+     * @param entity user where must be set following properties:
      *               <br> - {@link User#username} of new user
      *               <br> - {@link User#email} of new user
      *               <br> - {@link User#passHash} of new user
