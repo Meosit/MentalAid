@@ -18,7 +18,7 @@ public enum CommandEnum {
     /**
      * This command provides home page
      */
-    GET_HOME_PAGE(new GetLoginPageCommand()),
+    GET_HOME_PAGE(new GetHomePageCommand()),
     /**
      * Changes site content locale and saves it in database if user is signed in
      */

@@ -73,3 +73,7 @@ hr {
     font-size: 23px;
 }
 
+p span span.glyphicon {
+    color: grey;
+}
+

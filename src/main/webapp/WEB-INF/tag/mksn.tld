@@ -4,22 +4,27 @@
         xmlns="http://java.sun.com/xml/ns/j2ee"
         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
         version="2.0">
-  <description>Price formatter</description>
+  <description>Custom Mikhail Snitavets tags</description>
   <tlib-version>2.1</tlib-version>
   <short-name>ms</short-name>
   <uri>http://epam.mksn.by/MentalAid/tag/msTags</uri>
   <tag>
-    <name>price</name>
-    <tag-class>by.mksn.epam.mentalaid.tag.PriceFormatTag</tag-class>
+    <name>bootstrapPagination</name>
+    <tag-class>by.mksn.epam.mentalaid.tag.BootstrapPaginationBlockTag</tag-class>
     <body-content>empty</body-content>
     <attribute>
-      <name>value</name>
+      <name>baseUrl</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
-      <name>currencySign</name>
-      <required>false</required>
+      <name>currentPage</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>pageCount</name>
+      <required>true</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>

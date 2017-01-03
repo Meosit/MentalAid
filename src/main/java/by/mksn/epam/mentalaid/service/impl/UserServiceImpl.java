@@ -10,6 +10,9 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.util.HashUtil;
 import org.apache.log4j.Logger;
 
+import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
+
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
@@ -17,27 +20,27 @@ public class UserServiceImpl implements UserService {
     private static final String USERNAME_REGEX = "^[a-zA-Z_0-9]{5,45}$";
 
     private static boolean isValidEmail(String email) {
-        return email.matches(EMAIL_REGEX);
+        return !isNullOrEmpty(email) && email.matches(EMAIL_REGEX);
     }
 
     private static boolean isValidUsername(String username) {
-        return username.matches(USERNAME_REGEX);
+        return !isNullOrEmpty(username) && username.matches(USERNAME_REGEX);
     }
 
     @Override
     public User register(String username, String email, String password) throws ServiceException {
+        if (!isValidEmail(email)) {
+            logger.debug("Invalid email format of \"" + email + "\"");
+            throw new UserServiceException("Invalid email format", UserServiceException.WRONG_INPUT);
+        }
+        if (!isValidUsername(username)) {
+            logger.debug("Invalid username format of \"" + username + "\"");
+            throw new UserServiceException("Invalid username format", UserServiceException.WRONG_INPUT);
+        }
+
         UserDAO userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
         User user;
         try {
-            if (!isValidEmail(email)) {
-                logger.debug("Invalid email format of \"" + email + "\"");
-                throw new UserServiceException("Invalid email format", UserServiceException.WRONG_INPUT);
-            }
-            if (!isValidUsername(username)) {
-                logger.debug("Invalid username format of \"" + username + "\"");
-                throw new UserServiceException("Invalid username format", UserServiceException.WRONG_INPUT);
-            }
-
             user = userDAO.selectByUsername(username);
             if (user != null) {
                 logger.debug("This username \"" + username + "\" is already exists.");
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
         User user;
         try {
             user = userDAO.selectByUsername(username);
-            if (user != null && (user.getStatus() != User.STATUS_DELETED)) {
+            if (!isNull(user) && (user.getStatus() != User.STATUS_DELETED)) {
                 if (!HashUtil.isValidHash(password, user.getPassHash())) {
                     logger.debug("Incorrect password for username \"" + username + "\"");
                     throw new UserServiceException("Incorrect password.", UserServiceException.INCORRECT_PASSWORD);

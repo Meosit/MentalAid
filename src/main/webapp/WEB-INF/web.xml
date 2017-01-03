@@ -26,7 +26,7 @@
   <jsp-config>
     <taglib>
       <taglib-uri>http://epam.mksn.by/MentalAid/tag/msTags</taglib-uri>
-      <taglib-location>/WEB-INF/tag/price.tld</taglib-location>
+      <taglib-location>/WEB-INF/tag/mksn.tld</taglib-location>
     </taglib>
   </jsp-config>
 </web-app>

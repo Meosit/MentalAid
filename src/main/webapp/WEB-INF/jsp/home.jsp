@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ms" uri="http://epam.mksn.by/MentalAid/tag/msTags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:bundle basename="pagecontent" prefix="home.">
@@ -27,27 +28,34 @@
           </div>
         </div>
         <div>
-          <div class="question">
-            <div>
-              <h4><strong><a href="#">Title of the post</a></strong></h4>
+          <c:forEach var="question" items="${requestScope.questions}">
+            <div class="question">
+              <div>
+                <h4><strong><a href="#"><c:out value="${question.title}"/></a></strong></h4>
+              </div>
+              <div>
+                <p class="fade-long">
+                  <c:out value="${question.description}"/>
+                </p>
+              </div>
+              <div>
+                <p>
+                  <span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a
+                      href="#">${question.creatorUsername}</a></span>
+                  <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
+                      value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
+                  <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a
+                      href="#">${question.answerCount} Answers</a></span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p class="fade-long">
-                Lorem ipsum dolor sit amet, id nec conceptam conclusionemque. Et eam tation option. Utinam salutatus ex
-                eum. Ne mea dicit tibique facilisi, ea mei omittam explicari conclusionemque, ad nobis propriae
-                quaerendum
-                sea.
-              </p>
-            </div>
-            <div>
-              <p>
-                <span class="text-nowrap"><i class="icon-user"></i> by <a href="#">John</a></span>
-                <span class="text-nowrap">| <i class="icon-calendar"></i> Sept 16th, 2012</span>
-                <span class="text-nowrap">| <i class="icon-comment"></i> <a href="#">3 Answers</a></span>
-              </p>
-            </div>
-          </div>
-          <hr>
+            <hr>
+          </c:forEach>
+        </div>
+        <div class="row text-center">
+          <c:url value="/controller?cmd=get_home_page&page=" var="baseUrl"/>
+          <ms:bootstrapPagination baseUrl="${baseUrl}" currentPage="${requestScope.currentPage}"
+                                  pageCount="${requestScope.pageCount}"/>
         </div>
       </div>
       <jsp:include page="template/footer.jsp"/>
