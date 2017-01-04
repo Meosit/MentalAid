@@ -1,5 +1,6 @@
 package by.mksn.epam.mentalaid.dao.factory;
 
+import by.mksn.epam.mentalaid.dao.AnswerDAO;
 import by.mksn.epam.mentalaid.dao.QuestionDAO;
 import by.mksn.epam.mentalaid.dao.UserDAO;
 import by.mksn.epam.mentalaid.dao.exception.DAOFactoryNotFoundException;
@@ -46,6 +47,13 @@ public abstract class DAOFactory {
      * @return concrete {@link QuestionDAO}
      */
     public abstract QuestionDAO getQuestionDAO();
+
+    /**
+     * Returns concrete implementation of AnswerDAO for appropriate database
+     *
+     * @return concrete {@link AnswerDAO}
+     */
+    public abstract AnswerDAO getAnswerDAO();
 
 
 }
