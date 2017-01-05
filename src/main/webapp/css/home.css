@@ -11,7 +11,7 @@
 
 .fade-long {
     position: relative;
-    height: 3.6em;
+    height: 2.4em;
     overflow: hidden;
     line-height: 1.2em;
 }
@@ -75,5 +75,9 @@ hr {
 
 p span span.glyphicon {
     color: grey;
+}
+
+a.owner {
+    color: #22bf22;
 }
 

@@ -18,7 +18,7 @@
         <div class="row">
           <div id="custom-search-input">
             <div class="input-group">
-              <input type="text" class="form-control input-lg" placeholder="Search for questions"/>
+              <input type="text" class="form-control input-lg" placeholder="<fmt:message key="search.placeholder"/>"/>
               <span class="input-group-btn">
                 <button class="btn btn-info btn-lg" type="button">
                     <i class="glyphicon glyphicon-search"></i>
@@ -28,29 +28,57 @@
           </div>
         </div>
         <div>
-          <c:forEach var="question" items="${requestScope.questions}">
-            <div class="question">
-              <div>
-                <h4><strong><a href="#"><c:out value="${question.title}"/></a></strong></h4>
-              </div>
-              <div>
-                <p class="fade-long">
-                  <c:out value="${question.description}"/>
-                </p>
-              </div>
-              <div>
-                <p>
-                  <span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a
+          <c:choose>
+            <c:when test="${not empty requestScope.questions}">
+              <c:forEach var="question" items="${requestScope.questions}">
+                <c:if test="${(not empty sessionScope.user) and (sessionScope.user.id eq question.creatorId)}">
+                  <c:set var="aClass" value="class='owner'"/>
+                </c:if>
+                <div class="question">
+                  <div>
+                    <h4>
+                      <strong>
+                        <a ${aClass} href="#"><c:out value="${question.title}"/></a>
+                      </strong>
+                    </h4>
+                  </div>
+                  <div>
+                    <p class="fade-long">
+                      <c:out value="${question.description}"/>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                  <span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a ${aClass}
                       href="#">${question.creatorUsername}</a></span>
-                  <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
-                      value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
-                  <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a
-                      href="#">${question.answerCount} Answers</a></span>
-                </p>
+                      <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
+                          value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
+                      <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}
+                          href="#">${question.answerCount} <c:choose>
+                        <c:when test="${question.answerCount eq 1}">
+                          <fmt:message key="question.answers.single"/>
+                        </c:when>
+                        <c:when
+                            test="${(sessionScope.locale eq 'ru') and (question.answerCount % 10 == 1) and not (question.answerCount % 100 != 11)}">
+                          <fmt:message key="question.answers.single"/>
+                        </c:when>
+                        <c:otherwise>
+                          <fmt:message key="question.answers"/>
+                        </c:otherwise>
+                      </c:choose>
+                      </a></span>
+                    </p>
+                  </div>
+                </div>
+                <hr>
+              </c:forEach>
+            </c:when>
+            <c:otherwise>
+              <div class="row text-center">
+                <h6><fmt:message key="question.nothing"/></h6>
               </div>
-            </div>
-            <hr>
-          </c:forEach>
+            </c:otherwise>
+          </c:choose>
         </div>
         <div class="row text-center">
           <c:url value="/controller?cmd=get_home_page&page=" var="baseUrl"/>

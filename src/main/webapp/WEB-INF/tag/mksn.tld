@@ -28,4 +28,19 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  <tag>
+    <name>starRating</name>
+    <tag-class>by.mksn.epam.mentalaid.tag.StarRatingTag</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>value</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>starCount</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
 </taglib>

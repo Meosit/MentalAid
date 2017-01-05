@@ -1,0 +1,48 @@
+.stars {
+    font-size: 1.15em;
+    display: inline-block;
+    margin: auto 10px;
+    vertical-align: bottom;
+}
+
+.cfi.cfi--star {
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* наш аналог Font Awesome, который рисует звезду */
+
+.cfi.cfi--star:before {
+    content: "\e006";
+}
+
+.stars__out {
+    position: relative;
+    color: grey;
+    z-index: 1;
+}
+
+.stars__in {
+    /* разместим ка мы нашу заливку как дочернюю основной иконки и кинем поверх */
+    position: absolute;
+    z-index: 2;
+
+    color: #ffc423; /* дадим солнечного цвета */
+    font-size: inherit; /* и шрифту размер родителя */
+
+    /* блоку дадим точки отчета по нулям относительно родителя */
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    /* ну и ограничим область видимости, а также ширину установим в 0 по умолчанию   */
+    overflow: hidden;
+    width: 0;
+}

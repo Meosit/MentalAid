@@ -17,9 +17,9 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
 
     private static final String BLOCK_HEADER = "<nav aria-label='Page navigation'><ul class='pagination'>";
     private static final String BLOCK_FOOTER = "</ul></nav>";
-    private static final String BLOCK_PAGE_NUMBER_TEMPLATE = "<li class='#active'><a href='#url'>#number</a></li>";
-    private static final String BLOCK_PREV_TEMPLATE = "<li><a href='#url' aria-label='Previous'><span aria-hidden='true'>&larr;</span></a></li>";
-    private static final String BLOCK_NEXT_TEMPLATE = "<li><a href='#url' aria-label='Next'><span aria-hidden='true'>&rarr;</span></a></li>";
+    private static final String BLOCK_PAGE_NUMBER_TEMPLATE = "<li #active><a href='#url'>#number</a></li>";
+    private static final String BLOCK_PREV_TEMPLATE = "<li #visible><a href='#url' aria-label='Previous'><span aria-hidden='true'>&larr;</span></a></li>";
+    private static final String BLOCK_NEXT_TEMPLATE = "<li #visible><a href='#url' aria-label='Next'><span aria-hidden='true'>&rarr;</span></a></li>";
     private static final String BLOCK_NUMBER_RANGE_PLACEHOLDER = "<li><a>...</a></li>";
 
     private String baseUrl;
@@ -51,40 +51,36 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
     public void doTag() throws JspException, IOException {
         try {
             JspWriter out = getJspContext().getOut();
-            out.write(BLOCK_HEADER);
-            if (pageCount == 1) {
+            if (pageCount != 1) {
+                out.write(BLOCK_HEADER);
+                out.write(getPrevBlock());
                 out.write(getPageNumberBlock(1));
-            } else {
-                if (currentPageIndex != 1) {
-                    out.write(getPrevBlock());
-                }
+                if (pageCount != 1) {
+                    if (currentPageIndex >= 4) {
+                        if (currentPageIndex == 4) {
+                            out.write(getPageNumberBlock(2));
+                        } else {
+                            out.write(BLOCK_NUMBER_RANGE_PLACEHOLDER);
+                        }
+                    }
 
-                if (currentPageIndex >= 3) {
-                    out.write(getPageNumberBlock(1));
-                }
+                    out.write(getCurrentPageBlockAndNearest());
 
-                if (currentPageIndex >= 4) {
-                    out.write(BLOCK_NUMBER_RANGE_PLACEHOLDER);
-                }
-
-                out.write(getCurrentPageBlockAndNearest());
-
-                if (pageCount - currentPageIndex >= 3) {
-                    out.write(BLOCK_NUMBER_RANGE_PLACEHOLDER);
-                }
-
-                if (pageCount - currentPageIndex >= 2) {
+                    if (pageCount - currentPageIndex >= 3) {
+                        if (pageCount - currentPageIndex == 3) {
+                            out.write(getPageNumberBlock(pageCount - 1));
+                        } else {
+                            out.write(BLOCK_NUMBER_RANGE_PLACEHOLDER);
+                        }
+                    }
                     out.write(getPageNumberBlock(pageCount));
                 }
-
-                if (currentPageIndex != pageCount) {
-                    out.write(getNextBlock());
-                }
+                out.write(getNextBlock());
+                out.write(BLOCK_FOOTER);
             }
-            out.write(BLOCK_FOOTER);
         } catch (Exception e) {
-            logger.error(e);
-            throw new SkipPageException("Exception in formatting price. ", e);
+            logger.error("Cannot generate pagination block", e);
+            throw new SkipPageException("Exception in generating pagination block. ", e);
         }
     }
 
@@ -102,11 +98,13 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
 
     private String getCurrentPageBlockAndNearest() {
         String result = "";
-        if (currentPageIndex != 1) {
+        if (currentPageIndex > 2) {
             result += getPageNumberBlock(currentPageIndex - 1);
         }
-        result += getPageNumberBlock(currentPageIndex);
-        if (currentPageIndex != pageCount) {
+        if (currentPageIndex != pageCount && currentPageIndex != 1) {
+            result += getPageNumberBlock(currentPageIndex);
+        }
+        if (currentPageIndex < pageCount - 1) {
             result += getPageNumberBlock(currentPageIndex + 1);
         }
         return result;
@@ -114,18 +112,22 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
 
     private String getPageNumberBlock(int pageIndex) {
         String block = fastReplace(BLOCK_PAGE_NUMBER_TEMPLATE, "#number", pageIndex + "");
-        block = fastReplace(block, "#active", (currentPageIndex == pageIndex) ? "active" : "");
+        block = fastReplace(block, "#active", (currentPageIndex == pageIndex) ? "class='active'" : "");
         return fastReplace(block, "#url", baseUrl + pageIndex);
     }
 
     private String getPrevBlock() {
         String url = baseUrl + ((currentPageIndex == 1) ? 1 : (currentPageIndex - 1));
-        return fastReplace(BLOCK_PREV_TEMPLATE, "#url", url);
+        String block = fastReplace(BLOCK_PREV_TEMPLATE, "#url", url);
+        block = fastReplace(block, "#visible", (currentPageIndex == 1) ? "class='invisible'" : "");
+        return block;
     }
 
     private String getNextBlock() {
         String url = baseUrl + ((currentPageIndex == pageCount) ? pageCount : (currentPageIndex + 1));
-        return fastReplace(BLOCK_NEXT_TEMPLATE, "#url", url);
+        String block = fastReplace(BLOCK_NEXT_TEMPLATE, "#url", url);
+        block = fastReplace(block, "#visible", (currentPageIndex == pageCount) ? "class='invisible'" : "");
+        return block;
     }
 
 }

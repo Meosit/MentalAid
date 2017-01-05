@@ -1,0 +1,19 @@
+.question {
+}
+
+.description {
+    min-height: 200px;
+}
+
+.media-body {
+    border-left: 4px solid #ffc423;
+    padding-left: 10px;
+}
+
+.media-heading {
+    display: inline-block;
+}
+
+.question-separator {
+    border-color: #336699;
+}
