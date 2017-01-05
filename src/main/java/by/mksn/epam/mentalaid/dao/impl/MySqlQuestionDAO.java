@@ -21,7 +21,6 @@ public class MySqlQuestionDAO implements QuestionDAO {
 
     private static final Logger logger = Logger.getLogger(MySqlQuestionDAO.class);
     private static final String QUERY_INSERT = "INSERT INTO `question` (`creator_id`, `title`, `description`) VALUES (?, ?, ?);";
-    private static final String QUERY_SELECT_LAST_ADDED_BY_CREATOR_ID = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON `question`.`id` = `answer`.`question_id` WHERE `question`.`creator_id` = ? GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT 1;";
     private static final String QUERY_SELECT_BY_ID = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON `question`.`id` = `answer`.`question_id` WHERE (`question`.`id` = ?) AND (`question`.`status` != -1) GROUP BY `question`.`id`;";
     private static final String QUERY_SELECT_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON `question`.`id` = `answer`.`question_id` WHERE `question`.`status` != -1 GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
     private static final String QUERY_SELECT_BY_USERNAME_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON `question`.`id` = `answer`.`question_id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1)  GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
@@ -33,13 +32,19 @@ public class MySqlQuestionDAO implements QuestionDAO {
     @Override
     public Question insert(Question entity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT)) {
+             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, entity.getCreatorId());
             statement.setString(2, entity.getTitle());
             statement.setString(3, entity.getDescription());
             statement.executeUpdate();
 
-            entity = selectLastAddedByCreatorId(connection, entity.getCreatorId());
+            ResultSet keys = statement.getGeneratedKeys();
+            if (keys.next()) {
+                long insertedId = keys.getLong(1);
+                entity = selectById(connection, insertedId);
+            } else {
+                throw new DAOException("Generated keys set is empty");
+            }
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -51,11 +56,8 @@ public class MySqlQuestionDAO implements QuestionDAO {
     @Override
     public Question selectById(long id) throws DAOException {
         Question question;
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_ID)) {
-            statement.setLong(1, id);
-
-            question = executeStatementAndParseResultSet(statement);
+        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
+            question = selectById(connection, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -164,6 +166,13 @@ public class MySqlQuestionDAO implements QuestionDAO {
         }
     }
 
+    private Question selectById(Connection connection, long id) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_ID)) {
+            statement.setLong(1, id);
+            return executeStatementAndParseResultSet(statement);
+        }
+    }
+
     private Question executeStatementAndParseResultSet(PreparedStatement statement) throws SQLException {
         Question question;
         try (ResultSet resultSet = statement.executeQuery()) {
@@ -205,14 +214,6 @@ public class MySqlQuestionDAO implements QuestionDAO {
         }
         questions.trimToSize();
         return questions;
-    }
-
-    private Question selectLastAddedByCreatorId(Connection connection, long id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LAST_ADDED_BY_CREATOR_ID)) {
-            statement.setLong(1, id);
-
-            return executeStatementAndParseResultSet(statement);
-        }
     }
 
 }

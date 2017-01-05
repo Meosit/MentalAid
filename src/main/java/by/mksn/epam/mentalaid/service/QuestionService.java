@@ -30,7 +30,7 @@ public interface QuestionService {
      * Returns {@link Question} with the specified ID
      *
      * @param id id of a question
-     * @return {@link Question} with the specified ID
+     * @return {@link Question} with the specified ID, {@code null} if such question is not exist
      * @throws ServiceException if error happens during execution
      */
     Question getById(long id) throws ServiceException;

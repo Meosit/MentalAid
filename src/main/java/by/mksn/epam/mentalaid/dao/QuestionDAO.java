@@ -11,7 +11,7 @@ public interface QuestionDAO {
     /**
      * Inserts new question into database
      *
-     * @param entity user where must be set following properties:
+     * @param entity question where must be set following properties:
      *               <br> - {@link Question#creatorId} of new question
      *               <br> - {@link Question#title} of new question
      *               <br> - {@link Question#description} of new question
