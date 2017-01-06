@@ -5,6 +5,6 @@
     <title></title>
   </head>
   <body>
-  <jsp:forward page="/WEB-INF/jsp/question.jsp"/>
+  <jsp:forward page="/controller?cmd=get_home_page"/>
   </body>
 </html>

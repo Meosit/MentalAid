@@ -20,6 +20,10 @@ public enum CommandEnum {
      */
     GET_HOME_PAGE(new GetHomePageCommand()),
     /**
+     * This command provides question page
+     */
+    GET_QUESTION_PAGE(new GetQuestionPageCommand()),
+    /**
      * Changes site content locale and saves it in database if user is signed in
      */
     SET_LOCALE(new SetLocaleCommand()),

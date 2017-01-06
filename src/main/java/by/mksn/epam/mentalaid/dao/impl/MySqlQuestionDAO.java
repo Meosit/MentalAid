@@ -26,7 +26,7 @@ public class MySqlQuestionDAO implements QuestionDAO {
     private static final String QUERY_SELECT_BY_USERNAME_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON `question`.`id` = `answer`.`question_id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1)  GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
     private static final String QUERY_SELECT_COUNT = "SELECT COUNT(`id`) FROM `question` WHERE `question`.`status` != -1;";
     private static final String QUERY_SELECT_COUNT_BY_USERNAME = "SELECT COUNT(`creator_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1);";
-    private static final String QUERY_UPDATE = "UPDATE `question` SET `title` = ?, `description` = ? WHERE `id` = ?;";
+    private static final String QUERY_UPDATE = "UPDATE `question` SET `title` = ?, `description` = ? WHERE (`id` = ?) AND (`status` != -1);";
     private static final String QUERY_DELETE = "UPDATE `question` SET `status` = -1 WHERE `id` = ?;";
 
     @Override

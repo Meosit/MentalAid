@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
 
 public class QuestionServiceImpl implements QuestionService {
 
@@ -19,11 +19,11 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question add(Question question) throws ServiceException {
-        if (isNull(question.getTitle())) {
-            throw new QuestionServiceException("Null title passed", QuestionServiceException.WRONG_INPUT);
+        if (isNullOrEmpty(question.getTitle())) {
+            throw new QuestionServiceException("Null or empty title passed", QuestionServiceException.WRONG_INPUT);
         }
-        if (isNull(question.getDescription())) {
-            throw new QuestionServiceException("Null description passed", QuestionServiceException.WRONG_INPUT);
+        if (isNullOrEmpty(question.getDescription())) {
+            throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
@@ -119,11 +119,11 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void update(Question updatedQuestion) throws ServiceException {
-        if (isNull(updatedQuestion.getTitle())) {
-            throw new QuestionServiceException("Null title passed", QuestionServiceException.WRONG_INPUT);
+        if (isNullOrEmpty(updatedQuestion.getTitle())) {
+            throw new QuestionServiceException("Null or empty title passed", QuestionServiceException.WRONG_INPUT);
         }
-        if (isNull(updatedQuestion.getDescription())) {
-            throw new QuestionServiceException("Null description passed", QuestionServiceException.WRONG_INPUT);
+        if (isNullOrEmpty(updatedQuestion.getDescription())) {
+            throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();

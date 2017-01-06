@@ -17,3 +17,10 @@
 .question-separator {
     border-color: #336699;
 }
+
+.edited-caption {
+    margin-top: 0;
+    margin-bottom: 5px;
+    text-align: right;
+    color: grey;
+}

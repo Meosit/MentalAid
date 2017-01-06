@@ -10,11 +10,9 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 
@@ -66,13 +64,7 @@ public class RegisterCommand implements Command {
             throw new CommandException(e, true);
         }
 
-        try {
-            String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
-            request.getRequestDispatcher(pagePath).forward(request, response);
-        } catch (ServletException e) {
-            throw new CommandException("Servlet exception occurs. ", e, true);
-        } catch (IOException e) {
-            throw new CommandException("IOException exception occurs. ", e, true);
-        }
+        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
+        Command.dispatchRequest(pagePath, true, request, response);
     }
 }

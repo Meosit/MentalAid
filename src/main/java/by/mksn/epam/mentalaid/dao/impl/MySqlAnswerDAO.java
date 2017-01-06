@@ -134,14 +134,16 @@ public class MySqlAnswerDAO implements AnswerDAO {
         ArrayList<Answer> answers = new ArrayList<>();
         try (ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                Answer answer;
-                answer = new Answer();
+                Answer answer = new Answer();
                 answer.setId(resultSet.getLong(1));
-                answer.setCreatorId(resultSet.getLong(2));
-
-                answer.setCreatedAt(resultSet.getTimestamp(6));
-                answer.setModifiedAt(resultSet.getTimestamp(7));
-                answer.setCreatorUsername(resultSet.getString(8));
+                answer.setQuestionId(resultSet.getLong(2));
+                answer.setCreatorId(resultSet.getLong(3));
+                answer.setText(resultSet.getString(4));
+                answer.setCreatedAt(resultSet.getTimestamp(5));
+                answer.setModifiedAt(resultSet.getTimestamp(6));
+                answer.setAverageMark(resultSet.getFloat(7));
+                answer.setMarkCount(resultSet.getInt(8));
+                answer.setCreatorUsername(resultSet.getString(9));
                 answers.add(answer);
             }
         }

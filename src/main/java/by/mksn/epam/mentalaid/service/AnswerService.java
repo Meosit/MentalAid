@@ -16,7 +16,7 @@ public interface AnswerService {
      *               <br> - {@link Answer#questionId} of new answer
      *               <br> - {@link Answer#text} of new answer
      * @return {@link Answer} entity with all filled properties
-     * @throws AnswerServiceException if null title or description passed (cause code: {@link AnswerServiceException#WRONG_INPUT});
+     * @throws AnswerServiceException if null or empty text passed (cause code: {@link AnswerServiceException#WRONG_INPUT});
      * @throws ServiceException       if error happens during execution
      */
     Answer add(Answer answer) throws ServiceException;
@@ -46,6 +46,7 @@ public interface AnswerService {
      * Updating based on {@link Answer#id} property.
      *
      * @param updatedAnswer {@link Answer} with already updated properties
+     * @throws AnswerServiceException if null or empty text passed (cause code: {@link AnswerServiceException#WRONG_INPUT});
      * @throws ServiceException if error happens during execution
      */
     void update(Answer updatedAnswer) throws ServiceException;

@@ -21,7 +21,7 @@ public interface QuestionService {
      *                 <br> - {@link Question#title} of new question
      *                 <br> - {@link Question#description} of new question
      * @return {@link Question} entity with all filled properties
-     * @throws QuestionServiceException if null title or description passed (cause code: {@link QuestionServiceException#WRONG_INPUT});
+     * @throws QuestionServiceException if null/empty title or description passed (cause code: {@link QuestionServiceException#WRONG_INPUT});
      * @throws ServiceException         if error happens during execution
      */
     Question add(Question question) throws ServiceException;
@@ -127,7 +127,7 @@ public interface QuestionService {
      * Updating based on {@link Question#id} property.
      *
      * @param updatedQuestion {@link Question} with already updated properties
-     * @throws QuestionServiceException if trying to update deleted question (cause code: {@link QuestionServiceException#ENTITY_DELETED})
+     * @throws QuestionServiceException if null/empty title or description passed (cause code: {@link QuestionServiceException#WRONG_INPUT})
      * @throws ServiceException         if error happens during execution
      */
     void update(Question updatedQuestion) throws ServiceException;

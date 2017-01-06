@@ -5,10 +5,8 @@ import by.mksn.epam.mentalaid.command.exception.CommandException;
 import by.mksn.epam.mentalaid.command.resource.PathManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
 
@@ -23,13 +21,7 @@ public class LogoutCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         request.getSession().removeAttribute(USER_ATTRIBUTE);
         logger.debug("User logged out");
-        try {
-            String pagePath = PathManager.getProperty(PathManager.INDEX);
-            request.getRequestDispatcher(pagePath).forward(request, response);
-        } catch (ServletException e) {
-            throw new CommandException("Servlet exception occurs. ", e);
-        } catch (IOException e) {
-            throw new CommandException("IOException exception occurs. ", e);
-        }
+        String pagePath = PathManager.getProperty(PathManager.INDEX);
+        Command.dispatchRequest(pagePath, false, request, response);
     }
 }

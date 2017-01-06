@@ -9,10 +9,8 @@ import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
@@ -56,12 +54,6 @@ public class GetHomePageCommand implements Command {
         request.setAttribute(PAGE_COUNT_ATTRIBUTE, pageCount);
 
         String pagePath = PathManager.getProperty(PathManager.HOME);
-        try {
-            request.getRequestDispatcher(pagePath).forward(request, response);
-        } catch (ServletException e) {
-            throw new CommandException("Servlet exception occurs. ", e);
-        } catch (IOException e) {
-            throw new CommandException("IOException exception occurs. ", e);
-        }
+        Command.dispatchRequest(pagePath, false, request, response);
     }
 }

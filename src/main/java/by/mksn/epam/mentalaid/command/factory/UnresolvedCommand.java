@@ -5,10 +5,8 @@ import by.mksn.epam.mentalaid.command.exception.CommandException;
 import by.mksn.epam.mentalaid.command.resource.PathManager;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 
@@ -25,12 +23,6 @@ public class UnresolvedCommand implements Command {
         request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_UNRESOLVED);
         request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_UNRESOLVED);
         String pagePath = PathManager.getProperty(PathManager.ERROR);
-        try {
-            request.getRequestDispatcher(pagePath).forward(request, response);
-        } catch (ServletException e) {
-            throw new CommandException("Servlet exception occurs. ", e);
-        } catch (IOException e) {
-            throw new CommandException("IOException exception occurs. ", e);
-        }
+        Command.dispatchRequest(pagePath, false, request, response);
     }
 }

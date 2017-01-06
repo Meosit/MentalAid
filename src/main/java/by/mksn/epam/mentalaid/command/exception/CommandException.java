@@ -8,26 +8,22 @@ import by.mksn.epam.mentalaid.command.Command;
  */
 public class CommandException extends Exception {
 
-    private boolean isAsync;
+    private boolean isAsync = false;
 
     public CommandException() {
         super();
-        isAsync = false;
     }
 
     public CommandException(String cause) {
         super(cause);
-        isAsync = false;
     }
 
     public CommandException(Throwable t) {
         super(t);
-        isAsync = false;
     }
 
     public CommandException(String cause, Throwable t) {
         super(cause, t);
-        isAsync = false;
     }
 
     public CommandException(boolean isAsync) {

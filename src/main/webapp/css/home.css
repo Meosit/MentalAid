@@ -24,7 +24,7 @@
     right: 0;
     width: 30%;
     height: 1.2em;
-    background: linear-gradient(to right, rgba(0, 0, 0, .0001), rgb(238, 238, 238) 99%);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgb(255, 255, 255) 99%);
 }
 
 .question {

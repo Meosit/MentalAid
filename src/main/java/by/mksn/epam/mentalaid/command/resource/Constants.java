@@ -39,5 +39,7 @@ public final class Constants {
     public static final String ERROR_TITLE_REGISTER_FORMAT = "register.format.title";
     public static final String ERROR_MESSAGE_REGISTER_FORMAT = "register.format.message";
 
+    public static final String ERROR_TITLE_QUESTION_NOT_FOUND = "question.notFound.title";
+    public static final String ERROR_MESSAGE_QUESTION_NOT_FOUND = "question.notFound.message";
 
 }

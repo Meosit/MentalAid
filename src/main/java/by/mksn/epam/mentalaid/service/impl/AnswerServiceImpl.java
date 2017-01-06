@@ -10,12 +10,12 @@ import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
 
 public class AnswerServiceImpl implements AnswerService {
     @Override
     public Answer add(Answer answer) throws ServiceException {
-        if (isNull(answer.getText())) {
+        if (isNullOrEmpty(answer.getText())) {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
 
@@ -54,7 +54,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void update(Answer updatedAnswer) throws ServiceException {
-        if (isNull(updatedAnswer.getText())) {
+        if (isNullOrEmpty(updatedAnswer.getText())) {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
 
