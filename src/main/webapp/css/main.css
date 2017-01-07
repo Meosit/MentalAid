@@ -153,3 +153,7 @@ body {
 .navbar-default .navbar-nav > li > a.logo-label:hover {
     background-color: inherit;
 }
+
+.owner {
+    color: #22bf22;
+}

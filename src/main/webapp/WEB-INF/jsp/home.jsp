@@ -31,9 +31,15 @@
       <c:choose>
         <c:when test="${not empty requestScope.questions}">
           <c:forEach var="question" items="${requestScope.questions}">
-            <c:if test="${(not empty sessionScope.user) and (sessionScope.user.id eq question.creatorId)}">
-              <c:set var="aClass" value="class='owner'"/>
-            </c:if>
+            <c:choose>
+              <c:when test="${(not empty sessionScope.user) and (sessionScope.user.id eq question.creatorId)}">
+                <c:set var="aClass" value="class='owner'"/>
+              </c:when>
+              <c:otherwise>
+                <c:set var="aClass" value="class=''"/>
+              </c:otherwise>
+            </c:choose>
+
             <div class="question">
               <div>
                 <h4>

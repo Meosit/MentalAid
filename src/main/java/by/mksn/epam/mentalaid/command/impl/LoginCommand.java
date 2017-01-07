@@ -67,7 +67,7 @@ public class LoginCommand implements Command {
             throw new CommandException(e, true);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
+        String pagePath = PathManager.getProperty(PathManager.AJAX_STATUS_RESPONSE);
         Command.dispatchRequest(pagePath, true, request, response);
     }
 }

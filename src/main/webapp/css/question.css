@@ -2,7 +2,7 @@
 }
 
 .description {
-    min-height: 200px;
+    min-height: 100px;
 }
 
 .media-body {
@@ -23,4 +23,34 @@
     margin-bottom: 5px;
     text-align: right;
     color: grey;
+}
+
+.btn-custom {
+    border-width: 1px;
+    padding: 0;
+    width: 70px;
+}
+
+.btn-edit {
+    border-color: #ffc423;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn-edit:hover {
+    background-color: #ffedbd;
+}
+
+.btn-delete {
+    border-color: #d9534f;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn-delete:hover {
+    background-color: #ffd6d3;
+}
+
+.media-body.owner-border {
+    border-color: #22bf22;
 }
