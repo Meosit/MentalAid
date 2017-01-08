@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
     private static final String EMAIL_REGEX = "^[a-zA-Z_0-9]+@[a-zA-Z_0-9]+\\.[a-zA-Z_0-9]+$";
-    private static final String USERNAME_REGEX = "^[a-zA-Z_0-9]{5,45}$";
+    private static final String USERNAME_REGEX = "^[a-zA-Z_0-9]{3,45}$";
 
     private static boolean isValidEmail(String email) {
         return !isNullOrEmpty(email) && email.matches(EMAIL_REGEX);
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException("Invalid username format", UserServiceException.WRONG_INPUT);
         }
 
-        UserDAO userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
         try {
             user = userDAO.selectByUsername(username);
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String username, String password) throws ServiceException {
-        UserDAO userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
         try {
             user = userDAO.selectByUsername(username);
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User updatedUser) throws ServiceException {
-        UserDAO userDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getUserDAO();
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         try {
             userDAO.update(updatedUser);
         } catch (DAOException e) {

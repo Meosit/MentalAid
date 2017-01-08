@@ -5,7 +5,6 @@ import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.dao.pool.ConnectionPool;
 import by.mksn.epam.mentalaid.dao.pool.exception.PoolException;
 import by.mksn.epam.mentalaid.entity.User;
-import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +14,8 @@ import java.sql.SQLException;
 /**
  * MySQL implementation of {@link UserDAO}
  */
-public class MySqlUserDAO implements UserDAO {
+public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
 
-    private static final Logger logger = Logger.getLogger(MySqlUserDAO.class);
     private static final String QUERY_SELECT_BY_ID = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`id` = ?);";
     private static final String QUERY_SELECT_BY_USERNAME = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`username` = ?);";
     private static final String QUERY_SELECT_BY_EMAIL = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`email` = ?);";
@@ -26,28 +24,34 @@ public class MySqlUserDAO implements UserDAO {
     private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE `id` = ?";
 
     @Override
-    public User insert(User user) throws DAOException {
+    public User insert(User entity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT)) {
-            statement.setString(1, user.getEmail());
-            statement.setString(2, user.getUsername());
-            statement.setString(3, user.getPassHash());
+             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, entity.getEmail());
+            statement.setString(2, entity.getUsername());
+            statement.setString(3, entity.getPassHash());
             statement.executeUpdate();
 
-            user = selectByUsername(connection, user.getUsername());
+            ResultSet keys = statement.getGeneratedKeys();
+            if (keys.next()) {
+                long insertedId = keys.getLong(1);
+                entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+            } else {
+                throw new DAOException("Generated keys set is empty");
+            }
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
-        return user;
+        return entity;
     }
 
     @Override
     public User selectById(long id) throws DAOException {
         User user;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            user = selectById(connection, id);
+            user = selectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -58,31 +62,12 @@ public class MySqlUserDAO implements UserDAO {
 
     @Override
     public User selectByUsername(String username) throws DAOException {
-        User user;
-        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            user = selectByUsername(connection, username);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
-        return user;
+        return selectWithStringParameter(QUERY_SELECT_BY_USERNAME, username);
     }
 
     @Override
     public User selectByEmail(String email) throws DAOException {
-        User user;
-        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_EMAIL)) {
-                statement.setString(1, email);
-                user = executeStatementAndParseResultSet(statement);
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
-        return user;
+        return selectWithStringParameter(QUERY_SELECT_BY_EMAIL, email);
     }
 
     @Override
@@ -105,53 +90,37 @@ public class MySqlUserDAO implements UserDAO {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public void delete(long id) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_DELETE)) {
-            statement.setLong(1, id);
+        delete(QUERY_DELETE, id);
+    }
 
-            statement.executeUpdate();
+    private User selectWithStringParameter(String selectQuery, String parameter) throws DAOException {
+        User user;
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(selectQuery)) {
+            statement.setString(1, parameter);
+            user = executeStatementAndParseResultSet(statement);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
             throw new DAOException("Cannot get connection\n", e);
         }
+        return user;
     }
 
-    private User selectById(Connection connection, long id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_ID)) {
-            statement.setLong(1, id);
-            return executeStatementAndParseResultSet(statement);
-        }
-    }
-
-    private User selectByUsername(Connection connection, String username) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_USERNAME)) {
-            statement.setString(1, username);
-            return executeStatementAndParseResultSet(statement);
-        }
-    }
-
-    private User executeStatementAndParseResultSet(PreparedStatement statement) throws SQLException {
-        User user;
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                user = new User();
-                user.setId(resultSet.getLong(1));
-                user.setEmail(resultSet.getString(2));
-                user.setUsername(resultSet.getString(3));
-                user.setPassHash(resultSet.getString(4));
-                user.setRole(resultSet.getInt(5));
-                user.setCreatedAt(resultSet.getTimestamp(6));
-                user.setModifiedAt(resultSet.getTimestamp(7));
-                user.setStatus(resultSet.getInt(8));
-                user.setLocale(resultSet.getString(9));
-            } else {
-                user = null;
-            }
-        }
+    @Override
+    protected User parseResultSet(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getLong(1));
+        user.setEmail(resultSet.getString(2));
+        user.setUsername(resultSet.getString(3));
+        user.setPassHash(resultSet.getString(4));
+        user.setRole(resultSet.getInt(5));
+        user.setCreatedAt(resultSet.getTimestamp(6));
+        user.setModifiedAt(resultSet.getTimestamp(7));
+        user.setStatus(resultSet.getInt(8));
+        user.setLocale(resultSet.getString(9));
         return user;
     }
 

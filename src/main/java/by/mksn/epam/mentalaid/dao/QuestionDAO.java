@@ -6,7 +6,7 @@ import by.mksn.epam.mentalaid.entity.User;
 
 import java.util.List;
 
-public interface QuestionDAO {
+public interface QuestionDAO extends BaseDAO<Question> {
 
     /**
      * Inserts new question into database

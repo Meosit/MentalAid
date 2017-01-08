@@ -14,7 +14,17 @@ import java.io.IOException;
  */
 public interface Command {
 
-    static void dispatchRequest(String pagePath, boolean isAsync, HttpServletRequest request, HttpServletResponse response) throws CommandException {
+    /**
+     * Default dispatch for request
+     *
+     * @param pagePath path of page to forward
+     * @param isAsync  if {@code true}, exception handling will be for async requests
+     * @param request  request to dispatch
+     * @param response response to dispatch
+     * @throws CommandException if cannot dispatch request for specified {@code pagePath}
+     */
+    static void dispatchRequest(String pagePath, boolean isAsync, HttpServletRequest request,
+                                HttpServletResponse response) throws CommandException {
         try {
             request.getRequestDispatcher(pagePath).forward(request, response);
         } catch (ServletException e) {

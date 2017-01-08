@@ -19,7 +19,7 @@ public class AnswerServiceImpl implements AnswerService {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
 
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getAnswerDAO();
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         try {
             answer = answerDAO.insert(answer);
         } catch (DAOException e) {
@@ -30,7 +30,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Answer getById(long id) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getAnswerDAO();
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         Answer answer;
         try {
             answer = answerDAO.selectById(id);
@@ -42,7 +42,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> getAnswersForQuestion(long questionId) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getAnswerDAO();
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         List<Answer> answers;
         try {
             answers = answerDAO.selectByQuestionId(questionId);
@@ -58,7 +58,7 @@ public class AnswerServiceImpl implements AnswerService {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
 
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getAnswerDAO();
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         try {
             answerDAO.update(updatedAnswer);
         } catch (DAOException e) {
@@ -68,7 +68,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public void delete(long id) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getAnswerDAO();
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         try {
             answerDAO.delete(id);
         } catch (DAOException e) {

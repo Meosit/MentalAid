@@ -24,12 +24,12 @@ public class ConnectionPool {
     /**
      * Maximum amount of available Connections in pool
      */
-    public final int poolSize;
+    private final int poolSize;
     /**
      * Maximum time in milliseconds which provides to user to take free connection,
      * otherwise {@link PoolException} happens
      */
-    public final int pollTimeout;
+    private final int pollTimeout;
     private ArrayBlockingQueue<PooledConnection> availableConnections;
     private PooledConnection[] allConnections;
     private volatile boolean isPoolReleased = false;

@@ -13,6 +13,11 @@ public class DatabaseManager {
     public static final String DRIVER_NAME = "driver";
 
     /**
+     * Represents type of DAO (Which database)
+     */
+    public static final String DATABASE_TYPE = "databaseType";
+
+    /**
      * Represents username of user to access to database
      */
     public static final String USER = "user";

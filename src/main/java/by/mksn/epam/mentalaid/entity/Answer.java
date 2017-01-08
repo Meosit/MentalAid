@@ -11,7 +11,6 @@ import static by.mksn.epam.mentalaid.util.NullUtil.nullableHashCode;
  */
 public class Answer extends Entity {
 
-    private long id;
     private long questionId;
     private long creatorId;
     private String text;
@@ -31,7 +30,7 @@ public class Answer extends Entity {
     private String creatorUsername;
 
     public Answer(long id, long questionId, long creatorId, String text, Timestamp createdAt, Timestamp modifiedAt, float averageMark, int markCount, String creatorUsername) {
-        this.id = id;
+        super(id);
         this.questionId = questionId;
         this.creatorId = creatorId;
         this.text = text;
@@ -43,14 +42,7 @@ public class Answer extends Entity {
     }
 
     public Answer() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        super(-1);
     }
 
     public long getQuestionId() {
@@ -116,7 +108,7 @@ public class Answer extends Entity {
 
         Answer answer = (Answer) o;
 
-        return id == answer.id
+        return super.equals(o)
                 && questionId == answer.questionId
                 && creatorId == answer.creatorId
                 && Float.compare(answer.averageMark, averageMark) == 0
@@ -129,7 +121,7 @@ public class Answer extends Entity {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (int) (questionId ^ (questionId >>> 32));
         result = 17 * result + (int) (creatorId ^ (creatorId >>> 32));
         result = 31 * result + nullableHashCode(text);
@@ -144,7 +136,7 @@ public class Answer extends Entity {
     @Override
     public String toString() {
         return "Answer[" +
-                "id=" + id +
+                "id=" + getId() +
                 ", questionId=" + questionId +
                 ", creatorId=" + creatorId +
                 ", text='" + text + '\'' +

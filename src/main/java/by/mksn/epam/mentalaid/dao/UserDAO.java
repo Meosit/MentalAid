@@ -3,7 +3,7 @@ package by.mksn.epam.mentalaid.dao;
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.entity.User;
 
-public interface UserDAO {
+public interface UserDAO extends BaseDAO<User> {
 
     /**
      * Inserts user into the database

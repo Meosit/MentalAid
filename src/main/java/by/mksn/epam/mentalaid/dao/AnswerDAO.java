@@ -6,7 +6,7 @@ import by.mksn.epam.mentalaid.entity.Question;
 
 import java.util.List;
 
-public interface AnswerDAO {
+public interface AnswerDAO extends BaseDAO<Answer> {
 
     /**
      * Inserts new answer into database
@@ -50,7 +50,7 @@ public interface AnswerDAO {
     void update(Answer updatedEntity) throws DAOException;
 
     /**
-     * Removes question with the specified id
+     * Removes answer with the specified id
      *
      * @param id id of a question to delete
      * @throws DAOException if something went wrong

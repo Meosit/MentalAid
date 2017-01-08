@@ -20,7 +20,6 @@ public class Question extends Entity {
      */
     public static final int STATUS_NORMAL = 0;
 
-    private long id;
     private long creatorId;
     private String title;
     private String description;
@@ -37,7 +36,7 @@ public class Question extends Entity {
     private int answerCount;
 
     public Question(long id, long creatorId, String title, String description, int status, Timestamp createdAt, Timestamp modifiedAt, String creatorUsername, int answerCount) {
-        this.id = id;
+        super(id);
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
@@ -49,14 +48,6 @@ public class Question extends Entity {
     }
 
     public Question() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public long getCreatorId() {
@@ -130,7 +121,7 @@ public class Question extends Entity {
 
         Question question = (Question) o;
 
-        return id == question.id
+        return super.equals(o)
                 && creatorId == question.creatorId
                 && status == question.status
                 && answerCount == question.answerCount
@@ -143,7 +134,7 @@ public class Question extends Entity {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + (int) (creatorId ^ (creatorId >>> 32));
         result = 17 * result + nullableHashCode(title);
         result = 31 * result + nullableHashCode(description);
@@ -158,7 +149,7 @@ public class Question extends Entity {
     @Override
     public String toString() {
         return "Question[" +
-                "id=" + id +
+                "id=" + getId() +
                 ", creatorId=" + creatorId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

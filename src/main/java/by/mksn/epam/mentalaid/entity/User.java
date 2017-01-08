@@ -1,7 +1,5 @@
 package by.mksn.epam.mentalaid.entity;
 
-import org.apache.log4j.Logger;
-
 import java.sql.Timestamp;
 
 import static by.mksn.epam.mentalaid.util.NullUtil.nullableEquals;
@@ -35,9 +33,7 @@ public class User extends Entity {
      * Setting this status equals to deleting this user from the app.
      */
     public static final int STATUS_DELETED = -1;
-    private static final Logger logger = Logger.getLogger(User.class);
 
-    private long id;
     private String email;
     private String username;
     private String passHash;
@@ -53,7 +49,7 @@ public class User extends Entity {
     public User(long id, String email, String username,
                 String passHash, int role, Timestamp createdAt,
                 Timestamp modifiedAt, int status, String locale) {
-        this.id = id;
+        super(id);
         this.email = email;
         this.username = username;
         this.passHash = passHash;
@@ -62,14 +58,6 @@ public class User extends Entity {
         this.modifiedAt = modifiedAt;
         this.status = status;
         this.locale = locale;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -143,7 +131,7 @@ public class User extends Entity {
 
         User user = (User) o;
 
-        return id == user.id &&
+        return super.equals(o) &&
                 role == user.role &&
                 status == user.status &&
                 nullableEquals(email, user.getEmail()) &&
@@ -157,7 +145,7 @@ public class User extends Entity {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = super.hashCode();
         result = 31 * result + nullableHashCode(email);
         result = 17 * result + nullableHashCode(username);
         result = 31 * result + nullableHashCode(passHash);
@@ -171,7 +159,7 @@ public class User extends Entity {
 
     @Override
     public String toString() {
-        return "User[id=" + id +
+        return "User[id=" + getId() +
                 "; email=" + email +
                 "; username=" + username +
                 "; passHash=" + passHash +

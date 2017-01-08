@@ -26,9 +26,6 @@
                 <a href="<c:url value="/index.jsp"/>" class="btn btn-primary btn-lg">
                   <span class="glyphicon glyphicon-home"></span> <fmt:message key="button.takeMeHome"/>
                 </a>
-                <a href="#" class="btn btn-default btn-lg">
-                  <span class="glyphicon glyphicon-envelope"></span> <fmt:message key="button.contactSupport"/>
-                </a>
               </div>
             </div>
           </div>

@@ -26,7 +26,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {
             question = questionDAO.insert(question);
         } catch (DAOException e) {
@@ -37,7 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Question getById(long id) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         Question question;
         try {
             question = questionDAO.selectById(id);
@@ -55,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionServiceException("Invalid index passed", QuestionServiceException.INVALID_PAGE_INDEX);
         }
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         List<Question> questions;
         try {
             questions = questionDAO.selectWithLimit(offset, questionsPerPage);
@@ -73,7 +73,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionServiceException("Invalid index passed", QuestionServiceException.INVALID_PAGE_INDEX);
         }
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         List<Question> questions;
         try {
             questions = questionDAO.selectByUsernameWithLimit(username, offset, questionsPerPage);
@@ -85,7 +85,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public int getPageCount(int questionsPerPage) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         int pageCount;
         try {
             int questionCount = questionDAO.selectCount();
@@ -102,7 +102,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public int getPageCount(String username, int questionsPerPage) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         int pageCount;
         try {
             int questionCount = questionDAO.selectCountByUsername(username);
@@ -126,7 +126,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {
             questionDAO.update(updatedQuestion);
         } catch (DAOException e) {
@@ -136,7 +136,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void delete(long id) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory(DAOFactory.MY_SQL).getQuestionDAO();
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {
             questionDAO.delete(id);
         } catch (DAOException e) {

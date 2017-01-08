@@ -62,8 +62,11 @@
                       value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
                   <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}
                       href="<c:url value="/controller?cmd=get_question_page&quid=${question.id}"/>">${question.answerCount} <c:choose>
-                    <c:when test="${question.answerCount eq 1}">
+                    <c:when test="${(question.answerCount % 10) eq 1}">
                       <fmt:message key="question.answers.single"/>
+                    </c:when>
+                    <c:when test="${((question.answerCount % 10) lt 5) and ((question.answerCount % 10) ne 0)}">
+                      <fmt:message key="question.answers.alter"/>
                     </c:when>
                     <c:otherwise>
                       <fmt:message key="question.answers"/>

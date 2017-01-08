@@ -1,7 +1,7 @@
 $("#username").focusout(function () {
     validateInputByRegex(this,
         STRINGS.register_username_constraints,
-        /^[a-zA-Z_0-9]{5,45}$/
+        /^[a-zA-Z_0-9]{3,45}$/
     );
 });
 

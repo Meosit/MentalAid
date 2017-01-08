@@ -11,13 +11,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * MySQL implementation of {@link QuestionDAO}
  */
-public class MySqlQuestionDAO implements QuestionDAO {
+public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements QuestionDAO {
 
     private static final Logger logger = Logger.getLogger(MySqlQuestionDAO.class);
     private static final String QUERY_INSERT = "INSERT INTO `question` (`creator_id`, `title`, `description`) VALUES (?, ?, ?);";
@@ -151,19 +150,9 @@ public class MySqlQuestionDAO implements QuestionDAO {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public void delete(long id) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_DELETE)) {
-            statement.setLong(1, id);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        delete(QUERY_DELETE, id);
     }
 
     private Question selectById(Connection connection, long id) throws SQLException {
@@ -173,47 +162,19 @@ public class MySqlQuestionDAO implements QuestionDAO {
         }
     }
 
-    private Question executeStatementAndParseResultSet(PreparedStatement statement) throws SQLException {
-        Question question;
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                question = new Question();
-                question.setId(resultSet.getLong(1));
-                question.setCreatorId(resultSet.getLong(2));
-                question.setTitle(resultSet.getString(3));
-                question.setDescription(resultSet.getString(4));
-                question.setStatus(resultSet.getInt(5));
-                question.setCreatedAt(resultSet.getTimestamp(6));
-                question.setModifiedAt(resultSet.getTimestamp(7));
-                question.setCreatorUsername(resultSet.getString(8));
-                question.setAnswerCount(resultSet.getInt(9));
-            } else {
-                question = null;
-            }
-        }
+    @Override
+    protected Question parseResultSet(ResultSet resultSet) throws SQLException {
+        Question question = new Question();
+        question.setId(resultSet.getLong(1));
+        question.setCreatorId(resultSet.getLong(2));
+        question.setTitle(resultSet.getString(3));
+        question.setDescription(resultSet.getString(4));
+        question.setStatus(resultSet.getInt(5));
+        question.setCreatedAt(resultSet.getTimestamp(6));
+        question.setModifiedAt(resultSet.getTimestamp(7));
+        question.setCreatorUsername(resultSet.getString(8));
+        question.setAnswerCount(resultSet.getInt(9));
         return question;
-    }
-
-    private List<Question> executeStatementAndParseResultSetToList(PreparedStatement statement) throws SQLException {
-        ArrayList<Question> questions = new ArrayList<>();
-        try (ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                Question question;
-                question = new Question();
-                question.setId(resultSet.getLong(1));
-                question.setCreatorId(resultSet.getLong(2));
-                question.setTitle(resultSet.getString(3));
-                question.setDescription(resultSet.getString(4));
-                question.setStatus(resultSet.getInt(5));
-                question.setCreatedAt(resultSet.getTimestamp(6));
-                question.setModifiedAt(resultSet.getTimestamp(7));
-                question.setCreatorUsername(resultSet.getString(8));
-                question.setAnswerCount(resultSet.getInt(9));
-                questions.add(question);
-            }
-        }
-        questions.trimToSize();
-        return questions;
     }
 
 }

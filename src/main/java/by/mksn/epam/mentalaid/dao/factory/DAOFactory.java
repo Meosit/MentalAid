@@ -5,6 +5,7 @@ import by.mksn.epam.mentalaid.dao.QuestionDAO;
 import by.mksn.epam.mentalaid.dao.UserDAO;
 import by.mksn.epam.mentalaid.dao.exception.DAOFactoryNotFoundException;
 import by.mksn.epam.mentalaid.dao.factory.impl.MySqlDAOFactory;
+import by.mksn.epam.mentalaid.dao.manager.DatabaseManager;
 import org.apache.log4j.Logger;
 
 /**
@@ -12,23 +13,27 @@ import org.apache.log4j.Logger;
  */
 public abstract class DAOFactory {
 
-    public static final int MY_SQL = 1;
+    /**
+     * DAO type for MySQL / MariaDB databases
+     */
+    private static final String MY_SQL = "MySQL";
+
+    private static final String DATABASE_TYPE = DatabaseManager.getProperty(DatabaseManager.DATABASE_TYPE);
     private static final Logger logger = Logger.getLogger(DAOFactory.class);
 
     /**
      * Returns instance of concrete factory with for the specified type of database
      *
-     * @param type database type. At now supported only {@link #MY_SQL}
      * @return concrete factory instance
      */
-    public static DAOFactory getDAOFactory(int type) {
+    public static DAOFactory getDAOFactory() {
         DAOFactory result;
-        switch (type) {
+        switch (DATABASE_TYPE) {
             case MY_SQL:
                 result = MySqlDAOFactory.getInstance();
                 break;
             default:
-                logger.fatal("DAO Factory with for type " + type + " not found.");
+                logger.fatal("DAO Factory with for type " + DATABASE_TYPE + " not found.");
                 throw new DAOFactoryNotFoundException();
         }
         return result;
