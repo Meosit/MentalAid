@@ -2,6 +2,7 @@ package by.mksn.epam.mentalaid.command.impl;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
+import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
@@ -37,6 +38,7 @@ public class LoginCommand implements Command {
             if (user == null) {
                 user = userService.login(username, password);
                 request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
+                request.setAttribute(AJAX_REDIRECT_URL_ATTRIBUTE, CommandFactory.defineFromUrl(request));
                 session.setAttribute(USER_ATTRIBUTE, user);
                 session.setAttribute(LOCALE_ATTRIBUTE, user.getLocale());
                 logger.debug("User \"" + username + "\" logged in");
@@ -67,7 +69,7 @@ public class LoginCommand implements Command {
             throw new CommandException(e, true);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_STATUS_RESPONSE);
+        String pagePath = PathManager.getProperty(PathManager.AJAX_REDIRECT_RESPONSE);
         Command.dispatchRequest(pagePath, true, request, response);
     }
 }

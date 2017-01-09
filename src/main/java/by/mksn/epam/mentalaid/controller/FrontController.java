@@ -49,7 +49,7 @@ public class FrontController extends HttpServlet {
             String pagePath;
             if (e.isAsync()) {
                 request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
-                pagePath = PathManager.getProperty(PathManager.AJAX_STATUS_RESPONSE);
+                pagePath = PathManager.getProperty(PathManager.AJAX_REDIRECT_RESPONSE);
             } else {
                 pagePath = PathManager.getProperty(PathManager.ERROR);
             }

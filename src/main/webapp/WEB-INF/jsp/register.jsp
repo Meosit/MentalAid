@@ -13,12 +13,14 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="true"/>
+    <jsp:param name="fromUrl" value="register+${requestScope.fromUrl}"/>
   </jsp:include>
   <div class="container">
     <div class="wrapper">
       <fieldset>
         <h2 class="text-center"><fmt:message key="header"/></h2>
         <form class="form-horizontal" id="registration-form">
+          <input type="hidden" name="from" value="${requestScope.fromUrl}">
           <div class="form-group">
             <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="username"><fmt:message
                 key="username.label"/></label>
@@ -56,9 +58,14 @@
           <div class="form-group">
             <!-- Button -->
             <div class="text-center">
-              <button class="btn btn-lg btn-primary btn-block" id="register-button" name="submit" type="submit">
+              <button class="btn-register btn btn-lg btn-primary" id="register-button" name="submit" type="submit">
                 <fmt:message key="button.register"/></button>
             </div>
+          </div>
+          <div class="col-sm-offset-2 col-sm-8 login-hint alert alert-success">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <fmt:message key="login_hint.message"/> <a
+              href="<c:url value="/controller?cmd=login"/>"><fmt:message key="login_hint.link"/></a>.
           </div>
         </form>
         <div id="error-div">

@@ -2,7 +2,7 @@ package by.mksn.epam.mentalaid.command.impl;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
+import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +21,6 @@ public class LogoutCommand implements Command {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         request.getSession().removeAttribute(USER_ATTRIBUTE);
         logger.debug("User logged out");
-        String pagePath = PathManager.getProperty(PathManager.INDEX);
-        Command.dispatchRequest(pagePath, false, request, response);
+        Command.sendRedirect(CommandFactory.defineFromUrl(request), response);
     }
 }

@@ -2,7 +2,7 @@ package by.mksn.epam.mentalaid.command.impl;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
+import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
@@ -41,7 +41,6 @@ public class SetLocaleCommand implements Command {
             }
         }
         logger.debug("Locale was set to \"" + newLocale + "\"");
-        String pagePath = PathManager.getProperty(PathManager.INDEX);
-        Command.dispatchRequest(pagePath, false, request, response);
+        Command.sendRedirect(CommandFactory.defineFromUrl(request), response);
     }
 }

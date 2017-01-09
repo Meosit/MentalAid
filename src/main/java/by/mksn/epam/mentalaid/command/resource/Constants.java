@@ -2,15 +2,22 @@ package by.mksn.epam.mentalaid.command.resource;
 
 public final class Constants {
 
-    public static final String USER_ATTRIBUTE = "user";
+
+    public static final String COMMAND_PARAMETER = "cmd";
+    public static final String FROM_URL_PARAMETER = "from";
+    public static final String FROM_URL_ATTRIBUTE = "fromUrl";
+
     public static final String LOCALE_ATTRIBUTE = "locale";
+    public static final String USER_ATTRIBUTE = "user";
     public static final String QUESTION_LIST_ATTRIBUTE = "questions";
     public static final String PAGE_COUNT_ATTRIBUTE = "pageCount";
     public static final String CURRENT_PAGE_ATTRIBUTE = "currentPage";
 
     public static final String AJAX_STATUS_ATTRIBUTE = "responseStatus";
+    public static final String AJAX_REDIRECT_URL_ATTRIBUTE = "redirectUrl";
     public static final String AJAX_STATUS_OK = "ok";
     public static final String AJAX_STATUS_FAIL = "fail";
+
 
     public static final String ERROR_TITLE_ATTRIBUTE = "errorTitle";
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";

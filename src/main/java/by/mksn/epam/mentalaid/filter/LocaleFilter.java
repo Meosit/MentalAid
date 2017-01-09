@@ -15,7 +15,7 @@ import static by.mksn.epam.mentalaid.command.resource.Constants.LOCALE_ATTRIBUTE
  * Filter used to initialize default locale
  */
 @WebFilter(urlPatterns = {"/*"}, initParams = {
-        @WebInitParam(name = "defaultLocale", value = "ru"),
+        @WebInitParam(name = "defaultLocale", value = "en"),
         @WebInitParam(name = "supportedLocales", value = "en,ru")
 })
 public class LocaleFilter implements Filter {

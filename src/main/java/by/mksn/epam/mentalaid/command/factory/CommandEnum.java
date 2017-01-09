@@ -7,38 +7,43 @@ import by.mksn.epam.mentalaid.command.impl.*;
  * Represents full list of commands, used in factory
  */
 public enum CommandEnum {
+
+    /**
+     * This command provides site entry point page
+     */
+    INDEX(new GetIndexPageCommand()),
     /**
      * This command provides page with registration form
      */
-    GET_REGISTER_PAGE(new GetRegisterPageCommand()),
+    REGISTER(new GetRegisterPageCommand()),
     /**
      * This command provides page with login form
      */
-    GET_LOGIN_PAGE(new GetLoginPageCommand()),
+    LOGIN(new GetLoginPageCommand()),
     /**
-     * This command provides home page
+     * This command provides questions list page
      */
-    GET_HOME_PAGE(new GetHomePageCommand()),
+    QUESTIONS(new GetQuestionListPageCommand()),
     /**
      * This command provides question page
      */
-    GET_QUESTION_PAGE(new GetQuestionPageCommand()),
+    QUESTION(new GetQuestionPageCommand()),
     /**
      * Changes site content locale and saves it in database if user is signed in
      */
     SET_LOCALE(new SetLocaleCommand()),
     /**
-     * Authorizes user on site
-     */
-    LOGIN(new LoginCommand()),
-    /**
      * Logs out user from the site
      */
     LOGOUT(new LogoutCommand()),
     /**
+     * Authorizes user on site
+     */
+    ASYNC_LOGIN(new LoginCommand()),
+    /**
      * Registers new user on site
      */
-    REGISTER(new RegisterCommand());
+    ASYNC_REGISTER(new RegisterCommand());
 
     private Command command;
 

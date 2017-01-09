@@ -29,12 +29,13 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
             statement.setString(3, entity.getText());
             statement.executeUpdate();
 
-            ResultSet keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                long insertedId = keys.getLong(1);
-                entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
-            } else {
-                throw new DAOException("Generated keys set is empty");
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    long insertedId = keys.getLong(1);
+                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                } else {
+                    throw new DAOException("Generated keys set is empty");
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(e);

@@ -19,9 +19,9 @@ import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
 /**
  * Returns to client home page
  */
-public class GetHomePageCommand implements Command {
+public class GetQuestionListPageCommand implements Command {
 
-    private static final Logger logger = Logger.getLogger(GetHomePageCommand.class);
+    private static final Logger logger = Logger.getLogger(GetQuestionListPageCommand.class);
     private static final String PAGE_INDEX_PARAMETER = "page";
 
     @Override
@@ -53,7 +53,17 @@ public class GetHomePageCommand implements Command {
         request.setAttribute(QUESTION_LIST_ATTRIBUTE, questions);
         request.setAttribute(PAGE_COUNT_ATTRIBUTE, pageCount);
 
-        String pagePath = PathManager.getProperty(PathManager.HOME);
+        String pagePath = PathManager.getProperty(PathManager.QUESTION_LIST);
         Command.dispatchRequest(pagePath, false, request, response);
+    }
+
+    @Override
+    public String generateFromUrl(String urlWithoutParameters, String[] fromParameterArgs) {
+        String url = urlWithoutParameters;
+        if (fromParameterArgs.length > 1) {
+            url += '&' + PAGE_INDEX_PARAMETER + '=';
+            url += fromParameterArgs[1];
+        }
+        return url;
     }
 }

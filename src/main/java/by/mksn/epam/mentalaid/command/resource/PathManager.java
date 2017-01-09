@@ -16,9 +16,9 @@ public class PathManager {
      */
     public static final String ERROR = "page.error";
     /**
-     * Path of application home page, to this page user forwarded at first
+     * Path of question list page, to this page user forwarded at first
      */
-    public static final String HOME = "page.home";
+    public static final String QUESTION_LIST = "page.question_list";
     /**
      * Path of single question page
      */
@@ -32,9 +32,10 @@ public class PathManager {
      */
     public static final String REGISTER = "page.register";
     /**
-     * Path of page with ajax status response object
+     * Jsp page which generates JSON object with redirect url if operation is succeed
+     * or with error information otherwise
      */
-    public static final String AJAX_STATUS_RESPONSE = "page.ajax_status";
+    public static final String AJAX_REDIRECT_RESPONSE = "page.ajax_redirect";
 
     private static final String RESOURCE_NAME = "path";
     private final static ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);

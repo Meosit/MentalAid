@@ -1,6 +1,6 @@
 $('#login-form').submit(function (e) {
     $.ajax({
-        url: 'controller?cmd=login',
+        url: 'controller?cmd=async_login',
         type: 'POST',
         dataType: 'text json',
         data: $('#login-form').serialize(),
@@ -10,7 +10,7 @@ $('#login-form').submit(function (e) {
                 $('#error-title').text(response.errorTitle);
                 $('#error-message').text(response.errorMessage);
             } else {
-                window.location.replace("index.jsp");
+                window.location.replace(decodeURI(response.redirectUrl));
             }
         }
     });

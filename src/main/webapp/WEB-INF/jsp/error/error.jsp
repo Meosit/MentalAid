@@ -23,7 +23,7 @@
                 <fmt:message key="${requestScope.errorMessage}"/>
               </div>
               <div class="error-actions">
-                <a href="<c:url value="/index.jsp"/>" class="btn btn-primary btn-lg">
+                <a href="<c:url value="/"/>" class="btn btn-primary btn-lg">
                   <span class="glyphicon glyphicon-home"></span> <fmt:message key="button.takeMeHome"/>
                 </a>
               </div>

@@ -3,7 +3,7 @@
 <%@ taglib prefix="ms" uri="http://epam.mksn.by/MentalAid/tag/msTags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
-<fmt:bundle basename="pagecontent" prefix="home.">
+<fmt:bundle basename="pagecontent" prefix="question_list.">
   <html lang="${sessionScope.locale}">
   <head>
     <title><fmt:message key="title"/></title>
@@ -13,6 +13,7 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="false"/>
+    <jsp:param name="fromUrl" value="questions+${requestScope.currentPage}"/>
   </jsp:include>
   <div class="container">
     <div class="row">
@@ -44,7 +45,7 @@
               <div>
                 <h4>
                   <strong>
-                    <a ${aClass} href="<c:url value="/controller?cmd=get_question_page&quid=${question.id}"/>"><c:out
+                    <a ${aClass} href="<c:url value="/controller?cmd=question&quid=${question.id}"/>"><c:out
                         value="${question.title}"/></a>
                   </strong>
                 </h4>
@@ -61,7 +62,7 @@
                   <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
                       value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
                   <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}
-                      href="<c:url value="/controller?cmd=get_question_page&quid=${question.id}"/>">${question.answerCount} <c:choose>
+                      href="<c:url value="/controller?cmd=question&quid=${question.id}#answers"/>">${question.answerCount} <c:choose>
                     <c:when test="${(question.answerCount % 10) eq 1}">
                       <fmt:message key="question.answers.single"/>
                     </c:when>
@@ -87,7 +88,7 @@
       </c:choose>
     </div>
     <div class="row text-center">
-      <c:url value="/controller?cmd=get_home_page&page=" var="baseUrl"/>
+      <c:url value="/controller?cmd=questions&page=" var="baseUrl"/>
       <ms:bootstrapPagination baseUrl="${baseUrl}" currentPage="${requestScope.currentPage}"
                               pageCount="${requestScope.pageCount}"/>
     </div>

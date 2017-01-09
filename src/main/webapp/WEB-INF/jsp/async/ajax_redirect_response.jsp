@@ -5,6 +5,9 @@
 <json:object>
   <json:property name="status" value="${requestScope.responseStatus}"/>
   <c:choose>
+    <c:when test="${requestScope.responseStatus eq 'ok'}">
+      <json:property name="redirectUrl" value="${requestScope.redirectUrl}" escapeXml="false"/>
+    </c:when>
     <c:when test="${requestScope.responseStatus eq 'fail'}">
       <fmt:setLocale value="${sessionScope.locale}"/>
       <fmt:bundle basename="pagecontent" prefix="error.">

@@ -37,7 +37,7 @@ $("#email").focusout(function () {
 document.getElementById("registration-form").addEventListener("submit", function (e) {
     if (document.getElementById("error-div").childElementCount <= 1) {
         $.ajax({
-            url: 'controller?cmd=register',
+            url: 'controller?cmd=async_register',
             type: 'POST',
             dataType: 'text json',
             data: $('#registration-form').serialize(),
@@ -47,7 +47,7 @@ document.getElementById("registration-form").addEventListener("submit", function
                     $('#error-title').text(response.errorTitle);
                     $('#error-message').text(response.errorMessage);
                 } else {
-                    window.location.replace("index.jsp");
+                    window.location.replace(decodeURI(response.redirectUrl));
                 }
             }
         });
