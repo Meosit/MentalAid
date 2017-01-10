@@ -76,7 +76,6 @@ public class CommandFactory {
                 logger.warn("Invalid '" + FROM_URL_PARAMETER + "' parameter passed ('" + fromParameter + "')");
             }
         }
-        logger.debug("Defined from url = '" + resultUrl + "'");
         return resultUrl;
     }
 

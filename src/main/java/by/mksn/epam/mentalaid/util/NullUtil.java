@@ -32,6 +32,16 @@ public final class NullUtil {
     }
 
     /**
+     * Calculates hashCode of object with possible null value.
+     *
+     * @param object object to calculate hashCode
+     * @return {@code object.hashCode()} if object is not null, {@code 0} otherwise
+     */
+    public static <T> int nullableHashCode(T object) {
+        return (object != null) ? object.hashCode() : 0;
+    }
+
+    /**
      * Checks object for null
      *
      * @param object object to test
@@ -52,16 +62,6 @@ public final class NullUtil {
      */
     public static <T> T isNullDefault(T object, T defaultValue) {
         return (object == null) ? defaultValue : object;
-    }
-
-    /**
-     * Calculates hashCode of object with possible null value.
-     *
-     * @param object object to calculate hashCode
-     * @return {@code object.hashCode()} if object is not null, {@code 0} otherwise
-     */
-    public static <T> int nullableHashCode(T object) {
-        return (object != null) ? object.hashCode() : 0;
     }
 
 }

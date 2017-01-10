@@ -47,6 +47,9 @@ public interface UserDAO extends BaseDAO<User> {
     /**
      * Updates user in the database with the updated one.
      * Updating by {@link User#id}.
+     * This method affects only on {@link User#email}, {@link User#username},
+     * {@link User#passHash}, {@link User#status}, {@link User#locale},
+     * {@link User#imageUrl}, {@link User#website} values
      *
      * @param updatedEntity entity to update
      * @throws DAOException if something went wrong

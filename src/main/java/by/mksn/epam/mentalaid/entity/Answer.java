@@ -11,9 +11,19 @@ import static by.mksn.epam.mentalaid.util.NullUtil.nullableHashCode;
  */
 public class Answer extends Entity {
 
+    /**
+     * Represents that this answer is deleted.
+     */
+    public static final int STATUS_DELETED = -1;
+    /**
+     * Represents just normal status of a answer, same as "not deleted"
+     */
+    public static final int STATUS_NORMAL = 0;
+
     private long questionId;
     private long creatorId;
     private String text;
+    private int status;
     private Timestamp createdAt;
     private Timestamp modifiedAt;
     /**
@@ -29,11 +39,12 @@ public class Answer extends Entity {
      */
     private String creatorUsername;
 
-    public Answer(long id, long questionId, long creatorId, String text, Timestamp createdAt, Timestamp modifiedAt, float averageMark, int markCount, String creatorUsername) {
+    public Answer(long id, long questionId, long creatorId, String text, int status, Timestamp createdAt, Timestamp modifiedAt, float averageMark, int markCount, String creatorUsername) {
         super(id);
         this.questionId = questionId;
         this.creatorId = creatorId;
         this.text = text;
+        this.status = status;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.averageMark = averageMark;
@@ -69,6 +80,14 @@ public class Answer extends Entity {
         this.text = text;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -101,6 +120,14 @@ public class Answer extends Entity {
         this.markCount = markCount;
     }
 
+    public String getCreatorUsername() {
+        return creatorUsername;
+    }
+
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,6 +140,7 @@ public class Answer extends Entity {
                 && creatorId == answer.creatorId
                 && Float.compare(answer.averageMark, averageMark) == 0
                 && markCount == answer.markCount
+                && status == answer.status
                 && nullableEquals(text, answer.text)
                 && nullableEquals(creatorUsername, answer.creatorUsername)
                 && nullableEquals(createdAt, answer.createdAt)
@@ -130,6 +158,7 @@ public class Answer extends Entity {
         result = 17 * result + nullableHashCode(modifiedAt);
         result = 31 * result + (averageMark != +0.0f ? Float.floatToIntBits(averageMark) : 0);
         result = 17 * result + markCount;
+        result = 31 * result + status;
         return result;
     }
 
@@ -140,19 +169,12 @@ public class Answer extends Entity {
                 ", questionId=" + questionId +
                 ", creatorId=" + creatorId +
                 ", text='" + text + '\'' +
+                ", status='" + status + '\'' +
                 ", createdAt=" + createdAt +
                 ", modifiedAt=" + modifiedAt +
                 ", averageMark=" + averageMark +
                 ", markCount=" + markCount +
                 ", creatorUsername='" + creatorUsername + '\'' +
                 ']';
-    }
-
-    public String getCreatorUsername() {
-        return creatorUsername;
-    }
-
-    public void setCreatorUsername(String creatorUsername) {
-        this.creatorUsername = creatorUsername;
     }
 }

@@ -105,7 +105,7 @@
               </form>
             </c:when>
             <c:when test="${isQuestionOwner}">
-              You cannot answer on your own question, you can edit your question instead.
+              You cannot answer to your own question, you can edit your question instead.
             </c:when>
             <c:when test="${isAnswerExists}">
               You cannot post two answers, edit existed answer instead.

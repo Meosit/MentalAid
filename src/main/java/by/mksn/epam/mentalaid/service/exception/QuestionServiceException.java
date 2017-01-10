@@ -13,10 +13,6 @@ public class QuestionServiceException extends ServiceException {
      * Cause of exception when invalid properties values passed
      */
     public static final int WRONG_INPUT = 0x11;
-    /**
-     * Cause of exception when user trying to update deleted question
-     */
-    public static final int ENTITY_DELETED = 0x21;
 
     private int causeCode;
 

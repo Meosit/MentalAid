@@ -39,6 +39,10 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`user` (
   COMMENT 'Represents current status of user, can be one of specified values:\n-1 - deleted\n 0 - banned\n 1 - active\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
   `locale`      CHAR(2)               DEFAULT NULL
   COMMENT 'Time when current user credentials was updated',
+  `image_url`   VARCHAR(255)          DEFAULT NULL
+  COMMENT 'Avatar of an user',
+  `website`     VARCHAR(255)          DEFAULT NULL
+  COMMENT 'Personal website of a user, maybe facebook profile or smth like this',
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -50,35 +54,6 @@ CREATE UNIQUE INDEX `username_UNIQUE`
 
 CREATE UNIQUE INDEX `email_UNIQUE`
   ON `mentalaid`.`user` (`email` ASC);
-
--- -----------------------------------------------------
--- Table `mentalaid`.`user_info`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `mentalaid`.`user_info`;
-
-CREATE TABLE IF NOT EXISTS `mentalaid`.`user_info` (
-  `user_id`      INT UNSIGNED NOT NULL
-  COMMENT 'ID of a user this information corresponds to.  ',
-  `first_name`   VARCHAR(100) NULL
-  COMMENT 'First name of a user',
-  `last_name`    VARCHAR(100) NULL
-  COMMENT 'Last name of a user',
-  `phone_number` VARCHAR(10)  NULL
-  COMMENT 'phone number of a user',
-  `website`      VARCHAR(255) NULL
-  COMMENT 'Personal website of a user, maybe facebook profile or smth like this',
-  `image_uri`    VARCHAR(255) NULL
-  COMMENT 'Avatar if an user',
-  PRIMARY KEY (`user_id`)
-    COMMENT 'Primary index',
-  CONSTRAINT `fk_user_id`
-  FOREIGN KEY (`user_id`)
-  REFERENCES `mentalaid`.`user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB
-  COMMENT = 'Represents user information, what is not necessary for basic system working';
 
 -- -----------------------------------------------------
 -- Table `mentalaid`.`question`
@@ -124,6 +99,8 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`answer` (
   COMMENT 'ID of a user who created this answer',
   `text`        VARCHAR(2000) NOT NULL
   COMMENT 'text of an answer',
+  `status`      TINYINT       NOT NULL DEFAULT 0
+  COMMENT 'Represents current status of a question, can be one of specified values:\n-1 - deleted\n 0 - normal',
   `created_at`  DATETIME      NULL     DEFAULT NULL,
   `modified_at` DATETIME      NULL     DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -152,6 +129,8 @@ CREATE INDEX `answer_creator_id_INDEX`
 DROP TABLE IF EXISTS `mentalaid`.`mark`;
 
 CREATE TABLE IF NOT EXISTS `mentalaid`.`mark` (
+  `id`          INT UNSIGNED              NOT NULL
+  COMMENT 'id of a mark',
   `user_id`     INT UNSIGNED              NOT NULL
   COMMENT 'id of a user which created this mark',
   `answer_id`   INT UNSIGNED              NOT NULL
@@ -160,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`mark` (
   COMMENT 'Mark value',
   `created_at`  DATETIME                  NULL DEFAULT NULL,
   `modified_at` DATETIME                  NULL DEFAULT NULL,
-  PRIMARY KEY (`user_id`, `answer_id`),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_mark_answer1`
   FOREIGN KEY (`answer_id`)
   REFERENCES `mentalaid`.`answer` (`id`)

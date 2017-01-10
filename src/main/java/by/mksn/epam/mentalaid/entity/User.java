@@ -42,13 +42,19 @@ public class User extends Entity {
     private Timestamp modifiedAt;
     private int status;
     private String locale;
+    private String imageUrl;
+    private String website;
+    /**
+     * Selected from `mark` page
+     */
+    private float averageMark;
 
     public User() {
     }
 
     public User(long id, String email, String username,
                 String passHash, int role, Timestamp createdAt,
-                Timestamp modifiedAt, int status, String locale) {
+                Timestamp modifiedAt, int status, String locale, String imageUrl, String website, float averageMark) {
         super(id);
         this.email = email;
         this.username = username;
@@ -58,6 +64,9 @@ public class User extends Entity {
         this.modifiedAt = modifiedAt;
         this.status = status;
         this.locale = locale;
+        this.imageUrl = imageUrl;
+        this.website = website;
+        this.averageMark = averageMark;
     }
 
     public String getEmail() {
@@ -124,6 +133,30 @@ public class User extends Entity {
         this.locale = locale;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public float getAverageMark() {
+        return averageMark;
+    }
+
+    public void setAverageMark(float averageMark) {
+        this.averageMark = averageMark;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,12 +167,15 @@ public class User extends Entity {
         return super.equals(o) &&
                 role == user.role &&
                 status == user.status &&
+                Float.compare(averageMark, user.averageMark) == 0 &&
                 nullableEquals(email, user.getEmail()) &&
                 nullableEquals(username, user.getUsername()) &&
                 nullableEquals(passHash, user.getPassHash()) &&
                 nullableEquals(createdAt, user.getCreatedAt()) &&
                 nullableEquals(modifiedAt, user.getModifiedAt()) &&
-                nullableEquals(locale, user.getLocale());
+                nullableEquals(locale, user.getLocale()) &&
+                nullableEquals(imageUrl, user.getImageUrl()) &&
+                nullableEquals(website, user.getWebsite());
 
     }
 
@@ -154,6 +190,9 @@ public class User extends Entity {
         result = 17 * result + nullableHashCode(modifiedAt);
         result = 31 * result + status;
         result = 17 * result + nullableHashCode(locale);
+        result = 31 * result + nullableHashCode(imageUrl);
+        result = 17 * result + nullableHashCode(website);
+        result = 31 * result + (averageMark != +0.0f ? Float.floatToIntBits(averageMark) : 0);
         return result;
     }
 
@@ -168,6 +207,9 @@ public class User extends Entity {
                 "; modifiedAt=" + modifiedAt +
                 "; status=" + status +
                 "; locale=" + locale +
+                "; imageUrl=" + imageUrl +
+                "; website=" + website +
+                "; averageMark=" + averageMark +
                 "]";
     }
 }

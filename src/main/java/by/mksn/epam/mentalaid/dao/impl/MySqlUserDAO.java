@@ -16,12 +16,15 @@ import java.sql.SQLException;
  */
 public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
 
-    private static final String QUERY_SELECT_BY_ID = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`id` = ?);";
-    private static final String QUERY_SELECT_BY_USERNAME = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`username` = ?);";
-    private static final String QUERY_SELECT_BY_EMAIL = "SELECT `id`, `email`, `username`, `pass_hash`, `role`, `created_at`, `modified_at`, `status`, `locale` FROM `user` WHERE (`email` = ?);";
-    private static final String QUERY_UPDATE = "UPDATE `user` SET `email` = ?, `username` = ?, `pass_hash` = ?, `status` = ?, `locale` = ? WHERE `id` = ?";
+    private static final String QUERY_SELECT_BY_ID = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` WHERE `mark`.`answer_id` IN (SELECT `answer`.`id` FROM `answer` WHERE `answer`.`creator_id` = `user`.`id`)) AS averageMark FROM `user` " +
+            "WHERE `id` = ?;";
+    private static final String QUERY_SELECT_BY_USERNAME = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` WHERE `mark`.`answer_id` IN (SELECT `answer`.`id` FROM `answer` WHERE `answer`.`creator_id` = `user`.`id`)) AS averageMark FROM `user` " +
+            "WHERE (`username` = ?);";
+    private static final String QUERY_SELECT_BY_EMAIL = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` WHERE `mark`.`answer_id` IN (SELECT `answer`.`id` FROM `answer` WHERE `answer`.`creator_id` = `user`.`id`)) AS averageMark FROM `user` " +
+            "WHERE (`email` = ?);";
+    private static final String QUERY_UPDATE = "UPDATE `user` SET `email` = ?, `username` = ?, `pass_hash` = ?, `status` = ?, `locale` = ?, `image_url` = ?, `website` = ? WHERE (`id` = ?) AND (`status` != -1);";
     private static final String QUERY_INSERT = "INSERT INTO `user` (`email`, `username`, `pass_hash`) VALUES (?, ?, ?)";
-    private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE `id` = ?";
+    private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
 
     @Override
     public User insert(User entity) throws DAOException {
@@ -80,10 +83,14 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
             statement.setString(3, updatedEntity.getPassHash());
             statement.setInt(4, updatedEntity.getStatus());
             statement.setString(5, updatedEntity.getLocale());
+            statement.setString(6, updatedEntity.getImageUrl());
+            statement.setString(7, updatedEntity.getWebsite());
 
-            statement.setLong(6, updatedEntity.getId());
-
+            statement.setLong(8, updatedEntity.getId());
             statement.executeUpdate();
+
+            User reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -122,6 +129,9 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
         user.setModifiedAt(resultSet.getTimestamp(7));
         user.setStatus(resultSet.getInt(8));
         user.setLocale(resultSet.getString(9));
+        user.setImageUrl(resultSet.getString(10));
+        user.setWebsite(resultSet.getString(11));
+        user.setAverageMark(resultSet.getFloat(12));
         return user;
     }
 

@@ -15,10 +15,10 @@ import java.util.List;
 public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO {
 
     private static final String QUERY_INSERT = "INSERT INTO `answer` (`question_id`, `creator_id`, `text`) VALUES (?, ?, ?);";
-    private static final String QUERY_SELECT_BY_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`), COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE `answer`.`id` = ? GROUP BY `answer`.`id`;";
-    private static final String QUERY_SELECT_BY_CREATOR_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`) AS 'averageMark', COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE `answer`.`question_id` = ? GROUP BY `answer`.`id` ORDER BY averageMark DESC, `answer`.`id` DESC;";
-    private static final String QUERY_UPDATE = "UPDATE `answer` SET `text` = ? WHERE `id` = ?";
-    private static final String QUERY_DELETE = "DELETE FROM `answer` WHERE `id` = ?;";
+    private static final String QUERY_SELECT_BY_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`status`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`), COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE (`answer`.`id` = ?) AND (`answer`.`status` != -1) GROUP BY `answer`.`id`;";
+    private static final String QUERY_SELECT_BY_CREATOR_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`status`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`) AS 'averageMark', COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE (`answer`.`question_id` = ?) AND (`answer`.`status` != -1) GROUP BY `answer`.`id` ORDER BY averageMark DESC, `answer`.`id` DESC;";
+    private static final String QUERY_UPDATE = "UPDATE `answer` SET `text` = ? WHERE (`id` = ?) AND (`status` != -1);";
+    private static final String QUERY_DELETE = "UPDATE `answer` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
 
     @Override
     public Answer insert(Answer entity) throws DAOException {
@@ -80,6 +80,9 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
             statement.setLong(2, updatedEntity.getId());
 
             statement.executeUpdate();
+
+            Answer reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -99,11 +102,12 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
         answer.setQuestionId(resultSet.getLong(2));
         answer.setCreatorId(resultSet.getLong(3));
         answer.setText(resultSet.getString(4));
-        answer.setCreatedAt(resultSet.getTimestamp(5));
-        answer.setModifiedAt(resultSet.getTimestamp(6));
-        answer.setAverageMark(resultSet.getFloat(7));
-        answer.setMarkCount(resultSet.getInt(8));
-        answer.setCreatorUsername(resultSet.getString(9));
+        answer.setStatus(resultSet.getInt(5));
+        answer.setCreatedAt(resultSet.getTimestamp(6));
+        answer.setModifiedAt(resultSet.getTimestamp(7));
+        answer.setAverageMark(resultSet.getFloat(8));
+        answer.setMarkCount(resultSet.getInt(9));
+        answer.setCreatorUsername(resultSet.getString(10));
         return answer;
     }
 

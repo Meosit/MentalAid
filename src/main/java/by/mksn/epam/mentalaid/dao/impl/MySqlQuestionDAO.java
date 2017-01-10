@@ -26,7 +26,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     private static final String QUERY_SELECT_COUNT = "SELECT COUNT(`id`) FROM `question` WHERE `question`.`status` != -1;";
     private static final String QUERY_SELECT_COUNT_BY_USERNAME = "SELECT COUNT(`creator_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1);";
     private static final String QUERY_UPDATE = "UPDATE `question` SET `title` = ?, `description` = ? WHERE (`id` = ?) AND (`status` != -1);";
-    private static final String QUERY_DELETE = "UPDATE `question` SET `status` = -1 WHERE `id` = ?;";
+    private static final String QUERY_DELETE = "UPDATE `question` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
 
     @Override
     public Question insert(Question entity) throws DAOException {
@@ -40,7 +40,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = selectById(connection, insertedId);
+                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
@@ -57,7 +57,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     public Question selectById(long id) throws DAOException {
         Question question;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            question = selectById(connection, id);
+            question = selectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -144,6 +144,9 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
             statement.setLong(3, updatedEntity.getId());
 
             statement.executeUpdate();
+
+            Question reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -154,13 +157,6 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     @Override
     public void delete(long id) throws DAOException {
         delete(QUERY_DELETE, id);
-    }
-
-    private Question selectById(Connection connection, long id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_ID)) {
-            statement.setLong(1, id);
-            return executeStatementAndParseResultSet(statement);
-        }
     }
 
     @Override
