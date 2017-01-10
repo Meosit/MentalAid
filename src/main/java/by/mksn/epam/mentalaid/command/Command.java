@@ -1,7 +1,6 @@
 package by.mksn.epam.mentalaid.command;
 
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,17 +59,4 @@ public interface Command {
      */
     void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException;
 
-    /**
-     * This method generates command url with parameters to provide ability to back-redirecting mechanism.
-     * If command doesn't have any additional parameters, there is no need to implement this method.
-     *
-     * @param urlWithoutParameters url of the concrete command in format {@code /Context/Servlet?command_parameter=command_name}
-     * @param fromParameterArgs    array of parameters, which always contains {@code command_name} as first element,
-     *                             the following elements is just values of parameters for the concrete command
-     * @return string with Url which represents current command with specified parameters (if that is necessary)
-     * @see CommandFactory#defineFromUrl(HttpServletRequest)
-     */
-    default String generateFromUrl(String urlWithoutParameters, String[] fromParameterArgs) {
-        return urlWithoutParameters;
-    }
 }

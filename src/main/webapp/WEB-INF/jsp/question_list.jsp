@@ -13,7 +13,7 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="false"/>
-    <jsp:param name="fromUrl" value="questions+${requestScope.currentPage}"/>
+    <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
   </jsp:include>
   <div class="container">
     <div class="row">

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="ms" uri="http://epam.mksn.by/MentalAid/tag/msTags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:bundle basename="pagecontent" prefix="register.">
@@ -13,7 +14,7 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="true"/>
-    <jsp:param name="fromUrl" value="register+${requestScope.fromUrl}"/>
+    <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
   </jsp:include>
   <div class="container">
     <div class="wrapper">

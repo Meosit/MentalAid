@@ -21,16 +21,4 @@ public class GetLoginPageCommand implements Command {
         Command.dispatchRequest(pagePath, false, request, response);
     }
 
-    @Override
-    public String generateFromUrl(String urlWithoutParameters, String[] fromParameterArgs) {
-        String url = urlWithoutParameters;
-        if (fromParameterArgs.length > 1) {
-            url += '&' + FROM_URL_PARAMETER + '=';
-            url += fromParameterArgs[1];
-            for (int i = 2; i < fromParameterArgs.length; i++) {
-                url += '+' + fromParameterArgs[i];
-            }
-        }
-        return url;
-    }
 }

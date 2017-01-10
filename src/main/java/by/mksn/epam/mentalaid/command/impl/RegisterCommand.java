@@ -2,13 +2,13 @@ package by.mksn.epam.mentalaid.command.impl;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
+import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ public class RegisterCommand implements Command {
             HttpSession session = request.getSession();
             User user = userService.register(username, email, password);
             request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
-            request.setAttribute(AJAX_REDIRECT_URL_ATTRIBUTE, CommandFactory.defineFromUrl(request));
+            request.setAttribute(AJAX_REDIRECT_URL_ATTRIBUTE, UrlUtil.getBackRedirectUrl(request));
             session.setAttribute(USER_ATTRIBUTE, user);
         } catch (UserServiceException e) {
             logger.debug("Registration failed for (" + username + ", " + email + ")");

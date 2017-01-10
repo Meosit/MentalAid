@@ -57,13 +57,4 @@ public class GetQuestionListPageCommand implements Command {
         Command.dispatchRequest(pagePath, false, request, response);
     }
 
-    @Override
-    public String generateFromUrl(String urlWithoutParameters, String[] fromParameterArgs) {
-        String url = urlWithoutParameters;
-        if (fromParameterArgs.length > 1) {
-            url += '&' + PAGE_INDEX_PARAMETER + '=';
-            url += fromParameterArgs[1];
-        }
-        return url;
-    }
 }

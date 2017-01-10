@@ -16,7 +16,7 @@
     <body>
       <jsp:include page="template/navbar.jsp">
         <jsp:param name="isNavbarLess" value="false"/>
-        <jsp:param name="fromUrl" value="question+${requestScope.question.id}"/>
+        <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
       </jsp:include>
       <div class="container">
         <c:set var="isQuestionOwner"
@@ -112,8 +112,9 @@
             </c:when>
             <c:otherwise>
               To leave an answer, <a
-                href="<c:url value="/controller?cmd=login&from=question+${requestScope.question.id}"/>">Login</a> or <a
-                href="<c:url value="/controller?cmd=register&from=question+${requestScope.question.id}"/>">Register</a>
+                href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">Login</a> or
+              <a
+                  href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">Register</a>
             </c:otherwise>
           </c:choose>
         </div>

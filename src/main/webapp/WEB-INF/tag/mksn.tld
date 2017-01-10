@@ -43,4 +43,25 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  <function>
+    <name>fullRequestUrl</name>
+    <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
+    <function-signature>
+      java.lang.String getRequestUrl(javax.servlet.http.HttpServletRequest)
+    </function-signature>
+  </function>
+  <function>
+    <name>encodeUrl</name>
+    <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
+    <function-signature>
+      java.lang.String encodeUrl(java.lang.String)
+    </function-signature>
+  </function>
+  <function>
+    <name>decodeUrl</name>
+    <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
+    <function-signature>
+      java.lang.String decodeUrl(java.lang.String)
+    </function-signature>
+  </function>
 </taglib>

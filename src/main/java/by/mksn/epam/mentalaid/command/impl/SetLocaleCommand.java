@@ -2,11 +2,11 @@ package by.mksn.epam.mentalaid.command.impl;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.factory.CommandFactory;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
+import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +41,7 @@ public class SetLocaleCommand implements Command {
             }
         }
         logger.debug("Locale was set to \"" + newLocale + "\"");
-        Command.sendRedirect(CommandFactory.defineFromUrl(request), response);
+
+        Command.sendRedirect(UrlUtil.getBackRedirectUrl(request), response);
     }
 }
