@@ -11,7 +11,7 @@ import by.mksn.epam.mentalaid.util.HashUtil;
 import org.apache.log4j.Logger;
 
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
-import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 
 public class UserServiceImpl implements UserService {
 

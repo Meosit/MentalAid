@@ -8,7 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.*;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNullDefault;
 
 /**
  * Util class for simpler working with URL's
@@ -83,7 +84,7 @@ public final class UrlUtil {
     public static String getBackRedirectUrl(HttpServletRequest request) {
         String fromParameter = request.getParameter(Constants.FROM_URL_PARAMETER);
         String redirectUrl;
-        if (!isNullOrEmpty(fromParameter)) {
+        if (!StringUtil.isNullOrEmpty(fromParameter)) {
             redirectUrl = decodeUrl(fromParameter);
         } else {
             redirectUrl = getRequestUrl(request);

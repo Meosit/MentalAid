@@ -51,6 +51,7 @@ public class StarRatingTag extends SimpleTagSupport {
         percent = percent < 0 ? 0 : percent;
         percent = (float) (100 * (Math.asin(2 * percent - 1) / Math.PI + 0.5));
         percent = percent - 5;
+        percent = percent < 0 ? 0 : percent;
         return STAR_ELEMENT_BEFORE_VALUE
                 + String.format(Locale.ROOT, "%.2f", percent)
                 + STAR_ELEMENT_AFTER_VALUE;

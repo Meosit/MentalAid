@@ -48,8 +48,8 @@ public class FrontController extends HttpServlet {
             logger.error("Cannot execute command.\n", e);
             String pagePath;
             if (e.isAsync()) {
-                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
-                pagePath = PathManager.getProperty(PathManager.AJAX_REDIRECT_RESPONSE);
+                request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
+                pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
             } else {
                 pagePath = PathManager.getProperty(PathManager.ERROR);
             }

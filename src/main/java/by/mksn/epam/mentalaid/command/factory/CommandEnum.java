@@ -43,7 +43,15 @@ public enum CommandEnum {
     /**
      * Registers new user on site
      */
-    ASYNC_REGISTER(new RegisterCommand());
+    ASYNC_REGISTER(new RegisterCommand()),
+    /**
+     * Changes question data
+     */
+    ASYNC_QUESTION_EDIT(new EditQuestionCommand()),
+    /**
+     * Changes answer data
+     */
+    ASYNC_ANSWER_EDIT(new EditAnswerCommand());
 
     private Command command;
 

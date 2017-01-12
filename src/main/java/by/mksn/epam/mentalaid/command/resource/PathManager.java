@@ -35,7 +35,7 @@ public class PathManager {
      * Jsp page which generates JSON object with redirect url if operation is succeed
      * or with error information otherwise
      */
-    public static final String AJAX_REDIRECT_RESPONSE = "page.ajax_redirect";
+    public static final String AJAX_RESPONSE = "page.ajax_response";
 
     private static final String RESOURCE_NAME = "path";
     private final static ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);

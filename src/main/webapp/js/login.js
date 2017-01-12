@@ -5,13 +5,18 @@ $('#login-form').submit(function (e) {
         dataType: 'text json',
         data: $('#login-form').serialize(),
         success: function (response) {
-            if (response.status == "fail") {
+            if (response.isResultSuccess) {
+                window.location.replace(decodeURI(response.redirectUrl));
+            } else {
                 $('#error-alert').removeClass('hidden');
                 $('#error-title').text(response.errorTitle);
                 $('#error-message').text(response.errorMessage);
-            } else {
-                window.location.replace(decodeURI(response.redirectUrl));
             }
+        },
+        error: function (request, status, error) {
+            $('#error-alert').removeClass('hidden');
+            $('#error-title').text(status);
+            $('#error-message').text(error);
         }
     });
     e.preventDefault();
@@ -29,7 +34,7 @@ $(document).ajaxSend(function () {
 $(document).ajaxComplete(function () {
     var button = $('#login-button');
     button.attr('type', 'submit');
-    button.removeClass('btn-primary');
-    button.addClass('btn-info');
+    button.addClass('btn-primary');
+    button.removeClass('btn-info');
     button.html(button.html().replace("<span class=\"fa fa-spinner fa-spin\"></span> ", ""));
 });

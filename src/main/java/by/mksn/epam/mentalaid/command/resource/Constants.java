@@ -13,11 +13,9 @@ public final class Constants {
     public static final String PAGE_COUNT_ATTRIBUTE = "pageCount";
     public static final String CURRENT_PAGE_ATTRIBUTE = "currentPage";
 
-    public static final String AJAX_STATUS_ATTRIBUTE = "responseStatus";
-    public static final String AJAX_REDIRECT_URL_ATTRIBUTE = "redirectUrl";
-    public static final String AJAX_STATUS_OK = "ok";
-    public static final String AJAX_STATUS_FAIL = "fail";
-
+    public static final String AJAX_IS_RESULT_SUCCESS_ATTRIBUTE = "isResultSuccess";
+    public static final String AJAX_SUCCESS_VALUE_ATTRIBUTE = "successValue";
+    public static final String AJAX_SUCCESS_VALUE_NAME_ATTRIBUTE = "successValueName";
 
     public static final String ERROR_TITLE_ATTRIBUTE = "errorTitle";
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
@@ -27,6 +25,9 @@ public final class Constants {
 
     public static final String ERROR_TITLE_COMMAND = "command.title";
     public static final String ERROR_MESSAGE_COMMAND = "command.message";
+
+    public static final String ERROR_TITLE_ACCESS_DENIED = "accessDenied.title";
+    public static final String ERROR_MESSAGE_ACCESS_DENIED = "accessDenied.message";
 
     public static final String ERROR_TITLE_LOGIN_PASSWORD = "login.password.title";
     public static final String ERROR_MESSAGE_LOGIN_PASSWORD = "login.password.message";
@@ -48,5 +49,11 @@ public final class Constants {
 
     public static final String ERROR_TITLE_QUESTION_NOT_FOUND = "question.notFound.title";
     public static final String ERROR_MESSAGE_QUESTION_NOT_FOUND = "question.notFound.message";
+
+    public static final String ERROR_TITLE_QUESTION_WRONG_INPUT = "question.wrongInput.title";
+    public static final String ERROR_MESSAGE_QUESTION_WRONNG_INPUT = "question.wrongInput.message";
+
+    public static final String ERROR_TITLE_ANSWER_WRONG_INPUT = "answer.wrongInput.title";
+    public static final String ERROR_MESSAGE_ANSWER_WRONNG_INPUT = "answer.wrongInput.message";
 
 }

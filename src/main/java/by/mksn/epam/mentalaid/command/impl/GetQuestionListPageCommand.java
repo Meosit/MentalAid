@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
-import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 
 /**
  * Returns to client home page
@@ -39,10 +39,10 @@ public class GetQuestionListPageCommand implements Command {
             }
         }
 
-        QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
         List<Question> questions;
         int pageCount;
         try {
+            QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
             pageCount = questionService.getPageCount();
             questions = questionService.getQuestionsPage(pageIndex);
         } catch (ServiceException e) {

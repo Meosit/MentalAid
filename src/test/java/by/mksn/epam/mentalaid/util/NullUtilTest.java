@@ -17,53 +17,38 @@ import static org.junit.runners.Parameterized.Parameters;
 public class NullUtilTest {
 
     @Parameter(0)
-    public String nullOrEmptyTestString;
-    @Parameter(1)
     public Object testObjectOne;
-    @Parameter(2)
+    @Parameter(1)
     public Object testObjectTwo;
-    @Parameter(3)
-    public boolean nullOrEmptyExpected;
-    @Parameter(4)
+    @Parameter(2)
     public boolean nullableEqualsExpected;
-    @Parameter(5)
+    @Parameter(3)
     public int nullableHashCodeExpected;
-    @Parameter(6)
+    @Parameter(4)
     public boolean isNullExpected;
-    @Parameter(7)
+    @Parameter(5)
     public Object isNullDefaultExpected;
 
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {
-                        "",
                         Timestamp.valueOf("2010-11-21 11:11:11"),
                         Timestamp.valueOf("2010-11-21 11:11:11"),
-
-                        true,
                         true,
                         Timestamp.valueOf("2010-11-21 11:11:11").hashCode(),
                         false,
                         Timestamp.valueOf("2010-11-21 11:11:11"),
                 },
                 {
-                        "test",
                         null,
                         "123",
-
-                        false,
                         false,
                         0,
                         true,
                         "123",
                 }
         });
-    }
-
-    @Test
-    public void isNullOrEmptyTest() throws Exception {
-        assertEquals(nullOrEmptyExpected, isNullOrEmpty(nullOrEmptyTestString));
     }
 
     @Test

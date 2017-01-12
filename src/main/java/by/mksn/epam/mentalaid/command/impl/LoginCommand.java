@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 /**
  * Command to authorize user. This is async command.
@@ -25,26 +26,28 @@ public class LoginCommand implements Command {
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
     private static final String USERNAME_PARAMETER = "username";
     private static final String PASSWORD_PARAMETER = "password";
+    private static final String SUCCESS_VALUE_NAME = "redirectUrl";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         String username = request.getParameter(USERNAME_PARAMETER);
         String password = request.getParameter(PASSWORD_PARAMETER);
 
-        UserService userService = ServiceFactory.getInstance().getUserService();
         try {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute(USER_ATTRIBUTE);
-            if (user == null) {
+            if (isNull(user)) {
+                UserService userService = ServiceFactory.getInstance().getUserService();
                 user = userService.login(username, password);
-                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_OK);
-                request.setAttribute(AJAX_REDIRECT_URL_ATTRIBUTE, UrlUtil.getBackRedirectUrl(request));
+                request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
+                request.setAttribute(AJAX_SUCCESS_VALUE_NAME_ATTRIBUTE, SUCCESS_VALUE_NAME);
+                request.setAttribute(AJAX_SUCCESS_VALUE_ATTRIBUTE, UrlUtil.getBackRedirectUrl(request));
                 session.setAttribute(USER_ATTRIBUTE, user);
                 session.setAttribute(LOCALE_ATTRIBUTE, user.getLocale());
                 logger.debug("User \"" + username + "\" logged in");
             } else {
                 logger.debug("User trying to login twice without logout.");
-                request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
+                request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
                 request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_LOGIN_TWICE);
                 request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_LOGIN_TWICE);
             }
@@ -62,14 +65,14 @@ public class LoginCommand implements Command {
                     errorMessage = ERROR_MESSAGE_LOGIN_NOT_EXISTS;
                     break;
             }
-            request.setAttribute(AJAX_STATUS_ATTRIBUTE, AJAX_STATUS_FAIL);
+            request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
             request.setAttribute(ERROR_TITLE_ATTRIBUTE, errorTitle);
             request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, errorMessage);
         } catch (ServiceException e) {
             throw new CommandException(e, true);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_REDIRECT_RESPONSE);
+        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
         Command.dispatchRequest(pagePath, true, request, response);
     }
 }

@@ -9,16 +9,6 @@ public final class NullUtil {
     }
 
     /**
-     * Checks is specified string {@code null} or has zero length
-     *
-     * @param string string to test
-     * @return {@code true} if {@code null} or empty, false otherwise
-     */
-    public static boolean isNullOrEmpty(String string) {
-        return (string == null) || (string.isEmpty());
-    }
-
-    /**
      * Checks two objects for equality with possible null values. <br>
      * This method equals to the following code snippet: <br>
      * {@code (objectOne == null) ? (objectTwo == null) : (objectOne.equals(objectTwo))}

@@ -11,11 +11,13 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.StringUtil.*;
 
 public class QuestionServiceImpl implements QuestionService {
 
     private static final Logger logger = Logger.getLogger(QuestionServiceImpl.class);
+    private static final int TITLE_MAX_LENGTH = 200;
+    private static final int DESCRIPTION_MAX_LENGTH = 2000;
 
     @Override
     public Question add(Question question) throws ServiceException {
@@ -25,6 +27,15 @@ public class QuestionServiceImpl implements QuestionService {
         if (isNullOrEmpty(question.getDescription())) {
             throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
+
+        String normalizedTitle = trimAndCollapseNewLines(question.getTitle());
+        normalizedTitle = truncateToSize(normalizedTitle, TITLE_MAX_LENGTH);
+        question.setTitle(normalizedTitle);
+
+        String normalizedDescription = trimAndCollapseNewLines(question.getDescription());
+        normalizedDescription = truncateToSize(normalizedDescription, DESCRIPTION_MAX_LENGTH);
+        question.setTitle(normalizedDescription);
+
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {
@@ -125,6 +136,14 @@ public class QuestionServiceImpl implements QuestionService {
         if (isNullOrEmpty(updatedQuestion.getDescription())) {
             throw new QuestionServiceException("Null or empty description passed", QuestionServiceException.WRONG_INPUT);
         }
+
+        String normalizedTitle = trimAndCollapseNewLines(updatedQuestion.getTitle());
+        normalizedTitle = truncateToSize(normalizedTitle, TITLE_MAX_LENGTH);
+        updatedQuestion.setTitle(normalizedTitle);
+
+        String normalizedDescription = trimAndCollapseNewLines(updatedQuestion.getDescription());
+        normalizedDescription = truncateToSize(normalizedDescription, DESCRIPTION_MAX_LENGTH);
+        updatedQuestion.setTitle(normalizedDescription);
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {

@@ -42,12 +42,12 @@ document.getElementById("registration-form").addEventListener("submit", function
             dataType: 'text json',
             data: $('#registration-form').serialize(),
             success: function (response) {
-                if (response.status == "fail") {
+                if (response.isResultSuccess) {
+                    window.location.replace(decodeURI(response.redirectUrl));
+                } else {
                     $('#error-alert').removeClass('hidden');
                     $('#error-title').text(response.errorTitle);
                     $('#error-message').text(response.errorMessage);
-                } else {
-                    window.location.replace(decodeURI(response.redirectUrl));
                 }
             }
         });

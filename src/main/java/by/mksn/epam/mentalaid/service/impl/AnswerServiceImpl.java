@@ -10,14 +10,21 @@ import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.util.NullUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.StringUtil.*;
 
 public class AnswerServiceImpl implements AnswerService {
+
+    private static final int TEXT_MAX_LENGTH = 2000;
+
     @Override
     public Answer add(Answer answer) throws ServiceException {
         if (isNullOrEmpty(answer.getText())) {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
+
+        String normalizedText = trimAndCollapseNewLines(answer.getText());
+        normalizedText = truncateToSize(normalizedText, TEXT_MAX_LENGTH);
+        answer.setText(normalizedText);
 
         AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         try {
@@ -57,6 +64,10 @@ public class AnswerServiceImpl implements AnswerService {
         if (isNullOrEmpty(updatedAnswer.getText())) {
             throw new AnswerServiceException("Null text passed", AnswerServiceException.WRONG_INPUT);
         }
+
+        String normalizedText = trimAndCollapseNewLines(updatedAnswer.getText());
+        normalizedText = truncateToSize(normalizedText, TEXT_MAX_LENGTH);
+        updatedAnswer.setText(normalizedText);
 
         AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         try {
