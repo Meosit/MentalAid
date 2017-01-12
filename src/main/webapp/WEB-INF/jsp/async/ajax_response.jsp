@@ -6,11 +6,13 @@
   <json:property name="isResultSuccess" value="${requestScope.isResultSuccess}"/>
   <c:choose>
     <c:when test="${requestScope.isResultSuccess}">
-      <c:if test="${not empty requestScope.successValue}">
-        <json:property
-            name="${requestScope.successValueName}"
-            value="${requestScope.successValue}"
-            escapeXml="false"/>
+      <c:if test="${not empty requestScope.successValueMap}">
+        <c:forEach items="${requestScope.successValueMap}" var="successValue">
+          <json:property
+              name="${successValue.key}"
+              value="${successValue.value}"
+              escapeXml="false"/>
+        </c:forEach>
       </c:if>
     </c:when>
     <c:otherwise>

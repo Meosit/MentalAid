@@ -143,11 +143,9 @@ body {
 }
 
 .footer > p {
+    overflow: hidden;
+    white-space: nowrap;
     margin: 0;
-}
-
-.navbar-default .navbar-nav > li > a.logo-label {
-    padding-left: 0;
 }
 
 .navbar-default .navbar-nav > li > a.logo-label:hover {

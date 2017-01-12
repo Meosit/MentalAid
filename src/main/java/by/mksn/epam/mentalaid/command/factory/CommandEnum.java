@@ -2,6 +2,7 @@ package by.mksn.epam.mentalaid.command.factory;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.impl.*;
+import by.mksn.epam.mentalaid.command.impl.async.*;
 
 /**
  * Represents full list of commands, used in factory
@@ -51,7 +52,11 @@ public enum CommandEnum {
     /**
      * Changes answer data
      */
-    ASYNC_ANSWER_EDIT(new EditAnswerCommand());
+    ASYNC_ANSWER_EDIT(new EditAnswerCommand()),
+    /**
+     * Creates new answer
+     */
+    ASYNC_ANSWER_ADD(new AddAnswerCommand());
 
     private Command command;
 

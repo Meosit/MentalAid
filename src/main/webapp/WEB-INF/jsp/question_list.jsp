@@ -8,7 +8,7 @@
   <head>
     <title><fmt:message key="title"/></title>
     <jsp:include page="template/links.jsp"/>
-    <link rel="stylesheet" href="<c:url value="/css/home.css"/>">
+    <link rel="stylesheet" href="<c:url value="/css/question_list.css"/>">
   </head>
   <body>
   <jsp:include page="template/navbar.jsp">
@@ -92,6 +92,12 @@
       <ms:bootstrapPagination baseUrl="${baseUrl}" currentPage="${requestScope.currentPage}"
                               pageCount="${requestScope.pageCount}"/>
     </div>
+    <c:if test="${not empty param.question_deleted}">
+      <div class="alert-fixed alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong><fmt:message key="question.deleted.title"/></strong> <fmt:message key="question.deleted.message"/>
+      </div>
+    </c:if>
   </div>
   <jsp:include page="template/footer.jsp"/>
   </body>

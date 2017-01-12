@@ -1,4 +1,4 @@
-package by.mksn.epam.mentalaid.command.impl;
+package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
@@ -6,7 +6,6 @@ import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.Answer;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.AnswerService;
-import by.mksn.epam.mentalaid.service.exception.AnswerServiceException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
 import org.apache.log4j.Logger;
@@ -14,19 +13,14 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.Locale;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
-public class EditAnswerCommand implements Command {
+public class DeleteAnswerCommand implements Command {
 
-    private static final Logger logger = Logger.getLogger(EditAnswerCommand.class);
-    private static final String ANSWER_TEXT_PARAMETER = "answer_text";
+    private static final Logger logger = Logger.getLogger(DeleteAnswerCommand.class);
     private static final String ANSWER_ID_PARAMETER = "answer_id";
-    private static final String SUCCESS_VALUE_NAME = "modifiedAt";
 
     private static void setAccessDeniedResponse(HttpServletRequest request) {
         request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
@@ -34,15 +28,8 @@ public class EditAnswerCommand implements Command {
         request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ACCESS_DENIED);
     }
 
-    private static String formatDateTime(Timestamp timestamp, String locale) {
-        return DateFormat
-                .getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, new Locale(locale))
-                .format(timestamp);
-    }
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
-        String textParameter = request.getParameter(ANSWER_TEXT_PARAMETER);
         String idParameter = request.getParameter(ANSWER_ID_PARAMETER);
 
         try {
@@ -54,17 +41,11 @@ public class EditAnswerCommand implements Command {
                 Answer answer = answerService.getById(aid);
                 if (!isNull(answer)) {
                     if (answer.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
-                        answer.setText(textParameter);
-                        answerService.update(answer);
+                        answerService.delete(answer.getId());
                         request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_NAME_ATTRIBUTE, SUCCESS_VALUE_NAME);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_ATTRIBUTE, formatDateTime(
-                                answer.getModifiedAt(),
-                                (String) session.getAttribute(LOCALE_ATTRIBUTE)
-                        ));
                     } else {
                         logger.warn("User '" + user.getUsername() +
-                                "' trying to edit answer (id=" + idParameter + ") without permission.");
+                                "' trying to delete answer (id=" + idParameter + ") without permission.");
                         setAccessDeniedResponse(request);
                     }
                 } else {
@@ -72,18 +53,13 @@ public class EditAnswerCommand implements Command {
                     setAccessDeniedResponse(request);
                 }
             } else {
-                logger.warn("Unauthorized user trying to edit answer.\n" +
-                        "(answerID=" + idParameter + "; " +
-                        "newText=" + textParameter + ")");
+                logger.warn("Unauthorized user trying to delete answer.\n" +
+                        "(answerID=" + idParameter + ")");
                 setAccessDeniedResponse(request);
             }
         } catch (NumberFormatException e) {
             logger.warn("Invalid question ID parameter passed (" + idParameter + ")");
             setAccessDeniedResponse(request);
-        } catch (AnswerServiceException e) {
-            request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ANSWER_WRONG_INPUT);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ANSWER_WRONNG_INPUT);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

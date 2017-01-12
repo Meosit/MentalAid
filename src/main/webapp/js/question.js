@@ -66,6 +66,54 @@ $('#question-apply-btn').on('click', function (e) {
     }
 });
 
+$('#question-delete-btn').on('click', function (e) {
+    e.preventDefault();
+    bootbox.confirm({
+        message: STRINGS.question_delete_warning_message,
+        title: STRINGS.question_delete_warning_title,
+        buttons: {
+            confirm: {
+                label: STRINGS.question_delete_button_confirm,
+                className: 'btn-danger'
+            },
+            cancel: {
+                label: STRINGS.question_delete_button_cancel,
+                className: 'btn-default'
+            }
+        },
+        className: 'v-center',
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: "controller?async_question_delete",
+                    type: 'POST',
+                    dataType: 'text json',
+                    data: 'question_id=' + $('#question-id').val(),
+                    success: function (response) {
+                        if (response.isResultSuccess) {
+                            window.location.replace(decodeURI(response.redirectUrl));
+                        } else {
+                            $('#question-result-alert-container')
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    response.errorTitle,
+                                    response.errorMessage
+                                );
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#question-result-alert-container')
+                            .addResultAlert(
+                                false,
+                                status ? status : STRINGS.error_alert,
+                                error ? error : xhr.statusText
+                            );
+                    }
+                })
+            }
+        }
+    });
+});
 
 $('#question-description-edit').focusout(validateQuestionFields);
 $('#question-title-edit').focusout(validateQuestionFields);
@@ -151,6 +199,59 @@ $('.answer-apply-btn').on('click', function (e) {
     }
 });
 
+
+$('.answer-delete-btn').on('click', function (e) {
+    e.preventDefault();
+    var answerId = extractAnswerId(this);
+    bootbox.confirm({
+        message: STRINGS.answer_delete_warning_message,
+        title: STRINGS.answer_delete_warning_title,
+        buttons: {
+            confirm: {
+                label: STRINGS.answer_delete_button_confirm,
+                className: 'btn-danger'
+            },
+            cancel: {
+                label: STRINGS.answer_delete_button_cancel,
+                className: 'btn-default'
+            }
+        },
+        className: 'v-center',
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: "controller?async_question_delete",
+                    type: 'POST',
+                    dataType: 'text json',
+                    data: 'answer_id=' + answerId,
+                    success: function (response) {
+                        if (response.isResultSuccess) {
+                            var answerCount = $('#answer-count');
+                            answerCount.text(answerCount.text() - 1);
+                            $('#answer-div-' + answerId).remove();
+                        } else {
+                            $('#answer-result-alert-container' + answerId)
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    response.errorTitle,
+                                    response.errorMessage
+                                );
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#answer-result-alert-container' + answerId)
+                            .addResultAlert(
+                                false,
+                                status ? status : STRINGS.error_alert,
+                                error ? error : xhr.statusText
+                            );
+                    }
+                })
+            }
+        }
+    });
+});
+
 $('.answer-text-edit').focusout(function () {
     var answerId = extractAnswerId(this);
     if (isBlank(this.val())) {
@@ -167,8 +268,72 @@ $('.answer-text-edit').focusout(function () {
     }
 });
 
+$('#new-answer-text').focusout(function () {
+    if (isBlank(this.val())) {
+        isValidInput = false;
+        $('#new-answer-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.answer_wrong_input_message
+            );
+    } else {
+        $('#new-answer-alert-container').html('');
+        isValidInput = true;
+    }
+});
+
+
 $('#new-answer-form').on('submit', function (e) {
     e.preventDefault();
+    if (isValidInput) {
+        $.ajax({
+            url: 'controller?cmd=async_answer_add',
+            type: 'POST',
+            dataType: 'text json',
+            data: $('#new-answer-form').serialize(),
+            success: function (response) {
+                if (response.isResultSuccess) {
+                    $('#new-answer-create-date').text(response.createdAt);
+                    $('#new-answer-username-link').text(response.creatorUsername);
+
+                    $('#answer-text-dummy')
+                        .text(response.answerText)
+                        .attr('id', 'answer-text-' + response.answerId);
+                    $('#answer-edit-date-container-dummy').attr('id', 'answer-edit-date-container-' + response.answerId);
+                    $('#answer-edit-date-dummy')
+                        .text(response.createdAt)
+                        .attr('id', 'answer-edit-date-' + response.answerId);
+                    $('#answer-id-dummy').val(response.answerId).attr('id', 'answer-id-' + response.answerId);
+                    $('#answer-text-edit-container-dummy').attr('id', 'answer-text-edit-container-' + response.answerId);
+                    $('#answer-text-edit-form-dummy').attr('id', 'answer-text-edit-form-' + response.answerId);
+                    $('#answer-text-edit-dummy').attr('id', 'answer-text-edit-' + response.answerId);
+                    $('#answer-result-alert-container-dummy').attr('id', 'answer-result-alert-container-' + response.answerId);
+                    $('#answer-apply-dummy').attr('id', 'answer-apply-' + response.answerId);
+                    $('#answer-edit-dummy').attr('id', 'answer-edit-' + response.answerId);
+                    $('#answer-cancel-dummy').attr('id', 'answer-cancel-' + response.answerId);
+                    $('#answer-delete-dummy').attr('id', 'answer-delete-' + response.answerId);
+                    $('#answer-div-dummy').show().attr('id', 'answer-div-' + response.answerId);
+                } else {
+                    $('#new-answer-alert-container')
+                        .addResultAlert(
+                            response.isResultSuccess,
+                            response.errorTitle,
+                            response.errorMessage
+                        );
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#new-answer-alert-container')
+                    .addResultAlert(
+                        false,
+                        status ? status : STRINGS.error_alert,
+                        error ? error : xhr.statusText
+                    );
+            }
+        });
+        isValidInput = true;
+    }
 });
 
 jQuery.fn.addResultAlert = function (isSuccess, resultTitle, resultMessage) {

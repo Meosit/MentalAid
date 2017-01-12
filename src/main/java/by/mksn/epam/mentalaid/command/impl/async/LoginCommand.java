@@ -1,4 +1,4 @@
-package by.mksn.epam.mentalaid.command.impl;
+package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
@@ -26,7 +27,7 @@ public class LoginCommand implements Command {
     private static final Logger logger = Logger.getLogger(LoginCommand.class);
     private static final String USERNAME_PARAMETER = "username";
     private static final String PASSWORD_PARAMETER = "password";
-    private static final String SUCCESS_VALUE_NAME = "redirectUrl";
+    private static final String REDIRECT_VALUE_NAME = "redirectUrl";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -40,8 +41,9 @@ public class LoginCommand implements Command {
                 UserService userService = ServiceFactory.getInstance().getUserService();
                 user = userService.login(username, password);
                 request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-                request.setAttribute(AJAX_SUCCESS_VALUE_NAME_ATTRIBUTE, SUCCESS_VALUE_NAME);
-                request.setAttribute(AJAX_SUCCESS_VALUE_ATTRIBUTE, UrlUtil.getBackRedirectUrl(request));
+                request.setAttribute(AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE, new HashMap<String, String>(1) {{
+                    put(REDIRECT_VALUE_NAME, UrlUtil.getBackRedirectUrl(request));
+                }});
                 session.setAttribute(USER_ATTRIBUTE, user);
                 session.setAttribute(LOCALE_ATTRIBUTE, user.getLocale());
                 logger.debug("User \"" + username + "\" logged in");

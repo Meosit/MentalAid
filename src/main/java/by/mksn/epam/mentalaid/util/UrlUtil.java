@@ -25,6 +25,7 @@ public final class UrlUtil {
      * Attribute which contains client uri (in jsp page request object)
      */
     private static final String JSP_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
+    private static final String JSP_SERVLET_PATH_ATTRIBUTE = "javax.servlet.forward.servlet_path";
 
     private UrlUtil() {
     }
@@ -40,6 +41,19 @@ public final class UrlUtil {
         String uri = (String) request.getAttribute(JSP_REQUEST_URI_ATTRIBUTE);
         uri = isNullDefault(uri, request.getRequestURI());
         return uri + (isNull(parameters) ? "" : ("?" + parameters));
+    }
+
+    /**
+     * Returns servlet url such as {@code /ContextPath/ServletUrl}
+     * Works at the JSP as well.
+     *
+     * @param request {@link HttpServletRequest} from where this url will be taken
+     * @return real servlet url
+     */
+    public static String getServletUrl(HttpServletRequest request) {
+        String url = request.getContextPath();
+        url += isNullDefault((String) request.getAttribute(JSP_SERVLET_PATH_ATTRIBUTE), request.getServletPath());
+        return url;
     }
 
     /**

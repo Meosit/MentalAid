@@ -7,7 +7,15 @@ const STRINGS = {
     register_email_invalid: "Invalid email format.",
     question_edit_success_message: "Question edited successfully.",
     question_wrong_input_message: "Title and description fields must contain at least one word.",
+    question_delete_warning_title: "Delete this question?",
+    question_delete_warning_message: "Are you sure you want to delete this question? Operation cannot be undone.",
+    question_delete_button_confirm: "Delete",
+    question_delete_button_cancel: "Cancel",
     answer_edit_success_message: "Answer edited successfully.",
-    answer_wrong_input_message: "Answer text must contain at least one word."
+    answer_wrong_input_message: "Answer text must contain at least one word.",
+    answer_delete_warning_title: "Delete this answer?",
+    answer_delete_warning_message: "Are you sure you want to delete this answer? Operation cannot be undone.",
+    answer_delete_button_confirm: "Delete",
+    answer_delete_button_cancel: "Cancel"
 };
 Object.freeze(STRINGS);

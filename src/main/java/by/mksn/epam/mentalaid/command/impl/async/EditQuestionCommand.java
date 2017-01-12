@@ -1,4 +1,4 @@
-package by.mksn.epam.mentalaid.command.impl;
+package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.Locale;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
@@ -27,7 +28,7 @@ public class EditQuestionCommand implements Command {
     private static final String QUESTION_TITLE_PARAMETER = "question_title";
     private static final String QUESTION_DESCRIPTION_PARAMETER = "question_description";
     private static final String QUESTION_ID_PARAMETER = "question_id";
-    private static final String SUCCESS_VALUE_NAME = "modifiedAt";
+    private static final String MODIFIED_AT_NAME = "modifiedAt";
 
     private static void setNotFoundResponse(HttpServletRequest request) {
         request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
@@ -66,11 +67,12 @@ public class EditQuestionCommand implements Command {
                         question.setDescription(descriptionParameter);
                         questionService.update(question);
                         request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_NAME_ATTRIBUTE, SUCCESS_VALUE_NAME);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_ATTRIBUTE, formatDateTime(
-                                question.getModifiedAt(),
-                                (String) session.getAttribute(LOCALE_ATTRIBUTE)
-                        ));
+                        request.setAttribute(AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE,
+                                new HashMap<String, String>(1) {{
+                                    put(MODIFIED_AT_NAME, formatDateTime(
+                                            question.getModifiedAt(),
+                                            (String) session.getAttribute(LOCALE_ATTRIBUTE)));
+                                }});
                     } else {
                         logger.warn("User '" + user.getUsername() +
                                 "' trying to edit question (id=" + idParameter + ") without permission.");

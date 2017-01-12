@@ -41,7 +41,7 @@
                   <textarea class="form-control" rows="10" name="question_description"
                             id="question-description-edit"></textarea>
                 </div>
-                <input type="hidden" name="question_id" value="${requestScope.question.id}">
+                <input type="hidden" id="question-id" name="question_id" value="${requestScope.question.id}">
               </form>
             </div>
           </c:if>
@@ -99,7 +99,7 @@
                           <textarea class="answer-text-edit form-control" rows="4" name="answer_text"
                                     id="answer-text-edit-${answer.id}"></textarea>
                         </div>
-                        <input type="hidden" name="answer_id" value="${answer.id}">
+                        <input type="hidden" id="answer-id-${answer.id}" name="answer_id" value="${answer.id}">
                       </form>
                     </div>
                   </c:if>
@@ -135,23 +135,66 @@
               </div>
             </div>
           </c:forEach>
+          <c:if test="${(not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)}">
+            <div id="answer-div-dummy" class="hidden">
+              <div class="media">
+                <div class="media-body owner-border">
+                  <p id="answer-text-dummy" class="answer-text"></p>
+                  <div class="hidden" id="answer-text-edit-container-dummy">
+                    <form id="answer-text-edit-form-dummy">
+                      <div class="form-group">
+                        <label for="answer-text-edit-dummy"></label>
+                        <textarea class="answer-text-edit form-control" rows="4" name="answer_text"
+                                  id="answer-text-edit-dummy"></textarea>
+                      </div>
+                      <input type="hidden" id="answer-id-dummy" name="answer_id" value="">
+                    </form>
+                  </div>
+                  <div>
+                    <div class="col-md-6 text-left">
+                      <ms:starRating value="0"/>
+                    </div>
+                    <h5 class="media-heading col-md-6 text-right">by <a id="new-answer-username-link" class="owner"
+                                                                        href="#"></a> at <span
+                        class="glyphicon glyphicon-time"></span><span id="new-answer-create-date"
+                                                                      class="create-date"></span></h5>
+                    <h6 id="answer-edit-date-container-dummy" class="edited-caption hidden"><span
+                        class="glyphicon glyphicon-edit"></span> Edited at <span
+                        id="answer-edit-date-dummy"></span></h6>
+                  </div>
+                  <div class="col-xs-12 text-right">
+                    <a type="button" id="answer-edit-dummy" class="answer-edit-btn btn btn-custom btn-warn">Edit</a>
+                    <a type="button" id="answer-delete-dummy"
+                       class="answer-delete-btn btn btn-custom btn-dang">Delete</a>
+                    <a type="button" id="answer-apply-dummy"
+                       class="answer-apply-btn hidden btn btn-custom btn-conf">Apply</a>
+                    <a type="button" id="answer-cancel-dummy"
+                       class="answer-cancel-btn hidden btn btn-custom btn-warn">Cancel</a>
+                  </div>
+                </div>
+                <div id="answer-result-alert-container-dummy"></div>
+                <hr>
+              </div>
+            </div>
+          </c:if>
         </div>
         <div class="well">
           <c:choose>
             <c:when test="${(not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)}">
               <form id="new-answer-form">
                 <div class="form-group">
-                  <h4><label for="new-answer">Leave an answer:</label></h4>
-                  <textarea id="new-answer" class="form-control" rows="4"></textarea>
+                  <h4><label for="new-answer-text">Leave an answer:</label></h4>
+                  <textarea id="new-answer-text" class="form-control" rows="4"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
+              <div id="new-answer-alert-container"></div>
             </c:when>
             <c:when test="${isQuestionOwner}">
               You cannot answer to your own question, you can edit your question instead.
             </c:when>
             <c:when test="${isAnswerExists}">
-              You cannot post two answers, edit existed answer instead.
+              You cannot post two answers, edit existing answer instead.
             </c:when>
             <c:otherwise>
               To leave an answer, <a
