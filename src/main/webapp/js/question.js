@@ -4,14 +4,14 @@ $('#question-edit-btn').on('click', function (e) {
     e.preventDefault();
     $('#question-title-edit').val($('#question-title').text());
     $('#question-description-edit').val($('#question-description').text());
-    $('#question-edit-btn, #question-delete-btn, #question-div').hide();
-    $('#question-apply-btn, #question-cancel-btn, #question-edit-div').show();
+    $('#question-edit-btn, #question-delete-btn, #question-div').hideElem();
+    $('#question-apply-btn, #question-cancel-btn, #question-edit-div').showElem();
 });
 
 $('#question-cancel-btn').on('click', function (e) {
     e.preventDefault();
-    $('#question-edit-btn, #question-delete-btn, #question-div').show();
-    $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hide();
+    $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
+    $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
 });
 
 $('#question-apply-btn').on('click', function (e) {
@@ -30,7 +30,7 @@ $('#question-apply-btn').on('click', function (e) {
                         $('#question-description')
                             .text($('#question-description-edit').val())
                             .collapseTextNewLinesAndTrim();
-                        $('#question-edit-date-container').show();
+                        $('#question-edit-date-container').showElem();
                         $('#question-edit-date').text(response.modifiedAt);
                         $('#question-result-alert-container')
                             .addResultAlert(
@@ -38,8 +38,8 @@ $('#question-apply-btn').on('click', function (e) {
                                 STRINGS.success_alert,
                                 STRINGS.question_edit_success_message
                             );
-                        $('#question-edit-btn, #question-delete-btn, #question-div').show();
-                        $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hide();
+                        $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
+                        $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
                     } else {
                         $('#question-result-alert-container')
                             .addResultAlert(
@@ -59,8 +59,8 @@ $('#question-apply-btn').on('click', function (e) {
                 }
             });
         } else {
-            $('#question-edit-btn, #question-delete-btn, #question-div').show();
-            $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hide();
+            $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
+            $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
         }
         isValidInput = true;
     }
@@ -85,7 +85,7 @@ $('#question-delete-btn').on('click', function (e) {
         callback: function (result) {
             if (result) {
                 $.ajax({
-                    url: "controller?async_question_delete",
+                    url: "controller?cmd=async_question_delete",
                     type: 'POST',
                     dataType: 'text json',
                     data: 'question_id=' + $('#question-id').val(),
@@ -118,7 +118,7 @@ $('#question-delete-btn').on('click', function (e) {
 $('#question-description-edit').focusout(validateQuestionFields);
 $('#question-title-edit').focusout(validateQuestionFields);
 function validateQuestionFields() {
-    if (isBlank(this.val())) {
+    if (isBlank($(this).val())) {
         isValidInput = false;
         $('#question-result-alert-container')
             .addResultAlert(
@@ -132,49 +132,46 @@ function validateQuestionFields() {
     }
 }
 
-$('.answer-edit-btn').on('click', function (e) {
+$(document).on('click', '.answer-edit-btn', function (e) {
     e.preventDefault();
-    var answerId = extractAnswerId(this);
-    $('#answer-text-edit-' + answerId).val($('#answer-text-' + answerId).text());
-    $('#answer-edit-' + answerId + ', #answer-delete-' + answerId + ', #answer-text-' + answerId).hide();
-    $('#answer-apply-' + answerId + ', #answer-cancel-' + answerId + ', #answer-text-edit-container-' + answerId).show();
+    var answerRoot = $(this).closest('.answer');
+    answerRoot.find('.answer-text-input').val(answerRoot.find('.answer-text').text());
+    switchAnswerMode(answerRoot, true);
 });
 
-$('.answer-cancel-btn').on('click', function (e) {
+$(document).on('click', '.answer-cancel-btn', function (e) {
     e.preventDefault();
-    var answerId = extractAnswerId(this);
-    $('#answer-edit-' + answerId + ', #answer-delete-' + answerId + ', #answer-text-' + answerId).show();
-    $('#answer-apply-' + answerId + ', #answer-cancel-' + answerId + ', #answer-text-edit-container-' + answerId).hide();
+    var answerRoot = $(this).closest('.answer');
+    switchAnswerMode(answerRoot, false);
 });
 
 
-$('.answer-apply-btn').on('click', function (e) {
+$(document).on('click', '.answer-apply-btn', function (e) {
     e.preventDefault();
-    var answerId = extractAnswerId(this);
+    var answerRoot = $(this).closest('.answer');
     if (isValidInput) {
-        if ($('#answer-text-' + answerId).text() !== $('#answer-text-edit-' + answerId).val()) {
+        if (answerRoot.find('.answer-text').text() !== answerRoot.find('.answer-text-input').val()) {
             $.ajax({
                 url: 'controller?cmd=async_answer_edit',
                 type: 'POST',
                 dataType: 'text json',
-                data: $('#answer-text-edit-form-' + answerId).serialize(),
+                data: answerRoot.find('.answer-edit-form').serialize(),
                 success: function (response) {
                     if (response.isResultSuccess) {
-                        $('#answer-text-' + answerId)
-                            .text($('#answer-text-edit-' + answerId).val())
+                        answerRoot.find('.answer-text')
+                            .text(answerRoot.find('.answer-text-input').val())
                             .collapseTextNewLinesAndTrim();
-                        $('#answer-edit-date-container-' + answerId).show();
-                        $('#answer-edit-date-' + answerId).text(response.modifiedAt);
-                        $('#answer-result-alert-container' + answerId)
+                        answerRoot.find('.answer-modified-date-container').showElem();
+                        answerRoot.find('.answer-modified-date').text(response.modifiedAt);
+                        answerRoot.find('.answer-result-alert-container')
                             .addResultAlert(
                                 response.isResultSuccess,
                                 STRINGS.success_alert,
                                 STRINGS.answer_edit_success_message
                             );
-                        $('#answer-edit-' + answerId + ', #answer-delete-' + answerId + ', #answer-text-' + answerId).show();
-                        $('#answer-apply-' + answerId + ', #answer-cancel-' + answerId + ', #answer-text-edit-container-' + answerId).hide();
+                        switchAnswerMode(answerRoot, false);
                     } else {
-                        $('#answer-result-alert-container' + answerId)
+                        answerRoot.find('.answer-result-alert-container')
                             .addResultAlert(
                                 response.isResultSuccess,
                                 response.errorTitle,
@@ -183,7 +180,7 @@ $('.answer-apply-btn').on('click', function (e) {
                     }
                 },
                 error: function (xhr, status, error) {
-                    $('#answer-result-alert-container' + answerId)
+                    answerRoot.find('.answer-result-alert-container')
                         .addResultAlert(
                             false,
                             status ? status : STRINGS.error_alert,
@@ -192,17 +189,17 @@ $('.answer-apply-btn').on('click', function (e) {
                 }
             });
         } else {
-            $('#answer-edit-' + answerId + ', #answer-delete-' + answerId + ', #answer-text-' + answerId).show();
-            $('#answer-apply-' + answerId + ', #answer-cancel-' + answerId + ', #answer-text-edit-container-' + answerId).hide();
+            switchAnswerMode(answerRoot, false);
         }
         isValidInput = true;
     }
 });
 
 
-$('.answer-delete-btn').on('click', function (e) {
+$(document).on('click', '.answer-delete-btn', function (e) {
     e.preventDefault();
-    var answerId = extractAnswerId(this);
+    var answerRoot = $(this).closest('.answer');
+    var answerId = extractAnswerId(answerRoot);
     bootbox.confirm({
         message: STRINGS.answer_delete_warning_message,
         title: STRINGS.answer_delete_warning_title,
@@ -220,17 +217,17 @@ $('.answer-delete-btn').on('click', function (e) {
         callback: function (result) {
             if (result) {
                 $.ajax({
-                    url: "controller?async_question_delete",
+                    url: "controller?cmd=async_answer_delete",
                     type: 'POST',
                     dataType: 'text json',
                     data: 'answer_id=' + answerId,
                     success: function (response) {
                         if (response.isResultSuccess) {
-                            var answerCount = $('#answer-count');
-                            answerCount.text(answerCount.text() - 1);
-                            $('#answer-div-' + answerId).remove();
+                            updateAnswerCountLabel(-1);
+                            answerRoot.remove();
+                            switchNewAnswerMode('can-add')
                         } else {
-                            $('#answer-result-alert-container' + answerId)
+                            answerRoot.find('.answer-result-alert-container')
                                 .addResultAlert(
                                     response.isResultSuccess,
                                     response.errorTitle,
@@ -239,7 +236,7 @@ $('.answer-delete-btn').on('click', function (e) {
                         }
                     },
                     error: function (xhr, status, error) {
-                        $('#answer-result-alert-container' + answerId)
+                        answerRoot.find('.answer-result-alert-container')
                             .addResultAlert(
                                 false,
                                 status ? status : STRINGS.error_alert,
@@ -252,24 +249,24 @@ $('.answer-delete-btn').on('click', function (e) {
     });
 });
 
-$('.answer-text-edit').focusout(function () {
-    var answerId = extractAnswerId(this);
-    if (isBlank(this.val())) {
+$(document).on('focusout', '.answer-text-input', function () {
+    var answerRoot = $(this).closest('.answer');
+    if (isBlank($(this).val())) {
         isValidInput = false;
-        $('#answer-result-alert-container-' + answerId)
+        answerRoot.find('.answer-result-alert-container')
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
                 STRINGS.answer_wrong_input_message
             );
     } else {
-        $('#answer-result-alert-container-' + answerId).html('');
+        answerRoot.find('.answer-result-alert-container').html('');
         isValidInput = true;
     }
 });
 
-$('#new-answer-text').focusout(function () {
-    if (isBlank(this.val())) {
+$('#new-answer-text-input').focusout(function () {
+    if (isBlank($(this).val())) {
         isValidInput = false;
         $('#new-answer-alert-container')
             .addResultAlert(
@@ -294,26 +291,18 @@ $('#new-answer-form').on('submit', function (e) {
             data: $('#new-answer-form').serialize(),
             success: function (response) {
                 if (response.isResultSuccess) {
-                    $('#new-answer-create-date').text(response.createdAt);
-                    $('#new-answer-username-link').text(response.creatorUsername);
-
-                    $('#answer-text-dummy')
-                        .text(response.answerText)
-                        .attr('id', 'answer-text-' + response.answerId);
-                    $('#answer-edit-date-container-dummy').attr('id', 'answer-edit-date-container-' + response.answerId);
-                    $('#answer-edit-date-dummy')
-                        .text(response.createdAt)
-                        .attr('id', 'answer-edit-date-' + response.answerId);
-                    $('#answer-id-dummy').val(response.answerId).attr('id', 'answer-id-' + response.answerId);
-                    $('#answer-text-edit-container-dummy').attr('id', 'answer-text-edit-container-' + response.answerId);
-                    $('#answer-text-edit-form-dummy').attr('id', 'answer-text-edit-form-' + response.answerId);
-                    $('#answer-text-edit-dummy').attr('id', 'answer-text-edit-' + response.answerId);
-                    $('#answer-result-alert-container-dummy').attr('id', 'answer-result-alert-container-' + response.answerId);
-                    $('#answer-apply-dummy').attr('id', 'answer-apply-' + response.answerId);
-                    $('#answer-edit-dummy').attr('id', 'answer-edit-' + response.answerId);
-                    $('#answer-cancel-dummy').attr('id', 'answer-cancel-' + response.answerId);
-                    $('#answer-delete-dummy').attr('id', 'answer-delete-' + response.answerId);
-                    $('#answer-div-dummy').show().attr('id', 'answer-div-' + response.answerId);
+                    var newAnswerElement = $('#new-answer-template').find('.answer').clone();
+                    newAnswerElement.attr('id', 'answer-' + response.answerId);
+                    newAnswerElement.find('.answer-creator-username').text(response.creatorUsername);
+                    newAnswerElement.find('.answer-created-date').text(response.createdAt);
+                    newAnswerElement.find('.answer-modified-date').text(response.createdAt);
+                    newAnswerElement.find('.answer-id-input').val(response.answerId);
+                    newAnswerElement.find('.answer-text')
+                        .text($('#new-answer-text-input').val())
+                        .collapseTextNewLinesAndTrim();
+                    newAnswerElement.appendTo('.answers');
+                    switchNewAnswerMode('answer-exists');
+                    updateAnswerCountLabel(1)
                 } else {
                     $('#new-answer-alert-container')
                         .addResultAlert(
@@ -348,11 +337,11 @@ jQuery.fn.addResultAlert = function (isSuccess, resultTitle, resultMessage) {
     }
 };
 
-jQuery.fn.hide = function () {
+jQuery.fn.hideElem = function () {
     this.addClass('hidden');
 };
 
-jQuery.fn.show = function () {
+jQuery.fn.showElem = function () {
     this.removeClass('hidden');
 };
 
@@ -360,10 +349,80 @@ jQuery.fn.collapseTextNewLinesAndTrim = function () {
     this.text(this.text().trim().replace(/(\n){2,}/gm, '\n\n'))
 };
 
-function extractAnswerId(element) {
-    return element.id.replace(/^\D+/g, '');
-}
-
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
+}
+
+function extractAnswerId(element) {
+    return element.attr('id').replace(/^\D+/g, '');
+}
+
+function switchAnswerMode(answerRoot, isEditMode) {
+    if (isEditMode) {
+        answerRoot.find('.answer-edit-btn').hideElem();
+        answerRoot.find('.answer-delete-btn').hideElem();
+        answerRoot.find('.answer-text').hideElem();
+        answerRoot.find('.answer-apply-btn').showElem();
+        answerRoot.find('.answer-cancel-btn').showElem();
+        answerRoot.find('.answer-edit-container').showElem();
+    } else {
+        answerRoot.find('.answer-edit-btn').showElem();
+        answerRoot.find('.answer-delete-btn').showElem();
+        answerRoot.find('.answer-text').showElem();
+        answerRoot.find('.answer-apply-btn').hideElem();
+        answerRoot.find('.answer-cancel-btn').hideElem();
+        answerRoot.find('.answer-edit-container').hideElem();
+    }
+}
+
+function switchNewAnswerMode(mode) {
+    var newAnswerDiv = $('#new-answer-form-div');
+    var questionOwnerMessage = $('#question-owner-message');
+    var answerExistsMessage = $('#answer-exists-message');
+    var guestMessage = $('#guest-message');
+    switch (mode) {
+        case 'can-add':
+            newAnswerDiv.showElem();
+            questionOwnerMessage.hideElem();
+            answerExistsMessage.hideElem();
+            guestMessage.hideElem();
+            break;
+        case 'question-owner':
+            newAnswerDiv.hideElem();
+            questionOwnerMessage.showElem();
+            answerExistsMessage.hideElem();
+            guestMessage.hideElem();
+            break;
+        case 'answer-exists':
+            newAnswerDiv.hideElem();
+            questionOwnerMessage.hideElem();
+            answerExistsMessage.showElem();
+            guestMessage.hideElem();
+            break;
+        case 'quest':
+            newAnswerDiv.hideElem();
+            questionOwnerMessage.hideElem();
+            answerExistsMessage.hideElem();
+            guestMessage.showElem();
+            break;
+    }
+}
+
+function updateAnswerCountLabel(delta) {
+    var answerCount = $('#answer-count-label');
+    var count = parseInt(answerCount.text().replace(/^\D+/g, '')) + delta;
+    if (count == 1) {
+        answerCount.text(count + " " + STRINGS.answer_count_single);
+    } else if (count % 10 == 1) {
+        if (LOCALE === 'ru') {
+            answerCount.text(count + " " + STRINGS.answer_count_single);
+        } else {
+            answerCount.text(count + " " + STRINGS.answer_count_multiple);
+        }
+    } else if (count < 5 && count != 0) {
+        answerCount.text(count + " " + STRINGS.answer_count_alter);
+    } else {
+        answerCount.text(count + " " + STRINGS.answer_count_multiple);
+    }
+
 }

@@ -6,6 +6,8 @@ import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 import java.util.List;
 
+import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+
 public interface QuestionService {
 
     /**
@@ -140,5 +142,16 @@ public interface QuestionService {
      * @throws ServiceException if error happens during execution
      */
     void delete(long id) throws ServiceException;
+
+    /**
+     * Checks is question with the specified id exists in the database
+     *
+     * @param id id of a {@link Question} to check;
+     * @return {@code true} if the question with specified ID exists, {@code false} otherwise
+     * @throws ServiceException if error happens during execution
+     */
+    default boolean isQuestionExists(long id) throws ServiceException {
+        return !isNull(getById(id));
+    }
 
 }

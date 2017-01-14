@@ -1,3 +1,4 @@
+const LOCALE = "en";
 const STRINGS = {
     error_alert: "Error!",
     success_alert: "Success!",
@@ -16,6 +17,9 @@ const STRINGS = {
     answer_delete_warning_title: "Delete this answer?",
     answer_delete_warning_message: "Are you sure you want to delete this answer? Operation cannot be undone.",
     answer_delete_button_confirm: "Delete",
-    answer_delete_button_cancel: "Cancel"
+    answer_delete_button_cancel: "Cancel",
+    answer_count_multiple: "Answers",
+    answer_count_alter: "Answers",
+    answer_count_single: "Answer"
 };
 Object.freeze(STRINGS);

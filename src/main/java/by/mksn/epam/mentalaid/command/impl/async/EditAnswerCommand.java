@@ -2,13 +2,13 @@ package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.Answer;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.AnswerService;
 import by.mksn.epam.mentalaid.service.exception.AnswerServiceException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
+import by.mksn.epam.mentalaid.util.MapUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.util.HashMap;
 import java.util.Locale;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 public class EditAnswerCommand implements Command {
@@ -28,12 +28,6 @@ public class EditAnswerCommand implements Command {
     private static final String ANSWER_TEXT_PARAMETER = "answer_text";
     private static final String ANSWER_ID_PARAMETER = "answer_id";
     private static final String MODIFIED_AT_NAME = "modifiedAt";
-
-    private static void setAccessDeniedResponse(HttpServletRequest request) {
-        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-        request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ACCESS_DENIED);
-        request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ACCESS_DENIED);
-    }
 
     private static String formatDateTime(Timestamp timestamp, String locale) {
         return DateFormat
@@ -57,13 +51,11 @@ public class EditAnswerCommand implements Command {
                     if (answer.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         answer.setText(textParameter);
                         answerService.update(answer);
-                        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE,
-                                new HashMap<String, String>(1) {{
-                                    put(MODIFIED_AT_NAME, formatDateTime(
-                                            answer.getModifiedAt(),
-                                            (String) session.getAttribute(LOCALE_ATTRIBUTE)));
-                                }});
+                        setSuccessResponse(request, MapUtil.<String, Object>builder()
+                                .put(MODIFIED_AT_NAME, formatDateTime(
+                                        answer.getModifiedAt(),
+                                        (String) session.getAttribute(LOCALE_ATTRIBUTE)))
+                                .build());
                     } else {
                         logger.warn("User '" + user.getUsername() +
                                 "' trying to edit answer (id=" + idParameter + ") without permission.");
@@ -83,14 +75,11 @@ public class EditAnswerCommand implements Command {
             logger.warn("Invalid question ID parameter passed (" + idParameter + ")");
             setAccessDeniedResponse(request);
         } catch (AnswerServiceException e) {
-            request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ANSWER_WRONG_INPUT);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ANSWER_WRONNG_INPUT);
+            setErrorResponse(request, ERROR_TITLE_ANSWER_WRONG_INPUT, ERROR_MESSAGE_ANSWER_WRONNG_INPUT);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
-        Command.dispatchRequest(pagePath, true, request, response);
+        dispatchAjaxRequest(request, response);
     }
 }

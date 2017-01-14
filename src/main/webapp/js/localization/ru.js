@@ -1,3 +1,4 @@
+const LOCALE = "ru";
 const STRINGS = {
     error_alert: "Ошибка!",
     success_alert: "Успех!",
@@ -16,6 +17,9 @@ const STRINGS = {
     answer_delete_warning_title: "Удалить данный ответ?",
     answer_delete_warning_message: "Вы действительно хотите удалить данный ответ? Операцию будет невозможно отменить.",
     answer_delete_button_confirm: "Удалить",
-    answer_delete_button_cancel: "Отмена"
+    answer_delete_button_cancel: "Отмена",
+    answer_count_multiple: "Ответов",
+    answer_count_alter: "Ответа",
+    answer_count_single: "Ответ"
 };
 Object.freeze(STRINGS);

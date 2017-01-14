@@ -51,6 +51,13 @@
     </function-signature>
   </function>
   <function>
+    <name>backRedirectUrl</name>
+    <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
+    <function-signature>
+      java.lang.String getBackRedirectUrl(javax.servlet.http.HttpServletRequest)
+    </function-signature>
+  </function>
+  <function>
     <name>encodeUrl</name>
     <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
     <function-signature>

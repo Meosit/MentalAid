@@ -46,38 +46,59 @@
             </div>
           </c:if>
           <h5 class="text-right">
-            Asked by <a class="${isQuestionOwner ? 'owner' : ''}" href="#">${requestScope.question.creatorUsername}</a>
-            at <span class="glyphicon glyphicon-time"></span> <fmt:formatDate
+            <fmt:message key="question.askedBy"/> <a class="${isQuestionOwner ? 'owner' : ''}"
+                                                     href="#">${requestScope.question.creatorUsername}</a>
+            <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span> <fmt:formatDate
               value="${requestScope.question.createdAt}" type="both" dateStyle="long" timeStyle="short"/>
           </h5>
           <h6 id="question-edit-date-container"
               class="edited-caption ${(requestScope.question.createdAt ne requestScope.question.modifiedAt) ? '' : 'hidden'}">
-            <span class="glyphicon glyphicon-edit"></span> Edited at <span id="question-edit-date"><fmt:formatDate
+            <span class="glyphicon glyphicon-edit"></span> <fmt:message key="editedAt"/> <span
+              id="question-edit-date"><fmt:formatDate
               value="${requestScope.question.modifiedAt}" type="both" dateStyle="long" timeStyle="short"/></span></h6>
           <c:if test="${isAdmin or isQuestionOwner}">
             <div class="text-right">
-              <a type="button" id="question-edit-btn" class="btn btn-custom btn-warn">Edit</a>
-              <a type="button" id="question-delete-btn" class="btn btn-custom btn-dang">Delete</a>
-              <a type="button" id="question-apply-btn" class="hidden btn btn-custom btn-conf">Apply</a>
-              <a type="button" id="question-cancel-btn" class="hidden btn btn-custom btn-warn">Cancel</a>
+              <a type="button" id="question-edit-btn" class="btn btn-custom btn-warn"><fmt:message
+                  key="button.edit"/></a>
+              <a type="button" id="question-delete-btn" class="btn btn-custom btn-dang"><fmt:message
+                  key="button.delete"/></a>
+              <a type="button" id="question-apply-btn" class="hidden btn btn-custom btn-conf"><fmt:message
+                  key="button.apply"/></a>
+              <a type="button" id="question-cancel-btn" class="hidden btn btn-custom btn-warn"><fmt:message
+                  key="button.cancel"/></a>
             </div>
           </c:if>
           <div id="question-result-alert-container">
           </div>
         </div>
-
         <div class="answers">
           <div class="answers-header">
             <a class="anchor" id="answers"></a>
-            <h3><span id="answer-count">${requestScope.question.answerCount}</span>
-              <c:choose>
-                <c:when test="${requestScope.question.answerCount eq 1}">
-                  Answer
-                </c:when>
-                <c:otherwise>
-                  Answers
-                </c:otherwise>
-              </c:choose>
+            <h3>
+              <span id="answer-count-label">${requestScope.question.answerCount}
+                <c:choose>
+                  <c:when test="${sessionScope.question.answerCount eq 1}">
+                    <fmt:message key="answer.count.single"/>
+                  </c:when>
+                  <c:when test="${(sessionScope.question.answerCount % 10) eq 1}">
+                    <c:choose>
+                      <c:when test="${sessionScope.locale eq 'ru'}}">
+                        <fmt:message key="answer.count.single"/>
+                      </c:when>
+                      <c:otherwise>
+                        <fmt:message key="answer.count.multiple"/>
+                      </c:otherwise>
+                    </c:choose>
+                  </c:when>
+                  <c:when
+                      test="${((sessionScope.question.answerCount % 10) lt 5) and ((sessionScope.question.answerCount % 10) ne 0)}">
+                    <fmt:message key="answer.count.alter"/>
+                  </c:when>
+                  <c:otherwise>
+                    <fmt:message key="answer.count.multiple"/>
+                  </c:otherwise>
+                </c:choose>
+              </span>
             </h3>
             <hr class="question-separator">
           </div>
@@ -87,19 +108,20 @@
             <c:if test="${isAnswerOwner}">
               <c:set var="isAnswerExists" value="true"/>
             </c:if>
-            <div id="answer-div-${answer.id}">
+            <div class="answer" id="answer-${answer.id}">
               <div class="media">
                 <div class="media-body ${isAnswerOwner ? 'owner-border' : ''}">
-                  <p id="answer-text-${answer.id}" class="answer-text"><c:out value="${answer.text}"/></p>
+                  <p class="answer-text"><c:out value="${answer.text}"/></p>
                   <c:if test="${isAdmin or isAnswerOwner}">
-                    <div class="hidden" id="answer-text-edit-container-${answer.id}">
-                      <form id="answer-text-edit-form-${answer.id}">
+                    <div class="answer-edit-container hidden">
+                      <form class="answer-edit-form">
                         <div class="form-group">
-                          <label for="answer-text-edit-${answer.id}"></label>
-                          <textarea class="answer-text-edit form-control" rows="4" name="answer_text"
-                                    id="answer-text-edit-${answer.id}"></textarea>
+                          <label>
+                            <textarea class="answer-text-input form-control" rows="4" name="answer_text">
+                            </textarea>
+                          </label>
                         </div>
-                        <input type="hidden" id="answer-id-${answer.id}" name="answer_id" value="${answer.id}">
+                        <input type="hidden" class="answer-id-input" name="answer_id" value="${answer.id}">
                       </form>
                     </div>
                   </c:if>
@@ -107,106 +129,126 @@
                     <div class="col-md-6 text-left">
                       <ms:starRating value="${answer.averageMark}"/>
                     </div>
-                    <h5 class="media-heading col-md-6 text-right">by <a class="${isAnswerOwner ? 'owner' : ''}"
-                                                                        href="#">${answer.creatorUsername}</a> at <span
-                        class="glyphicon glyphicon-time"></span><span
-                        class="create-date"><fmt:formatDate value="${answer.createdAt}"
-                                                            type="both" dateStyle="long" timeStyle="short"/></span></h5>
-                    <h6 id="answer-edit-date-container-${answer.id}"
-                        class="edited-caption ${(answer.createdAt ne answer.modifiedAt) ? '' : 'hidden'}"><span
-                        class="glyphicon glyphicon-edit"></span> Edited at <span
-                        id="answer-edit-date-${answer.id}"><fmt:formatDate
-                        value="${answer.modifiedAt}" type="both" dateStyle="long" timeStyle="short"/></span></h6>
+                    <h5 class="media-heading col-md-6 text-right">
+                      <fmt:message key="answer.by"/> <a class="${isAnswerOwner ? 'owner' : ''}"
+                                                        href="#">${answer.creatorUsername}</a>
+                      <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span>
+                      <span class="answer-created-date create-date">
+                        <fmt:formatDate value="${answer.createdAt}" type="both" dateStyle="long" timeStyle="short"/>
+                      </span>
+                    </h5>
+                    <h6 class="answer-modified-date-container edited-caption ${(answer.createdAt ne answer.modifiedAt) ? '' : 'hidden'}">
+                      <span class="glyphicon glyphicon-edit"></span> <fmt:message key="editedAt"/>
+                      <span class="answer-modified-date">
+                        <fmt:formatDate value="${answer.modifiedAt}" type="both" dateStyle="long" timeStyle="short"/>
+                      </span>
+                    </h6>
                   </div>
                   <c:if test="${isAdmin or isAnswerOwner}">
                     <div class="col-xs-12 text-right">
-                      <a type="button" id="answer-edit-${answer.id}" class="answer-edit-btn btn btn-custom btn-warn">Edit</a>
-                      <a type="button" id="answer-delete-${answer.id}"
-                         class="answer-delete-btn btn btn-custom btn-dang">Delete</a>
-                      <a type="button" id="answer-apply-${answer.id}"
-                         class="answer-apply-btn hidden btn btn-custom btn-conf">Apply</a>
-                      <a type="button" id="answer-cancel-${answer.id}"
-                         class="answer-cancel-btn hidden btn btn-custom btn-warn">Cancel</a>
+                      <a type="button" class="answer-edit-btn btn btn-custom btn-warn"><fmt:message
+                          key="button.edit"/></a>
+                      <a type="button" class="answer-delete-btn btn btn-custom btn-dang"><fmt:message
+                          key="button.delete"/></a>
+                      <a type="button" class="answer-apply-btn hidden btn btn-custom btn-conf"><fmt:message
+                          key="button.apply"/></a>
+                      <a type="button" class="answer-cancel-btn hidden btn btn-custom btn-warn"><fmt:message
+                          key="button.cancel"/></a>
                     </div>
                   </c:if>
                 </div>
-                <div id="answer-result-alert-container-${answer.id}"></div>
+                <div class="answer-result-alert-container">
+                </div>
                 <hr>
               </div>
             </div>
           </c:forEach>
-          <c:if test="${(not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)}">
-            <div id="answer-div-dummy" class="hidden">
-              <div class="media">
-                <div class="media-body owner-border">
-                  <p id="answer-text-dummy" class="answer-text"></p>
-                  <div class="hidden" id="answer-text-edit-container-dummy">
-                    <form id="answer-text-edit-form-dummy">
-                      <div class="form-group">
-                        <label for="answer-text-edit-dummy"></label>
-                        <textarea class="answer-text-edit form-control" rows="4" name="answer_text"
-                                  id="answer-text-edit-dummy"></textarea>
-                      </div>
-                      <input type="hidden" id="answer-id-dummy" name="answer_id" value="">
-                    </form>
-                  </div>
-                  <div>
-                    <div class="col-md-6 text-left">
-                      <ms:starRating value="0"/>
+        </div>
+        <div class="hidden" id="new-answer-template">
+          <div class="answer">
+            <div class="media">
+              <div class="media-body owner-border">
+                <p class="answer-text"></p>
+                <div class="answer-edit-container hidden">
+                  <form class="answer-edit-form">
+                    <div class="form-group">
+                      <label>
+                          <textarea class="answer-text-input form-control" rows="4" name="answer_text">
+                          </textarea>
+                      </label>
                     </div>
-                    <h5 class="media-heading col-md-6 text-right">by <a id="new-answer-username-link" class="owner"
-                                                                        href="#"></a> at <span
-                        class="glyphicon glyphicon-time"></span><span id="new-answer-create-date"
-                                                                      class="create-date"></span></h5>
-                    <h6 id="answer-edit-date-container-dummy" class="edited-caption hidden"><span
-                        class="glyphicon glyphicon-edit"></span> Edited at <span
-                        id="answer-edit-date-dummy"></span></h6>
-                  </div>
-                  <div class="col-xs-12 text-right">
-                    <a type="button" id="answer-edit-dummy" class="answer-edit-btn btn btn-custom btn-warn">Edit</a>
-                    <a type="button" id="answer-delete-dummy"
-                       class="answer-delete-btn btn btn-custom btn-dang">Delete</a>
-                    <a type="button" id="answer-apply-dummy"
-                       class="answer-apply-btn hidden btn btn-custom btn-conf">Apply</a>
-                    <a type="button" id="answer-cancel-dummy"
-                       class="answer-cancel-btn hidden btn btn-custom btn-warn">Cancel</a>
-                  </div>
+                    <input type="hidden" class="answer-id-input" name="answer_id" value="">
+                  </form>
                 </div>
-                <div id="answer-result-alert-container-dummy"></div>
-                <hr>
+                <div>
+                  <div class="col-md-6 text-left">
+                    <ms:starRating value="0"/>
+                  </div>
+                  <h5 class="media-heading col-md-6 text-right">
+                    <fmt:message key="answer.by"/> <a class="answer-creator-username owner" href="#"></a>
+                    <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span>
+                    <span class="answer-created-date create-date"></span>
+                  </h5>
+                  <h6 class="answer-modified-date-container edited-caption hidden">
+                    <span class="glyphicon glyphicon-edit"></span> <fmt:message key="editedAt"/>
+                    <span class="answer-modified-date"></span>
+                  </h6>
+                </div>
+                <div class="col-xs-12 text-right">
+                  <a type="button" class="answer-edit-btn btn btn-custom btn-warn"><fmt:message key="button.edit"/></a>
+                  <a type="button" class="answer-delete-btn btn btn-custom btn-dang"><fmt:message
+                      key="button.delete"/></a>
+                  <a type="button" class="answer-apply-btn hidden btn btn-custom btn-conf"><fmt:message
+                      key="button.apply"/></a>
+                  <a type="button" class="answer-cancel-btn hidden btn btn-custom btn-warn"><fmt:message
+                      key="button.cancel"/></a>
+                </div>
               </div>
+              <div class="answer-result-alert-container">
+              </div>
+              <hr>
             </div>
-          </c:if>
+          </div>
         </div>
         <div class="well">
-          <c:choose>
-            <c:when test="${(not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)}">
-              <form id="new-answer-form">
-                <div class="form-group">
-                  <h4><label for="new-answer-text">Leave an answer:</label></h4>
-                  <textarea id="new-answer-text" class="form-control" rows="4"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-              <div id="new-answer-alert-container"></div>
-            </c:when>
-            <c:when test="${isQuestionOwner}">
-              You cannot answer to your own question, you can edit your question instead.
-            </c:when>
-            <c:when test="${isAnswerExists}">
-              You cannot post two answers, edit existing answer instead.
-            </c:when>
-            <c:otherwise>
-              To leave an answer, <a
-                href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">Login</a> or
-              <a
-                  href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">Register</a>
-            </c:otherwise>
-          </c:choose>
+          <div id="new-answer-form-div"
+               class="${((not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)) ? '' : 'hidden'}">
+            <form id="new-answer-form">
+              <div class="form-group">
+                <h4>
+                  <label for="new-answer-text-input">
+                    <fmt:message key="answer.new.label"/>
+                  </label>
+                </h4>
+                <textarea id="new-answer-text-input" name="new_answer_text" class="form-control" rows="4"></textarea>
+                <input type="hidden" name="question_id" value="${requestScope.question.id}">
+              </div>
+              <button type="submit" class="btn btn-primary">
+                <fmt:message key="button.submit"/>
+              </button>
+            </form>
+            <div id="new-answer-alert-container"></div>
+          </div>
+          <div id="question-owner-message" class="${isQuestionOwner ? '' : 'hidden'}">
+            <fmt:message key="answer.warning.questionOwner"/>
+          </div>
+          <div id="answer-exists-message" class="${isAnswerExists ? '' : 'hidden'}">
+            <fmt:message key="answer.warning.answerExists"/>
+          </div>
+          <div id="guest-message" class="${(not empty sessionScope.user) ? 'hidden' : ''}">
+            <fmt:message key="answer.warning.guest.toLeave"/>
+            <a href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">
+              <fmt:message key="answer.warning.guest.link.login"/>
+            </a>
+            <fmt:message key="answer.warning.guest.or"/>
+            <a href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">
+              <fmt:message key="answer.warning.guest.link.register"/>
+            </a>
+          </div>
         </div>
       </div>
       <jsp:include page="template/footer.jsp"/>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+      <script src="<c:url value="/js/lib/bootbox.js"/>"></script>
       <script src="<c:url value="/js/question.js"/>"></script>
     </body>
   </html>

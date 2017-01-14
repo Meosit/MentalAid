@@ -19,17 +19,19 @@
         <ul class="nav navbar-nav">
           <li>
             <a class="logo-label" href="<c:url value="/"/>"><fmt:message key="app.name"/></a></li>
-          <c:if test="${not empty sessionScope.user}">
-            <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}"><a
-                href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
-              <fmt:message
-                  key="button.newQuestion"/></a></li>
-          </c:if>
-          <c:if test="${sessionScope.user.role eq 1}">
-            <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/user_list.jsp' ? 'active' : ''}"><a
-                href="<c:url value="/controller?cmd=users"/>"><span class="glyphicon glyphicon-list-alt"></span>
-              <fmt:message
-                  key="button.userList"/></a></li>
+          <c:if test="${not param.isNavbarLess}">
+            <c:if test="${not empty sessionScope.user}">
+              <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}"><a
+                  href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
+                <fmt:message
+                    key="button.newQuestion"/></a></li>
+            </c:if>
+            <c:if test="${sessionScope.user.role eq 1}">
+              <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/user_list.jsp' ? 'active' : ''}"><a
+                  href="<c:url value="/controller?cmd=users"/>"><span class="glyphicon glyphicon-list-alt"></span>
+                <fmt:message
+                    key="button.userList"/></a></li>
+            </c:if>
           </c:if>
         </ul>
         <ul class="nav navbar-nav navbar-right">

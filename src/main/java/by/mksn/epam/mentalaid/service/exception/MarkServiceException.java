@@ -1,14 +1,7 @@
 package by.mksn.epam.mentalaid.service.exception;
 
-/**
- * Thrown to indicate that something wrong with question logic
- */
-public class QuestionServiceException extends ServiceException {
+public class MarkServiceException extends ServiceException {
 
-    /**
-     * Cause of exception when invalid page index passed
-     */
-    public static final int INVALID_PAGE_INDEX = 0x01;
     /**
      * Cause of exception when invalid properties values passed
      */
@@ -16,22 +9,22 @@ public class QuestionServiceException extends ServiceException {
 
     private int causeCode;
 
-    public QuestionServiceException(int causeCode) {
+    public MarkServiceException(int causeCode) {
         super();
         this.causeCode = causeCode;
     }
 
-    public QuestionServiceException(String cause, int causeCode) {
+    public MarkServiceException(String cause, int causeCode) {
         super(cause);
         this.causeCode = causeCode;
     }
 
-    public QuestionServiceException(Throwable t, int causeCode) {
+    public MarkServiceException(Throwable t, int causeCode) {
         super(t);
         this.causeCode = causeCode;
     }
 
-    public QuestionServiceException(String cause, Throwable t, int causeCode) {
+    public MarkServiceException(String cause, Throwable t, int causeCode) {
         super(cause, t);
         this.causeCode = causeCode;
     }
@@ -40,8 +33,7 @@ public class QuestionServiceException extends ServiceException {
      * Represents code of exception cause
      *
      * @return code of exception cause, one of the following:<br>
-     * - {@link #WRONG_INPUT}<br>
-     * - {@link #INVALID_PAGE_INDEX}
+     * - {@link #WRONG_INPUT}
      */
     public int getCauseCode() {
         return causeCode;

@@ -50,9 +50,17 @@ public enum CommandEnum {
      */
     ASYNC_QUESTION_EDIT(new EditQuestionCommand()),
     /**
+     * Deletes question
+     */
+    ASYNC_QUESTION_DELETE(new DeleteQuestionCommand()),
+    /**
      * Changes answer data
      */
     ASYNC_ANSWER_EDIT(new EditAnswerCommand()),
+    /**
+     * Deletes answer
+     */
+    ASYNC_ANSWER_DELETE(new DeleteAnswerCommand()),
     /**
      * Creates new answer
      */

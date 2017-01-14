@@ -37,7 +37,7 @@ public class SetLocaleCommand implements Command {
             try {
                 userService.updateUser(user);
             } catch (ServiceException e) {
-                throw new CommandException(e);
+                logger.error("Cannot store user locale: \n", e);
             }
         }
         logger.debug("Locale was set to \"" + newLocale + "\"");

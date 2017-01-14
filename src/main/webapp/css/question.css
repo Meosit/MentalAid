@@ -27,7 +27,7 @@
 .btn-custom {
     border-width: 1px;
     padding: 0;
-    width: 70px;
+    width: 90px;
 }
 
 .btn-warn {
@@ -81,4 +81,9 @@
 
 .answer-text {
     white-space: pre-wrap;
+}
+
+label {
+    display: initial;
+    font-weight: initial;
 }

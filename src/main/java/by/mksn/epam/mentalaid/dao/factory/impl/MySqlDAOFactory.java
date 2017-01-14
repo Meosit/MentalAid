@@ -1,9 +1,11 @@
 package by.mksn.epam.mentalaid.dao.factory.impl;
 
 import by.mksn.epam.mentalaid.dao.AnswerDAO;
+import by.mksn.epam.mentalaid.dao.MarkDAO;
 import by.mksn.epam.mentalaid.dao.QuestionDAO;
 import by.mksn.epam.mentalaid.dao.UserDAO;
 import by.mksn.epam.mentalaid.dao.factory.DAOFactory;
+import by.mksn.epam.mentalaid.dao.impl.MarkDAOImpl;
 import by.mksn.epam.mentalaid.dao.impl.MySqlAnswerDAO;
 import by.mksn.epam.mentalaid.dao.impl.MySqlQuestionDAO;
 import by.mksn.epam.mentalaid.dao.impl.MySqlUserDAO;
@@ -17,11 +19,13 @@ public class MySqlDAOFactory extends DAOFactory {
     private UserDAO userDAO;
     private QuestionDAO questionDAO;
     private AnswerDAO answerDAO;
+    private MarkDAO markDAO;
 
     private MySqlDAOFactory() {
         userDAO = new MySqlUserDAO();
         questionDAO = new MySqlQuestionDAO();
         answerDAO = new MySqlAnswerDAO();
+        markDAO = new MarkDAOImpl();
     }
 
     public static MySqlDAOFactory getInstance() {
@@ -41,5 +45,10 @@ public class MySqlDAOFactory extends DAOFactory {
     @Override
     public AnswerDAO getAnswerDAO() {
         return answerDAO;
+    }
+
+    @Override
+    public MarkDAO getMarkDAO() {
+        return markDAO;
     }
 }

@@ -16,7 +16,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
 
     private static final String QUERY_INSERT = "INSERT INTO `answer` (`question_id`, `creator_id`, `text`) VALUES (?, ?, ?);";
     private static final String QUERY_SELECT_BY_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`status`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`), COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE (`answer`.`id` = ?) AND (`answer`.`status` != -1) GROUP BY `answer`.`id`;";
-    private static final String QUERY_SELECT_BY_CREATOR_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`status`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`) AS 'averageMark', COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE (`answer`.`question_id` = ?) AND (`answer`.`status` != -1) GROUP BY `answer`.`id` ORDER BY averageMark DESC, `answer`.`id` DESC;";
+    private static final String QUERY_SELECT_BY_QUESTION_ID = "SELECT `answer`.`id`, `answer`.`question_id`, `answer`.`creator_id`, `answer`.`text`, `answer`.`status`, `answer`.`created_at`, `answer`.`modified_at`, AVG(`mark`.`value`) AS 'averageMark', COUNT(`mark`.`value`), `user`.`username` FROM `answer` JOIN `user` ON `answer`.`creator_id` = `user`.`id` LEFT JOIN `mark` ON `answer`.`id` = `mark`.`answer_id` WHERE (`answer`.`question_id` = ?) AND (`answer`.`status` != -1) GROUP BY `answer`.`id` ORDER BY averageMark DESC, `answer`.`id`;";
     private static final String QUERY_UPDATE = "UPDATE `answer` SET `text` = ? WHERE (`id` = ?) AND (`status` != -1);";
     private static final String QUERY_DELETE = "UPDATE `answer` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
 
@@ -61,7 +61,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
     @Override
     public List<Answer> selectByQuestionId(long id) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_CREATOR_ID)) {
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_QUESTION_ID)) {
             statement.setLong(1, id);
 
             return executeStatementAndParseResultSetToList(statement);

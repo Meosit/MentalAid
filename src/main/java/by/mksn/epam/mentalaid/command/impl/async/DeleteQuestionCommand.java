@@ -2,21 +2,21 @@ package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.Question;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.QuestionService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
+import by.mksn.epam.mentalaid.util.MapUtil;
 import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 
-import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 public class DeleteQuestionCommand implements Command {
@@ -24,12 +24,6 @@ public class DeleteQuestionCommand implements Command {
     private static final Logger logger = Logger.getLogger(DeleteQuestionCommand.class);
     private static final String QUESTION_ID_PARAMETER = "question_id";
     private static final String REDIRECT_URL_NAME = "redirectUrl";
-
-    private static void setAccessDeniedResponse(HttpServletRequest request) {
-        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-        request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ACCESS_DENIED);
-        request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ACCESS_DENIED);
-    }
 
     private static String getRedirectUrl(HttpServletRequest request) {
         return UrlUtil.getServletUrl(request) + "?question_deleted=success";
@@ -49,10 +43,9 @@ public class DeleteQuestionCommand implements Command {
                 if (!isNull(question)) {
                     if (question.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         questionService.delete(question.getId());
-                        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-                        request.setAttribute(AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE, new HashMap<String, String>(1) {{
-                            put(REDIRECT_URL_NAME, getRedirectUrl(request));
-                        }});
+                        setSuccessResponse(request, MapUtil.<String, Object>builder()
+                                .put(REDIRECT_URL_NAME, getRedirectUrl(request))
+                                .build());
                     } else {
                         logger.warn("User '" + user.getUsername() +
                                 "' trying to delete question (id=" + idParameter + ") without permission.");
@@ -74,8 +67,8 @@ public class DeleteQuestionCommand implements Command {
             throw new CommandException(e);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
-        Command.dispatchRequest(pagePath, true, request, response);
+        dispatchAjaxRequest(request, response);
     }
+
 
 }

@@ -34,8 +34,9 @@
       </form>
       <div class="alert alert-success">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        <fmt:message key="register_hint.message"/> <a
-          href="<c:url value="/controller?cmd=register"/>"><fmt:message key="register_hint.link"/></a>.
+        <fmt:message key="register_hint.message"/>
+        <a href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(ms:backRedirectUrl(pageContext.request))}"/>"><fmt:message
+            key="register_hint.link"/></a>.
       </div>
       <div id="error-alert" class="alert alert-danger hidden">
         <strong id="error-title"></strong> <span id="error-message"></span>

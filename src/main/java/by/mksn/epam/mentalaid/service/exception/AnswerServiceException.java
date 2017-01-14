@@ -29,6 +29,12 @@ public class AnswerServiceException extends ServiceException {
         this.causeCode = causeCode;
     }
 
+    /**
+     * Represents code of exception cause
+     *
+     * @return code of exception cause, one of the following:<br>
+     * - {@link #WRONG_INPUT
+     */
     public int getCauseCode() {
         return causeCode;
     }

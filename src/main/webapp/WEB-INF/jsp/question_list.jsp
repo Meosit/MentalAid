@@ -63,14 +63,24 @@
                       value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
                   <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}
                       href="<c:url value="/controller?cmd=question&quid=${question.id}#answers"/>">${question.answerCount} <c:choose>
-                    <c:when test="${(question.answerCount % 10) eq 1}">
+                    <c:when test="${question.answerCount eq 1}">
                       <fmt:message key="question.answers.single"/>
+                    </c:when>
+                    <c:when test="${(question.answerCount % 10) eq 1}">
+                      <c:choose>
+                        <c:when test="${sessionScope.locale eq 'ru'}}">
+                          <fmt:message key="question.answers.single"/>
+                        </c:when>
+                        <c:otherwise>
+                          <fmt:message key="question.answers.multiple"/>
+                        </c:otherwise>
+                      </c:choose>
                     </c:when>
                     <c:when test="${((question.answerCount % 10) lt 5) and ((question.answerCount % 10) ne 0)}">
                       <fmt:message key="question.answers.alter"/>
                     </c:when>
                     <c:otherwise>
-                      <fmt:message key="question.answers"/>
+                      <fmt:message key="question.answers.multiple"/>
                     </c:otherwise>
                   </c:choose>
                       </a></span>

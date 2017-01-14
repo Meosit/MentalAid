@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.LOCALE_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 /**
  * Filter used to initialize default locale
@@ -33,8 +34,13 @@ public class LocaleFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) servletRequest).getSession();
         String locale = (String) session.getAttribute(LOCALE_ATTRIBUTE);
-        if (locale == null || !supportedLocales.contains(locale)) {
-            session.setAttribute(LOCALE_ATTRIBUTE, defaultLocale);
+        if (isNull(locale)) {
+            String browserLocale = servletRequest.getLocale().getLanguage();
+            if (supportedLocales.contains(browserLocale)) {
+                session.setAttribute(LOCALE_ATTRIBUTE, browserLocale);
+            } else {
+                session.setAttribute(LOCALE_ATTRIBUTE, defaultLocale);
+            }
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

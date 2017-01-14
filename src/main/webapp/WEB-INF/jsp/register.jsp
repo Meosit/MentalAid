@@ -66,7 +66,8 @@
           <div class="col-sm-offset-2 col-sm-8 login-hint alert alert-success">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <fmt:message key="login_hint.message"/> <a
-              href="<c:url value="/controller?cmd=login"/>"><fmt:message key="login_hint.link"/></a>.
+              href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:backRedirectUrl(pageContext.request))}"/>"><fmt:message
+              key="login_hint.link"/></a>.
           </div>
         </form>
         <div id="error-div">

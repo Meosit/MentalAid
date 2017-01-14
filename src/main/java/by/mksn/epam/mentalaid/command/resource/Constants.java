@@ -14,7 +14,7 @@ public final class Constants {
     public static final String CURRENT_PAGE_ATTRIBUTE = "currentPage";
 
     public static final String AJAX_IS_RESULT_SUCCESS_ATTRIBUTE = "isResultSuccess";
-    public static final String AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE = "successValue";
+    public static final String AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE = "successValueMap";
 
     public static final String ERROR_TITLE_ATTRIBUTE = "errorTitle";
     public static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
@@ -54,5 +54,8 @@ public final class Constants {
 
     public static final String ERROR_TITLE_ANSWER_WRONG_INPUT = "answer.wrongInput.title";
     public static final String ERROR_MESSAGE_ANSWER_WRONNG_INPUT = "answer.wrongInput.message";
+
+    public static final String ERROR_TITLE_ANSWER_EXISTS = "answer.exists.title";
+    public static final String ERROR_MESSAGE_ANSWER_EXISTS = "answer.exists.message";
 
 }

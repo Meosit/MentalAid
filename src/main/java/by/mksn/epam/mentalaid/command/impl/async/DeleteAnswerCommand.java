@@ -2,7 +2,6 @@ package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.Answer;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.AnswerService;
@@ -14,19 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.command.resource.Constants.AJAX_IS_RESULT_SUCCESS_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.dispatchAjaxRequest;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.setAccessDeniedResponse;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 public class DeleteAnswerCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(DeleteAnswerCommand.class);
     private static final String ANSWER_ID_PARAMETER = "answer_id";
-
-    private static void setAccessDeniedResponse(HttpServletRequest request) {
-        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-        request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ACCESS_DENIED);
-        request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ACCESS_DENIED);
-    }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -64,7 +60,6 @@ public class DeleteAnswerCommand implements Command {
             throw new CommandException(e);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
-        Command.dispatchRequest(pagePath, true, request, response);
+        dispatchAjaxRequest(request, response);
     }
 }

@@ -60,5 +60,15 @@ public interface AnswerService {
      */
     void delete(long id) throws ServiceException;
 
-
+    /**
+     * Checks is user with specified id already has an answer for a question with specified id.
+     *
+     * @param questionId id of a question for search appropriate answers
+     * @param userId     id of a user to search answers which this user created
+     * @return {@code true} if the answer already exists, {@code false} otherwise
+     * @throws ServiceException if error happens during execution
+     */
+    default boolean isAnswerAlreadyExists(long questionId, long userId) throws ServiceException {
+        return getAnswersForQuestion(questionId).stream().anyMatch(x -> x.getCreatorId() == userId);
+    }
 }

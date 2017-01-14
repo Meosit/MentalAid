@@ -2,21 +2,21 @@ package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
-import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
+import by.mksn.epam.mentalaid.util.MapUtil;
 import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 
 /**
  * Command to register a new user. This is async command.
@@ -27,7 +27,7 @@ public class RegisterCommand implements Command {
     private static final String USERNAME_PARAMETER = "username";
     private static final String EMAIL_PARAMETER = "email";
     private static final String PASSWORD_PARAMETER = "password";
-    private static final String REDIRECT_VALUE_NAME = "redirectUrl";
+    private static final String REDIRECT_URL_NAME = "redirectUrl";
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -39,10 +39,9 @@ public class RegisterCommand implements Command {
             HttpSession session = request.getSession();
             UserService userService = ServiceFactory.getInstance().getUserService();
             User user = userService.register(username, email, password);
-            request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
-            request.setAttribute(AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE, new HashMap<String, String>(1) {{
-                put(REDIRECT_VALUE_NAME, UrlUtil.getBackRedirectUrl(request));
-            }});
+            setSuccessResponse(request, MapUtil.<String, Object>builder()
+                    .put(REDIRECT_URL_NAME, UrlUtil.getBackRedirectUrl(request))
+                    .build());
             session.setAttribute(USER_ATTRIBUTE, user);
         } catch (UserServiceException e) {
             logger.debug("Registration failed for (" + username + ", " + email + ")");
@@ -62,15 +61,12 @@ public class RegisterCommand implements Command {
                     errorMessage = ERROR_MESSAGE_REGISTER_FORMAT;
                     break;
             }
-            request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, errorTitle);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, errorMessage);
+            setErrorResponse(request, errorTitle, errorMessage);
         } catch (ServiceException e) {
             throw new CommandException(e, true);
         }
 
-        String pagePath = PathManager.getProperty(PathManager.AJAX_RESPONSE);
-        Command.dispatchRequest(pagePath, true, request, response);
+        dispatchAjaxRequest(request, response);
     }
 
 }
