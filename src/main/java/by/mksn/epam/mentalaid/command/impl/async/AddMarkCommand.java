@@ -58,7 +58,7 @@ public class AddMarkCommand implements Command {
                     } else {
                         logger.debug("User " + user.getUsername() + " trying to add mark to his own answer");
                         setSuccessResponse(request,
-                                MapUtil.<String, Object>builder().put(RESULT_STATUS_NAME, RESULT_STATUS_OK).build());
+                                MapUtil.<String, Object>builder().put(RESULT_STATUS_NAME, RESULT_STATUS_DENIED).build());
                     }
                 } else {
                     logger.warn("User " + user.getUsername() + " trying to add mark to not existing answer");

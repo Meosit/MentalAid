@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="ms" uri="http://epam.mksn.by/MentalAid/tag/msTags" %>
 <fmt:setLocale value="${sessionScope.locale}"/>
 <fmt:bundle basename="pagecontent" prefix="navbar.">
   <nav class="navbar navbar-default navbar-fixed-top">
@@ -18,10 +19,12 @@
       <div class="collapse navbar-collapse" id="nav">
         <ul class="nav navbar-nav">
           <li>
-            <a class="logo-label" href="<c:url value="/"/>"><fmt:message key="app.name"/></a></li>
+            <a class="logo-label" href="<c:url value="/"/>"><fmt:message key="app.name"/></a>
+          </li>
           <c:if test="${not param.isNavbarLess}">
             <c:if test="${not empty sessionScope.user}">
-              <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}"><a
+              <li class="${sessionScope.user.status eq 0 ? 'disabled' :''} ${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}">
+                <a
                   href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
                 <fmt:message key="button.newQuestion"/></a></li>
             </c:if>
@@ -87,9 +90,11 @@
             <ul class="dropdown-menu">
               <c:choose>
                 <c:when test="${not empty param.fromUrl}">
-                  <li><a href="<c:url value="/controller?cmd=set_locale&locale=en&from=${param.fromUrl}"/>">English</a>
+                  <li><a
+                      href="<c:url value="/controller?cmd=set_locale&locale=en&from=${ms:encodeUrl(param.fromUrl)}"/>">English</a>
                   </li>
-                  <li><a href="<c:url value="/controller?cmd=set_locale&locale=ru&from=${param.fromUrl}"/>">Русский</a>
+                  <li><a
+                      href="<c:url value="/controller?cmd=set_locale&locale=ru&from=${ms:encodeUrl(param.fromUrl)}"/>">Русский</a>
                   </li>
                 </c:when>
                 <c:otherwise>

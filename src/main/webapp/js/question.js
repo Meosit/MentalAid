@@ -528,24 +528,33 @@ function showAddMarkResult(statusElement, result) {
     switch (result) {
         case 'ok':
             statusElement
+                .fadeIn()
                 .addClass('cfi-status-spark')
-                .delay(100)
+                .delay(300)
                 .removeClass('cfi-status-spark')
-                .addClass('cfi-status-success glyphicon-ok-circle');
+                .addClass('cfi-status-success glyphicon-ok-circle')
+                .delay(1000)
+                .fadeOut(2000);
             break;
         case 'denied':
             statusElement
+                .fadeIn()
                 .addClass('cfi-status-spark')
-                .delay(100)
+                .delay(300)
                 .removeClass('cfi-status-spark')
-                .addClass('cfi-status-failed glyphicon-ban-circle');
+                .addClass('cfi-status-failed glyphicon-ban-circle')
+                .delay(1000)
+                .fadeOut(2000);
             break;
         case 'error':
             statusElement
+                .fadeIn()
                 .addClass('cfi-status-spark')
-                .delay(100)
+                .delay(300)
                 .removeClass('cfi-status-spark')
-                .addClass('cfi-status-failed glyphicon-remove-circle');
+                .addClass('cfi-status-failed glyphicon-remove-circle')
+                .delay(1000)
+                .fadeOut(2000);
             break;
     }
 }

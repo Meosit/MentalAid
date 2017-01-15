@@ -118,8 +118,7 @@
                         <div class="form-group">
                           <label>
                             <textarea class="answer-text-input form-control" rows="4" name="answer_text"
-                                      placeholder="<fmt:message key="answer.text.placeholder"/>">
-                            </textarea>
+                                      placeholder="<fmt:message key="answer.text.placeholder"/>"></textarea>
                           </label>
                         </div>
                         <input type="hidden" class="answer-id-input" name="answer_id" value="${answer.id}">
