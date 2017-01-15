@@ -25,6 +25,9 @@ public final class Constants {
     public static final String ERROR_TITLE_COMMAND = "command.title";
     public static final String ERROR_MESSAGE_COMMAND = "command.message";
 
+    public static final String ERROR_TITLE_USER_BANNED = "userBanned.title";
+    public static final String ERROR_MESSAGE_USER_BANNED = "userBanned.message";
+
     public static final String ERROR_TITLE_ACCESS_DENIED = "accessDenied.title";
     public static final String ERROR_MESSAGE_ACCESS_DENIED = "accessDenied.message";
 

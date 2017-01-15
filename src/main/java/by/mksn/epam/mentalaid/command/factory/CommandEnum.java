@@ -30,6 +30,10 @@ public enum CommandEnum {
      */
     QUESTION(new GetQuestionPageCommand()),
     /**
+     * This command provides new question page
+     */
+    NEW_QUESTION(new GetNewQuestionPageCommand()),
+    /**
      * Changes site content locale and saves it in database if user is signed in
      */
     SET_LOCALE(new SetLocaleCommand()),
@@ -54,6 +58,10 @@ public enum CommandEnum {
      */
     ASYNC_QUESTION_DELETE(new DeleteQuestionCommand()),
     /**
+     * Creates new question
+     */
+    ASYNC_QUESTION_ADD(new AddQuestionCommand()),
+    /**
      * Changes answer data
      */
     ASYNC_ANSWER_EDIT(new EditAnswerCommand()),
@@ -64,7 +72,11 @@ public enum CommandEnum {
     /**
      * Creates new answer
      */
-    ASYNC_ANSWER_ADD(new AddAnswerCommand());
+    ASYNC_ANSWER_ADD(new AddAnswerCommand()),
+    /**
+     * Creates new mark to a question
+     */
+    ASYNC_MARK_ADD(new AddMarkCommand());
 
     private Command command;
 

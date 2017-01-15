@@ -76,7 +76,7 @@ public class MarkDAOImpl extends AbstractBaseDAO<Mark> implements MarkDAO {
     @Override
     public void update(Mark updatedEntity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE)) {
+             PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, updatedEntity.getValue());
             statement.setLong(2, updatedEntity.getId());
 

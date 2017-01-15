@@ -26,27 +26,6 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
     private int currentPageIndex;
     private int pageCount;
 
-    private static String fastReplace(String str, String target, String replacement) {
-        int targetLength = target.length();
-        if (targetLength == 0) {
-            return str;
-        }
-        int idx2 = str.indexOf(target);
-        if (idx2 < 0) {
-            return str;
-        }
-        StringBuilder buffer = new StringBuilder(targetLength > replacement.length() ? str.length() : str.length() * 2);
-        int idx1 = 0;
-        do {
-            buffer.append(str, idx1, idx2);
-            buffer.append(replacement);
-            idx1 = idx2 + targetLength;
-            idx2 = str.indexOf(target, idx1);
-        } while (idx2 > 0);
-        buffer.append(str, idx1, str.length());
-        return buffer.toString();
-    }
-
     @Override
     public void doTag() throws JspException, IOException {
         try {
@@ -111,22 +90,22 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
     }
 
     private String getPageNumberBlock(int pageIndex) {
-        String block = fastReplace(BLOCK_PAGE_NUMBER_TEMPLATE, "#number", pageIndex + "");
-        block = fastReplace(block, "#active", (currentPageIndex == pageIndex) ? "class='active'" : "");
-        return fastReplace(block, "#url", baseUrl + pageIndex);
+        String block = BLOCK_PAGE_NUMBER_TEMPLATE.replace("#number", pageIndex + "");
+        block = block.replace("#active", (currentPageIndex == pageIndex) ? "class='active'" : "");
+        return block.replace("#url", baseUrl + pageIndex);
     }
 
     private String getPrevBlock() {
         String url = baseUrl + ((currentPageIndex == 1) ? 1 : (currentPageIndex - 1));
-        String block = fastReplace(BLOCK_PREV_TEMPLATE, "#url", url);
-        block = fastReplace(block, "#visible", (currentPageIndex == 1) ? "class='invisible'" : "");
+        String block = BLOCK_PREV_TEMPLATE.replace("#url", url);
+        block = block.replace("#visible", (currentPageIndex == 1) ? "class='invisible'" : "");
         return block;
     }
 
     private String getNextBlock() {
         String url = baseUrl + ((currentPageIndex == pageCount) ? pageCount : (currentPageIndex + 1));
-        String block = fastReplace(BLOCK_NEXT_TEMPLATE, "#url", url);
-        block = fastReplace(block, "#visible", (currentPageIndex == pageCount) ? "class='invisible'" : "");
+        String block = BLOCK_NEXT_TEMPLATE.replace("#url", url);
+        block = block.replace("#visible", (currentPageIndex == pageCount) ? "class='invisible'" : "");
         return block;
     }
 

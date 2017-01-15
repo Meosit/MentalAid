@@ -32,14 +32,14 @@
               <form id="question-edit-form">
                 <div class="form-group">
                   <label for="question-title-edit"></label>
-                  <textarea class="form-title form-control" rows="1" name="question_title"
-                            id="question-title-edit"></textarea>
+                  <textarea class="form-title form-control" rows="1" name="question_title" id="question-title-edit"
+                            placeholder="<fmt:message key="question.title.placeholder"/>"></textarea>
                 </div>
                 <hr class="question-separator">
                 <div class="form-group">
                   <label for="question-description-edit"></label>
-                  <textarea class="form-control" rows="10" name="question_description"
-                            id="question-description-edit"></textarea>
+                  <textarea class="form-control" rows="10" name="question_description" id="question-description-edit"
+                            placeholder="<fmt:message key="question.description.placehloder"/>"></textarea>
                 </div>
                 <input type="hidden" id="question-id" name="question_id" value="${requestScope.question.id}">
               </form>
@@ -77,12 +77,12 @@
             <h3>
               <span id="answer-count-label">${requestScope.question.answerCount}
                 <c:choose>
-                  <c:when test="${sessionScope.question.answerCount eq 1}">
+                  <c:when test="${requestScope.question.answerCount eq 1}">
                     <fmt:message key="answer.count.single"/>
                   </c:when>
-                  <c:when test="${(sessionScope.question.answerCount % 10) eq 1}">
+                  <c:when test="${(requestScope.question.answerCount % 10) eq 1}">
                     <c:choose>
-                      <c:when test="${sessionScope.locale eq 'ru'}}">
+                      <c:when test="${requestScope.locale eq 'ru'}}">
                         <fmt:message key="answer.count.single"/>
                       </c:when>
                       <c:otherwise>
@@ -91,7 +91,7 @@
                     </c:choose>
                   </c:when>
                   <c:when
-                      test="${((sessionScope.question.answerCount % 10) lt 5) and ((sessionScope.question.answerCount % 10) ne 0)}">
+                      test="${((requestScope.question.answerCount % 10) lt 5) and ((requestScope.question.answerCount % 10) ne 0)}">
                     <fmt:message key="answer.count.alter"/>
                   </c:when>
                   <c:otherwise>
@@ -117,7 +117,8 @@
                       <form class="answer-edit-form">
                         <div class="form-group">
                           <label>
-                            <textarea class="answer-text-input form-control" rows="4" name="answer_text">
+                            <textarea class="answer-text-input form-control" rows="4" name="answer_text"
+                                      placeholder="<fmt:message key="answer.text.placeholder"/>">
                             </textarea>
                           </label>
                         </div>
@@ -173,8 +174,8 @@
                   <form class="answer-edit-form">
                     <div class="form-group">
                       <label>
-                          <textarea class="answer-text-input form-control" rows="4" name="answer_text">
-                          </textarea>
+                          <textarea class="answer-text-input form-control" rows="4" name="answer_text"
+                                    placeholder="<fmt:message key="answer.text.placeholder"/>"></textarea>
                       </label>
                     </div>
                     <input type="hidden" class="answer-id-input" name="answer_id" value="">
@@ -212,7 +213,7 @@
         </div>
         <div class="well">
           <div id="new-answer-form-div"
-               class="${((not empty sessionScope.user) and (not isQuestionOwner) and (empty isAnswerExists)) ? '' : 'hidden'}">
+               class="${((not empty sessionScope.user) and (sessionScope.user.status ne 0) and (not isQuestionOwner) and (empty isAnswerExists)) ? '' : 'hidden'}">
             <form id="new-answer-form">
               <div class="form-group">
                 <h4>
@@ -220,7 +221,8 @@
                     <fmt:message key="answer.new.label"/>
                   </label>
                 </h4>
-                <textarea id="new-answer-text-input" name="new_answer_text" class="form-control" rows="4"></textarea>
+                <textarea id="new-answer-text-input" name="new_answer_text" class="form-control" rows="4"
+                          placeholder="<fmt:message key="answer.text.placeholder"/>"></textarea>
                 <input type="hidden" name="question_id" value="${requestScope.question.id}">
               </div>
               <button type="submit" class="btn btn-primary">
@@ -229,13 +231,17 @@
             </form>
             <div id="new-answer-alert-container"></div>
           </div>
-          <div id="question-owner-message" class="${isQuestionOwner ? '' : 'hidden'}">
+          <div class="text-danger ${sessionScope.user.status eq  0 ? '' : 'hidden'}" id="user-banned-message">
+            <fmt:message key="answer.warning.userBanned"/>
+          </div>
+          <div id="question-owner-message"
+               class="${isQuestionOwner  and (sessionScope.user.status ne 0) ? '' : 'hidden'}">
             <fmt:message key="answer.warning.questionOwner"/>
           </div>
-          <div id="answer-exists-message" class="${isAnswerExists ? '' : 'hidden'}">
+          <div id="answer-exists-message" class="${isAnswerExists and (sessionScope.user.status ne 0) ? '' : 'hidden'}">
             <fmt:message key="answer.warning.answerExists"/>
           </div>
-          <div id="guest-message" class="${(not empty sessionScope.user) ? 'hidden' : ''}">
+          <div id="guest-message" class="${(empty sessionScope.user) ? '' : 'hidden'}">
             <fmt:message key="answer.warning.guest.toLeave"/>
             <a href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>">
               <fmt:message key="answer.warning.guest.link.login"/>

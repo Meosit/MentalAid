@@ -38,6 +38,7 @@ public class DeleteAnswerCommand implements Command {
                 if (!isNull(answer)) {
                     if (answer.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         answerService.delete(answer.getId());
+                        logger.debug("Answer deleted: \n" + answer);
                         request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
                     } else {
                         logger.warn("User '" + user.getUsername() +

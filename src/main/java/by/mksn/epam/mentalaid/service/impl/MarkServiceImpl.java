@@ -17,55 +17,23 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public Mark add(Mark mark) throws ServiceException {
+    public void add(Mark mark) throws ServiceException {
         if (isMarkValueOutOfRange(mark.getValue())) {
             throw new MarkServiceException("Invalid mark value passed", MarkServiceException.WRONG_INPUT);
         }
 
         try {
             MarkDAO markDAO = DAOFactory.getDAOFactory().getMarkDAO();
-            mark = markDAO.insert(mark);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-        return mark;
-    }
-
-    @Override
-    public Mark getById(long id) throws ServiceException {
-        Mark mark;
-        try {
-            MarkDAO markDAO = DAOFactory.getDAOFactory().getMarkDAO();
-            mark = markDAO.selectById(id);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-        return mark;
-    }
-
-    @Override
-    public void update(Mark updatedMark) throws ServiceException {
-        if (isMarkValueOutOfRange(updatedMark.getValue())) {
-            throw new MarkServiceException("Invalid mark value passed", MarkServiceException.WRONG_INPUT);
-        }
-
-        try {
-            MarkDAO markDAO = DAOFactory.getDAOFactory().getMarkDAO();
-            markDAO.update(updatedMark);
+            Mark oldMark = markDAO.selectByUserAndAnswerId(mark.getUserId(), mark.getAnswerId());
+            if (isNull(oldMark)) {
+                markDAO.insert(mark);
+            } else {
+                oldMark.setValue(mark.getValue());
+                markDAO.update(mark);
+            }
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }
 
-    @Override
-    public boolean isMarkAlreadyExists(long answerId, long userId) throws ServiceException {
-        Mark mark;
-        try {
-            MarkDAO markDAO = DAOFactory.getDAOFactory().getMarkDAO();
-            mark = markDAO.selectByUserAndAnswerId(userId, answerId);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-        return !isNull(mark);
-    }
 }

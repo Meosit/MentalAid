@@ -43,6 +43,7 @@ public class DeleteQuestionCommand implements Command {
                 if (!isNull(question)) {
                     if (question.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         questionService.delete(question.getId());
+                        logger.debug("Question deleted: \n" + question);
                         setSuccessResponse(request, MapUtil.<String, Object>builder()
                                 .put(REDIRECT_URL_NAME, getRedirectUrl(request))
                                 .build());

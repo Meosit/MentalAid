@@ -129,7 +129,7 @@ CREATE INDEX `answer_creator_id_INDEX`
 DROP TABLE IF EXISTS `mentalaid`.`mark`;
 
 CREATE TABLE IF NOT EXISTS `mentalaid`.`mark` (
-  `id`          INT UNSIGNED              NOT NULL
+  `id`          INT UNSIGNED              NOT NULL AUTO_INCREMENT
   COMMENT 'id of a mark',
   `user_id`     INT UNSIGNED              NOT NULL
   COMMENT 'id of a user which created this mark',

@@ -48,33 +48,39 @@ public class AddAnswerCommand implements Command {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute(USER_ATTRIBUTE);
             if (!isNull(user)) {
-                QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
-                if (questionService.isQuestionExists(quid)) {
-                    AnswerService answerService = ServiceFactory.getInstance().getAnswerService();
-                    if (!answerService.isAnswerAlreadyExists(quid, user.getId())) {
-                        Answer newAnswer = new Answer();
-                        newAnswer.setQuestionId(quid);
-                        newAnswer.setCreatorId(user.getId());
-                        newAnswer.setText(answerTextParameter);
-                        newAnswer = answerService.add(newAnswer);
-                        setSuccessResponse(request, MapUtil.<String, Object>builder()
-                                .put(ANSWER_ID_NAME, newAnswer.getId())
-                                .put(CREATOR_USERNAME_NAME, newAnswer.getCreatorUsername())
-                                .put(CREATED_AT_NAME,
-                                        formatDateTime(newAnswer.getCreatedAt(),
-                                                (String) session.getAttribute(LOCALE_ATTRIBUTE)))
-                                .build());
+                if (user.getStatus() != User.STATUS_BANNED) {
+                    QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
+                    if (questionService.isQuestionExists(quid)) {
+                        AnswerService answerService = ServiceFactory.getInstance().getAnswerService();
+                        if (!answerService.isAnswerAlreadyExists(quid, user.getId())) {
+                            Answer newAnswer = new Answer();
+                            newAnswer.setQuestionId(quid);
+                            newAnswer.setCreatorId(user.getId());
+                            newAnswer.setText(answerTextParameter);
+                            newAnswer = answerService.add(newAnswer);
+                            logger.debug("Answer added \n" + newAnswer);
+                            setSuccessResponse(request, MapUtil.<String, Object>builder()
+                                    .put(ANSWER_ID_NAME, newAnswer.getId())
+                                    .put(CREATOR_USERNAME_NAME, newAnswer.getCreatorUsername())
+                                    .put(CREATED_AT_NAME,
+                                            formatDateTime(newAnswer.getCreatedAt(),
+                                                    (String) session.getAttribute(LOCALE_ATTRIBUTE)))
+                                    .build());
+                        } else {
+                            logger.warn("User '" + user.getUsername() +
+                                    "' trying to add two answers for one question (questionId="
+                                    + questionIdParameter + ")");
+                            setErrorResponse(request, ERROR_TITLE_ANSWER_EXISTS, ERROR_MESSAGE_ANSWER_EXISTS);
+                        }
                     } else {
                         logger.warn("User '" + user.getUsername() +
-                                "' trying to add two answers for one question (questionId="
-                                + questionIdParameter + ")");
-                        setErrorResponse(request, ERROR_TITLE_ANSWER_EXISTS, ERROR_MESSAGE_ANSWER_EXISTS);
+                                "' trying to add answer to not existing question (questionID="
+                                + questionIdParameter + "; " + "newText=" + answerTextParameter + ")");
+                        setErrorResponse(request, ERROR_TITLE_QUESTION_NOT_FOUND, ERROR_MESSAGE_QUESTION_NOT_FOUND);
                     }
                 } else {
-                    logger.warn("User '" + user.getUsername() +
-                            "' trying to add answer to not existing question (questionID="
-                            + questionIdParameter + "; " + "newText=" + answerTextParameter + ")");
-                    setErrorResponse(request, ERROR_TITLE_QUESTION_NOT_FOUND, ERROR_MESSAGE_QUESTION_NOT_FOUND);
+                    logger.warn("Banned user '" + user.getUsername() + "' trying to add answer.");
+                    setUserBannedResponse(request);
                 }
             } else {
                 logger.warn("Unauthorized user trying to add answer.\n" +
@@ -90,7 +96,6 @@ public class AddAnswerCommand implements Command {
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-
         dispatchAjaxRequest(request, response);
     }
 }

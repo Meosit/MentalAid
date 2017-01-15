@@ -57,4 +57,5 @@ public final class StringUtil {
     public static String trimAndCollapseNewLines(String string) {
         return isNull(string) ? null : removeCarriageReturns(string.trim()).replaceAll("(\\n){2,}", "\n\n");
     }
+
 }

@@ -58,6 +58,7 @@ public class EditQuestionCommand implements Command {
                         question.setTitle(titleParameter);
                         question.setDescription(descriptionParameter);
                         questionService.update(question);
+                        logger.debug("Question updated: \n" + question);
                         setSuccessResponse(request, MapUtil.<String, Object>builder()
                                 .put(MODIFIED_AT_NAME, formatDateTime(
                                         question.getModifiedAt(),

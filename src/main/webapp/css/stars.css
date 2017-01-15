@@ -55,3 +55,15 @@
     overflow: hidden;
     width: 0;
 }
+
+.cfi-status-spark {
+    color: #00fdff;
+}
+
+.cfi-status-success {
+    color: #59e88d;
+}
+
+.cfi-status-failed {
+    color: #c3201e;
+}

@@ -56,6 +56,17 @@ public final class AjaxUtil {
     }
 
     /**
+     * Sets to request ajax user banned error attributes.
+     *
+     * @param request request where this attributes will be set
+     */
+    public static void setUserBannedResponse(HttpServletRequest request) {
+        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, false);
+        request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_USER_BANNED);
+        request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_USER_BANNED);
+    }
+
+    /**
      * Dispatches ajax request
      *
      * @param request  request to dispatch

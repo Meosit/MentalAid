@@ -1,4 +1,7 @@
 var isValidInput = true;
+const MAX_QUESTION_TITLE_LENGTH = 200;
+const MAX_QUESTION_DESCRIPTION_LENGTH = 2000;
+const MAX_ANSWER_TEXT_LENGTH = 2000;
 
 $('#question-edit-btn').on('click', function (e) {
     e.preventDefault();
@@ -115,22 +118,51 @@ $('#question-delete-btn').on('click', function (e) {
     });
 });
 
-$('#question-description-edit').focusout(validateQuestionFields);
-$('#question-title-edit').focusout(validateQuestionFields);
-function validateQuestionFields() {
+$('#question-description-edit').focusout(function () {
     if (isBlank($(this).val())) {
         isValidInput = false;
         $('#question-result-alert-container')
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.question_wrong_input_message
+                STRINGS.question_description_empty
+            );
+    } else if ($(this).val().length > MAX_QUESTION_DESCRIPTION_LENGTH) {
+        isValidInput = false;
+        $('#question-result-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.question_description_too_long
             );
     } else {
         $('#question-result-alert-container').html('');
         isValidInput = true;
     }
-}
+});
+
+$('#question-title-edit').focusout(function () {
+    if (isBlank($(this).val())) {
+        isValidInput = false;
+        $('#question-result-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.question_title_empty
+            );
+    } else if ($(this).val().length > MAX_QUESTION_TITLE_LENGTH) {
+        isValidInput = false;
+        $('#question-result-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.question_title_too_long
+            );
+    } else {
+        $('#question-result-alert-container').html('');
+        isValidInput = true;
+    }
+});
 
 $(document).on('click', '.answer-edit-btn', function (e) {
     e.preventDefault();
@@ -257,7 +289,15 @@ $(document).on('focusout', '.answer-text-input', function () {
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.answer_wrong_input_message
+                STRINGS.answer_text_empty
+            );
+    } else if ($(this).val().length > MAX_ANSWER_TEXT_LENGTH) {
+        isValidInput = false;
+        answerRoot.find('.answer-result-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.answer_text_too_long
             );
     } else {
         answerRoot.find('.answer-result-alert-container').html('');
@@ -272,7 +312,7 @@ $('#new-answer-text-input').focusout(function () {
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.answer_wrong_input_message
+                STRINGS.answer_text_empty
             );
     } else {
         $('#new-answer-alert-container').html('');
@@ -379,30 +419,42 @@ function switchNewAnswerMode(mode) {
     var newAnswerDiv = $('#new-answer-form-div');
     var questionOwnerMessage = $('#question-owner-message');
     var answerExistsMessage = $('#answer-exists-message');
+    var userBannedMessage = $('#user-banned-message');
     var guestMessage = $('#guest-message');
     switch (mode) {
         case 'can-add':
             newAnswerDiv.showElem();
             questionOwnerMessage.hideElem();
             answerExistsMessage.hideElem();
-            guestMessage.hideElem();
-            break;
-        case 'question-owner':
-            newAnswerDiv.hideElem();
-            questionOwnerMessage.showElem();
-            answerExistsMessage.hideElem();
+            userBannedMessage.hideElem();
             guestMessage.hideElem();
             break;
         case 'answer-exists':
             newAnswerDiv.hideElem();
             questionOwnerMessage.hideElem();
             answerExistsMessage.showElem();
+            userBannedMessage.hideElem();
+            guestMessage.hideElem();
+            break;
+        case 'question-owner':
+            newAnswerDiv.hideElem();
+            questionOwnerMessage.showElem();
+            answerExistsMessage.hideElem();
+            userBannedMessage.hideElem();
+            guestMessage.hideElem();
+            break;
+        case 'user-banned':
+            newAnswerDiv.hideElem();
+            questionOwnerMessage.hideElem();
+            answerExistsMessage.hideElem();
+            userBannedMessage.showElem();
             guestMessage.hideElem();
             break;
         case 'quest':
             newAnswerDiv.hideElem();
             questionOwnerMessage.hideElem();
             answerExistsMessage.hideElem();
+            userBannedMessage.hideElem();
             guestMessage.showElem();
             break;
     }
@@ -425,4 +477,75 @@ function updateAnswerCountLabel(delta) {
         answerCount.text(count + " " + STRINGS.answer_count_multiple);
     }
 
+}
+if ($('meta[name=authorized]').attr('content') == 'true') {
+    $(document)
+        .on('mouseenter', '.cfi.cfi--star.stars__out', function () {
+            $(this).find('.stars__in').width('100%');
+            $(this).prevAll().each(function () {
+                $(this).find('.stars__in').width("100%");
+            });
+            $(this).nextAll().each(function () {
+                $(this).find('.stars__in').width("0%");
+            });
+        })
+        .on('mouseleave', '.cfi.cfi--star.stars__out', function () {
+            $(this).siblings().each(function () {
+                var initVal = $(this).attr('data-init-value');
+                $(this).find('.stars__in').width(initVal + "%");
+            });
+            $(this).find('.stars__in').width($(this).attr('data-init-value') + "%");
+        })
+        .on('click', '.cfi.cfi--star.stars__out', function () {
+            $(this).attr('data-init-value', '100');
+            $(this).prevAll().each(function () {
+                $(this).attr('data-init-value', '100');
+            });
+            $(this).nextAll().each(function () {
+                $(this).attr('data-init-value', '0');
+            });
+            var value = $(this).attr('data-index');
+            var answerId = extractAnswerId($(this).closest('.answer'));
+            var element = $(this).closest('.stars').find('.cfi.status');
+            $.ajax({
+                url: 'controller?cmd=async_mark_add',
+                type: 'POST',
+                dataType: 'text json',
+                data: 'answer_id=' + answerId + '&value=' + value,
+                success: function (response) {
+                    showAddMarkResult(element, response.resultStatus);
+                },
+                error: function () {
+                    showAddMarkResult(element, 'error');
+                }
+            });
+        });
+}
+
+function showAddMarkResult(statusElement, result) {
+    statusElement.removeClass('cfi-status-success cfi-status-failed ' +
+        'glyphicon-ok-circle glyphicon-ban-circle glyphicon-remove-circle');
+    switch (result) {
+        case 'ok':
+            statusElement
+                .addClass('cfi-status-spark')
+                .delay(100)
+                .removeClass('cfi-status-spark')
+                .addClass('cfi-status-success glyphicon-ok-circle');
+            break;
+        case 'denied':
+            statusElement
+                .addClass('cfi-status-spark')
+                .delay(100)
+                .removeClass('cfi-status-spark')
+                .addClass('cfi-status-failed glyphicon-ban-circle');
+            break;
+        case 'error':
+            statusElement
+                .addClass('cfi-status-spark')
+                .delay(100)
+                .removeClass('cfi-status-spark')
+                .addClass('cfi-status-failed glyphicon-remove-circle');
+            break;
+    }
 }

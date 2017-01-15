@@ -51,6 +51,7 @@ public class EditAnswerCommand implements Command {
                     if (answer.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         answer.setText(textParameter);
                         answerService.update(answer);
+                        logger.debug("Answer updated: \n" + answer);
                         setSuccessResponse(request, MapUtil.<String, Object>builder()
                                 .put(MODIFIED_AT_NAME, formatDateTime(
                                         answer.getModifiedAt(),

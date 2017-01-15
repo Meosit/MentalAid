@@ -34,7 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         String normalizedDescription = trimAndCollapseNewLines(question.getDescription());
         normalizedDescription = truncateToSize(normalizedDescription, DESCRIPTION_MAX_LENGTH);
-        question.setTitle(normalizedDescription);
+        question.setDescription(normalizedDescription);
 
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
@@ -143,7 +143,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         String normalizedDescription = trimAndCollapseNewLines(updatedQuestion.getDescription());
         normalizedDescription = truncateToSize(normalizedDescription, DESCRIPTION_MAX_LENGTH);
-        updatedQuestion.setTitle(normalizedDescription);
+        updatedQuestion.setDescription(normalizedDescription);
 
         QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         try {
