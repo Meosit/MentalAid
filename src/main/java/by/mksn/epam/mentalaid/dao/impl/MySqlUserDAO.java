@@ -38,7 +38,7 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                    entity = executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
@@ -55,7 +55,7 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
     public User selectById(long id) throws DAOException {
         User user;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            user = selectById(connection, QUERY_SELECT_BY_ID, id);
+            user = executeSelectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -89,7 +89,7 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
             statement.setLong(8, updatedEntity.getId());
             statement.executeUpdate();
 
-            User reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            User reselectedEntity = executeSelectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
             updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -100,7 +100,7 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
 
     @Override
     public void delete(long id) throws DAOException {
-        delete(QUERY_DELETE, id);
+        executeDelete(QUERY_DELETE, id);
     }
 
     private User selectWithStringParameter(String selectQuery, String parameter) throws DAOException {

@@ -34,6 +34,10 @@ public enum CommandEnum {
      */
     NEW_QUESTION(new GetNewQuestionPageCommand()),
     /**
+     * This command add query attribute and redirect to the appropriate command to show filtered question list
+     */
+    SEARCH(new SearchRedirectCommand()),
+    /**
      * Changes site content locale and saves it in database if user is signed in
      */
     SET_LOCALE(new SetLocaleCommand()),

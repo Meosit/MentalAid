@@ -6,13 +6,14 @@ public final class Constants {
     public static final String COMMAND_PARAMETER = "cmd";
     public static final String FROM_URL_PARAMETER = "from";
     public static final String FULL_URL_ATTRIBUTE = "fullUrl";
-
     public static final String LOCALE_ATTRIBUTE = "locale";
     public static final String USER_ATTRIBUTE = "user";
+
     public static final String QUESTION_LIST_ATTRIBUTE = "questions";
     public static final String PAGE_INDEX_PARAMETER = "page";
     public static final String PAGE_COUNT_ATTRIBUTE = "pageCount";
     public static final String CURRENT_PAGE_ATTRIBUTE = "currentPage";
+    public static final String SEARCH_QUERY_PARAMETER = "query";
 
     public static final String AJAX_IS_RESULT_SUCCESS_ATTRIBUTE = "isResultSuccess";
     public static final String AJAX_SUCCESS_VALUE_MAP_ATTRIBUTE = "successValueMap";

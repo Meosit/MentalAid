@@ -32,7 +32,7 @@ public class MarkDAOImpl extends AbstractBaseDAO<Mark> implements MarkDAO {
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                    entity = executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
@@ -49,7 +49,7 @@ public class MarkDAOImpl extends AbstractBaseDAO<Mark> implements MarkDAO {
     public Mark selectById(long id) throws DAOException {
         Mark mark;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            mark = selectById(connection, QUERY_SELECT_BY_ID, id);
+            mark = executeSelectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -82,7 +82,7 @@ public class MarkDAOImpl extends AbstractBaseDAO<Mark> implements MarkDAO {
 
             statement.executeUpdate();
 
-            Mark reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            Mark reselectedEntity = executeSelectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
             updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -93,7 +93,7 @@ public class MarkDAOImpl extends AbstractBaseDAO<Mark> implements MarkDAO {
 
     @Override
     public void delete(long id) throws DAOException {
-        delete(QUERY_DELETE, id);
+        executeDelete(QUERY_DELETE, id);
     }
 
     @Override

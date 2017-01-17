@@ -59,6 +59,28 @@ public interface QuestionService {
     }
 
     /**
+     * Returns list of {@link Question} for the specified search query on the page with specified index
+     *
+     * @param searchQuery      query to search
+     * @param index            index of page to return, must be positive and {@code index * questionsPerPage <= 2147483647}
+     * @param questionsPerPage count of questions on the page
+     * @return list of {@link Question} on the page with specified index
+     * @throws QuestionServiceException if invalid page index passed (cause code: {@link QuestionServiceException#INVALID_PAGE_INDEX})
+     * @throws ServiceException         if error happens during execution
+     */
+    List<Question> getSearchQuestionsPage(String searchQuery, int index, int questionsPerPage) throws ServiceException;
+
+    /**
+     * Does same as {@link #getSearchQuestionsPage(String, int, int)}, but with
+     * {@link #QUESTIONS_PER_PAGE} as third parameter.
+     *
+     * @see #getSearchQuestionsPage(String, int, int)
+     */
+    default List<Question> getSearchQuestionsPage(String searchQuery, int index) throws ServiceException {
+        return getSearchQuestionsPage(searchQuery, index, QUESTIONS_PER_PAGE);
+    }
+
+    /**
      * Returns list of {@link Question} on the page with specified index which belongs
      * to user with specified username
      *
@@ -69,16 +91,41 @@ public interface QuestionService {
      * @throws QuestionServiceException if invalid page index passed (cause code: {@link QuestionServiceException#INVALID_PAGE_INDEX})
      * @throws ServiceException         if error happens during execution
      */
-    List<Question> getQuestionsPage(String username, int index, int questionsPerPage) throws ServiceException;
+    List<Question> getPageForUserQuestions(String username, int index, int questionsPerPage) throws ServiceException;
 
     /**
-     * Does same as {@link #getQuestionsPage(String, int, int)}, but with
+     * Does same as {@link #getPageForUserQuestions(String, int, int)}, but with
      * {@link #QUESTIONS_PER_PAGE} as third parameter.
      *
-     * @see #getQuestionsPage(String, int, int)
+     * @see #getPageForUserQuestions(String, int, int)
      */
-    default List<Question> getQuestionsPage(String username, int index) throws ServiceException {
-        return getQuestionsPage(username, index, QUESTIONS_PER_PAGE);
+    default List<Question> getPageForUserQuestions(String username, int index) throws ServiceException {
+        return getPageForUserQuestions(username, index, QUESTIONS_PER_PAGE);
+    }
+
+    /**
+     * Returns list of {@link Question} for the specified search query on the page with
+     * specified index which belongs to user with specified username
+     *
+     * @param searchQuery      query to search
+     * @param username         username of user this questions belongs to
+     * @param index            index of page to return, must be positive and {@code index * questionsPerPage <= 2147483647}
+     * @param questionsPerPage count of questions on the page
+     * @return list of {@link Question} on the page with specified index
+     * @throws QuestionServiceException if invalid page index passed (cause code: {@link QuestionServiceException#INVALID_PAGE_INDEX})
+     * @throws ServiceException         if error happens during execution
+     */
+    List<Question> getSearchPageForUserQuestions(String searchQuery, String username,
+                                                 int index, int questionsPerPage) throws ServiceException;
+
+    /**
+     * Does same as {@link #getSearchPageForUserQuestions(String, String, int, int)}, but with
+     * {@link #QUESTIONS_PER_PAGE} as fourth parameter.
+     *
+     * @see #getSearchPageForUserQuestions(String, String, int, int)
+     */
+    default List<Question> getSearchPageForUserQuestions(String searchQuery, String username, int index) throws ServiceException {
+        return getSearchPageForUserQuestions(searchQuery, username, index, QUESTIONS_PER_PAGE);
     }
 
     /**
@@ -103,6 +150,27 @@ public interface QuestionService {
 
     /**
      * Returns page count, calculated on base of {@code questionPerPage} parameter
+     * and on count of all questions for the specified search query
+     *
+     * @param searchQuery      query to search
+     * @param questionsPerPage count of questions on the page
+     * @return count of pages
+     * @throws ServiceException if error happens during execution
+     */
+    int getSearchPageCount(String searchQuery, int questionsPerPage) throws ServiceException;
+
+    /**
+     * Does same as {@link #getSearchPageCount(String, int)}, but with
+     * {@link #QUESTIONS_PER_PAGE} second parameter.
+     *
+     * @see #getSearchPageCount(String, int)
+     */
+    default int getSearchPageCount(String searchQuery) throws ServiceException {
+        return getSearchPageCount(searchQuery, QUESTIONS_PER_PAGE);
+    }
+
+    /**
+     * Returns page count, calculated on base of {@code questionPerPage} parameter
      * and on count of all question in the system which belongs to user with specified username
      *
      * @param username         username of a user this question belongs to
@@ -110,16 +178,38 @@ public interface QuestionService {
      * @return count of pages
      * @throws ServiceException if error happens during execution
      */
-    int getPageCount(String username, int questionsPerPage) throws ServiceException;
+    int getPageCountForUserQuestions(String username, int questionsPerPage) throws ServiceException;
 
     /**
-     * Does same as {@link #getPageCount(String, int)}, but with
+     * Does same as {@link #getPageCountForUserQuestions(String, int)}, but with
      * {@link #QUESTIONS_PER_PAGE} a parameter.
      *
-     * @see #getPageCount(String, int)
+     * @see #getPageCountForUserQuestions(String, int)
      */
-    default int getPageCount(String username) throws ServiceException {
-        return getPageCount(username, QUESTIONS_PER_PAGE);
+    default int getPageCountForUserQuestions(String username) throws ServiceException {
+        return getPageCountForUserQuestions(username, QUESTIONS_PER_PAGE);
+    }
+
+    /**
+     * Returns page count, calculated on base of {@code questionPerPage} parameter
+     * and on count of all questions for the specified search query
+     * which belongs to user with specified username
+     *
+     * @param searchQuery      query to search
+     * @param questionsPerPage count of questions on the page
+     * @return count of pages
+     * @throws ServiceException if error happens during execution
+     */
+    int getSearchPageCountForUserQuestions(String searchQuery, String username, int questionsPerPage) throws ServiceException;
+
+    /**
+     * Does same as {@link #getSearchPageCountForUserQuestions(String, String, int)}, but with
+     * {@link #QUESTIONS_PER_PAGE} third parameter.
+     *
+     * @see #getSearchPageCountForUserQuestions(String, String, int)
+     */
+    default int getSearchPageCountForUserQuestions(String searchQuery, String username) throws ServiceException {
+        return getSearchPageCountForUserQuestions(searchQuery, username, QUESTIONS_PER_PAGE);
     }
 
     /**

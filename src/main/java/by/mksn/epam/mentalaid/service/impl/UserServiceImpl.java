@@ -1,7 +1,6 @@
 package by.mksn.epam.mentalaid.service.impl;
 
 import by.mksn.epam.mentalaid.dao.UserDAO;
-import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.dao.factory.DAOFactory;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
@@ -10,6 +9,7 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.util.HashUtil;
 import org.apache.log4j.Logger;
 
+import static by.mksn.epam.mentalaid.service.impl.DAOCaller.tryCallDAO;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 
@@ -38,52 +38,42 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException("Invalid username format", UserServiceException.WRONG_INPUT);
         }
 
+        String passwordHash = HashUtil.hashString(password);
         UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
-        try {
-            user = userDAO.selectByUsername(username);
-            if (user != null) {
-                logger.debug("This username \"" + username + "\" is already exists.");
-                throw new UserServiceException("User with that username is already exists", UserServiceException.USER_EXISTS);
-            }
-
-            user = userDAO.selectByEmail(email);
-            if (user != null) {
-                logger.debug("This email \"" + email + "\" is already exists.");
-                throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
-            }
-
-            password = HashUtil.hashString(password);
-
-            user = new User();
-            user.setUsername(username);
-            user.setEmail(email);
-            user.setPassHash(password);
-
-            user = userDAO.insert(user);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
+        user = tryCallDAO(() -> userDAO.selectByUsername(username));
+        if (user != null) {
+            logger.debug("This username \"" + username + "\" is already exists.");
+            throw new UserServiceException("User with that username is already exists", UserServiceException.USER_EXISTS);
         }
-        return user;
+
+        user = tryCallDAO(() -> userDAO.selectByEmail(email));
+        if (user != null) {
+            logger.debug("This email \"" + email + "\" is already exists.");
+            throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
+        }
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassHash(passwordHash);
+
+        return tryCallDAO(() -> userDAO.insert(newUser));
     }
 
     @Override
     public User login(String username, String password) throws ServiceException {
         UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
-        try {
-            user = userDAO.selectByUsername(username);
-            if (!isNull(user) && (user.getStatus() != User.STATUS_DELETED)) {
-                if (!HashUtil.isValidHash(password, user.getPassHash())) {
-                    logger.debug("Incorrect password for username \"" + username + "\"");
-                    throw new UserServiceException("Incorrect password.", UserServiceException.INCORRECT_PASSWORD);
-                }
-            } else {
-                logger.debug("User with username \"" + username + "\" doesn't exists.");
-                throw new UserServiceException("Incorrect password.", UserServiceException.USER_NOT_EXIST);
+        user = tryCallDAO(() -> userDAO.selectByUsername(username));
+        if (!isNull(user) && (user.getStatus() != User.STATUS_DELETED)) {
+            if (!HashUtil.isValidHash(password, user.getPassHash())) {
+                logger.debug("Incorrect password for username \"" + username + "\"");
+                throw new UserServiceException("Incorrect password.", UserServiceException.INCORRECT_PASSWORD);
             }
-        } catch (DAOException e) {
-            throw new ServiceException(e);
+        } else {
+            logger.debug("User with username \"" + username + "\" doesn't exists.");
+            throw new UserServiceException("Incorrect password.", UserServiceException.USER_NOT_EXIST);
         }
         return user;
     }
@@ -91,10 +81,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User updatedUser) throws ServiceException {
         UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-        try {
-            userDAO.update(updatedUser);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
+        tryCallDAO(() -> userDAO.update(updatedUser));
     }
 }

@@ -26,6 +26,8 @@ public class GetHomePageCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         String pageParameter = request.getParameter(PAGE_INDEX_PARAMETER);
+        String searchQuery = request.getParameter(SEARCH_QUERY_PARAMETER);
+
         int pageIndex = 1;
         if (!isNullOrEmpty(pageParameter)) {
             try {
@@ -42,8 +44,13 @@ public class GetHomePageCommand implements Command {
         int pageCount;
         try {
             QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
-            pageCount = questionService.getPageCount();
-            questions = questionService.getQuestionsPage(pageIndex);
+            if (isNullOrEmpty(searchQuery)) {
+                pageCount = questionService.getPageCount();
+                questions = questionService.getQuestionsPage(pageIndex);
+            } else {
+                pageCount = questionService.getSearchPageCount(searchQuery);
+                questions = questionService.getSearchQuestionsPage(searchQuery, pageIndex);
+            }
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

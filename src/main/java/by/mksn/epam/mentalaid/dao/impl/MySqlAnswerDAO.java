@@ -32,7 +32,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                    entity = executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
@@ -49,7 +49,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
     public Answer selectById(long id) throws DAOException {
         Answer answer;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            answer = selectById(connection, QUERY_SELECT_BY_ID, id);
+            answer = executeSelectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -81,7 +81,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
 
             statement.executeUpdate();
 
-            Answer reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            Answer reselectedEntity = executeSelectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
             updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -92,7 +92,7 @@ public class MySqlAnswerDAO extends AbstractBaseDAO<Answer> implements AnswerDAO
 
     @Override
     public void delete(long id) throws DAOException {
-        delete(QUERY_DELETE, id);
+        executeDelete(QUERY_DELETE, id);
     }
 
     @Override

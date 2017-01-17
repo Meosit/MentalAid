@@ -162,3 +162,39 @@ a.anchor {
     top: -60px;
     visibility: hidden;
 }
+
+.btn-custom {
+    border-width: 1px;
+    padding: 0;
+    width: 90px;
+}
+
+.btn-warn {
+    border-color: #ffc423;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn-warn:hover {
+    background-color: #ffedbd;
+}
+
+.btn-dang {
+    border-color: #d9534f;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn-dang:hover {
+    background-color: #ffd6d3;
+}
+
+.btn-conf {
+    border-color: #43b3f7;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn-conf:hover {
+    background-color: #b9f2f7;
+}

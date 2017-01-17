@@ -85,4 +85,10 @@ p span span.glyphicon {
     z-index: 9999;
 }
 
+.search-info {
+    margin: 10px 0;
+    border-bottom: 1px solid #336699;
+    padding: 0 10px 10px 10px;
+    font-size: medium;
+}
 

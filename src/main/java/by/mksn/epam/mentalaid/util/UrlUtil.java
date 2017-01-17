@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNullDefault;
+import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 
 /**
  * Util class for simpler working with URL's
@@ -98,12 +99,29 @@ public final class UrlUtil {
     public static String getBackRedirectUrl(HttpServletRequest request) {
         String fromParameter = request.getParameter(Constants.FROM_URL_PARAMETER);
         String redirectUrl;
-        if (!StringUtil.isNullOrEmpty(fromParameter)) {
+        if (!isNullOrEmpty(fromParameter)) {
             redirectUrl = fromParameter;
         } else {
             redirectUrl = getServletUrl(request);
         }
         return redirectUrl;
+    }
+
+    /**
+     * Removes GET parameter from the url
+     *
+     * @param url           url where parameter will be removed
+     * @param parameterName name of the parameter to remove
+     * @return url without parameter;
+     */
+    public static String removeParameterFromUrl(String url, String parameterName) {
+        if (!isNullOrEmpty(url)) {
+            return url
+                    .replaceAll(parameterName + "=[^&]*?[&]?", "")
+                    .replace("&&", "&");
+        } else {
+            return "";
+        }
     }
 
 }

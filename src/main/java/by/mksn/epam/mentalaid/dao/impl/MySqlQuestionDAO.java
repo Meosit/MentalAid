@@ -22,9 +22,13 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     private static final String QUERY_INSERT = "INSERT INTO `question` (`creator_id`, `title`, `description`) VALUES (?, ?, ?);";
     private static final String QUERY_SELECT_BY_ID = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON (`question`.`id` = `answer`.`question_id`) AND (`answer`.`status` != -1) WHERE (`question`.`id` = ?) AND (`question`.`status` != -1) GROUP BY `question`.`id`;";
     private static final String QUERY_SELECT_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON (`question`.`id` = `answer`.`question_id`) AND (`answer`.`status` != -1) WHERE (`question`.`status` != -1) GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
+    private static final String QUERY_SELECT_LIKE_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON (`question`.`id` = `answer`.`question_id`) AND (`answer`.`status` != -1) WHERE (`question`.`status` != -1) AND ((LOWER(`question`.`description`) LIKE LOWER(?)) OR (LOWER(`question`.`title`) LIKE LOWER(?))) GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
     private static final String QUERY_SELECT_BY_USERNAME_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON (`question`.`id` = `answer`.`question_id`) AND (`answer`.`status` != -1) WHERE (`user`.`username` = ?) AND (`question`.`status` != -1) GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
+    private static final String QUERY_SELECT_LIKE_BY_USERNAME_WITH_LIMIT = "SELECT `question`.`id`, `question`.`creator_id`, `question`.`title`, `question`.`description`, `question`.`status`, `question`.`created_at`, `question`.`modified_at`, `user`.`username`, COUNT(`answer`.`question_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` LEFT JOIN `answer` ON (`question`.`id` = `answer`.`question_id`) AND (`answer`.`status` != -1) WHERE (`user`.`username` = ?) AND (`question`.`status` != -1) AND ((LOWER(`question`.`description`) LIKE LOWER(?)) OR (LOWER(`question`.`title`) LIKE LOWER(?))) GROUP BY `question`.`id` ORDER BY `question`.`id` DESC LIMIT ?, ?;";
     private static final String QUERY_SELECT_COUNT = "SELECT COUNT(`id`) FROM `question` WHERE `question`.`status` != -1;";
+    private static final String QUERY_SELECT_LIKE_COUNT = "SELECT COUNT(`id`) FROM `question` WHERE (`question`.`status` != -1) AND ((LOWER(`question`.`description`) LIKE LOWER(?)) OR (LOWER(`question`.`title`) LIKE LOWER(?)));";
     private static final String QUERY_SELECT_COUNT_BY_USERNAME = "SELECT COUNT(`creator_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1);";
+    private static final String QUERY_SELECT_LIKE_COUNT_BY_USERNAME = "SELECT COUNT(`creator_id`) FROM `question` JOIN `user` ON `question`.`creator_id` = `user`.`id` WHERE (`user`.`username` = ?) AND (`question`.`status` != -1) AND ((LOWER(`question`.`description`) LIKE LOWER(?)) OR (LOWER(`question`.`title`) LIKE LOWER(?)));";
     private static final String QUERY_UPDATE = "UPDATE `question` SET `title` = ?, `description` = ? WHERE (`id` = ?) AND (`status` != -1);";
     private static final String QUERY_DELETE = "UPDATE `question` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
 
@@ -40,7 +44,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = selectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                    entity = executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
@@ -57,7 +61,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     public Question selectById(long id) throws DAOException {
         Question question;
         try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            question = selectById(connection, QUERY_SELECT_BY_ID, id);
+            question = executeSelectById(connection, QUERY_SELECT_BY_ID, id);
         } catch (SQLException e) {
             throw new DAOException(e);
         } catch (PoolException e) {
@@ -72,6 +76,24 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
              PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_WITH_LIMIT)) {
             statement.setInt(1, offset);
             statement.setInt(2, count);
+
+            return executeStatementAndParseResultSetToList(statement);
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+    }
+
+    @Override
+    public List<Question> selectLikeWithLimit(String likeQuery, int offset, int count) throws DAOException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_WITH_LIMIT)) {
+            likeQuery = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likeQuery);
+            statement.setString(2, likeQuery);
+            statement.setInt(3, offset);
+            statement.setInt(4, count);
 
             return executeStatementAndParseResultSetToList(statement);
         } catch (SQLException e) {
@@ -98,6 +120,25 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     }
 
     @Override
+    public List<Question> selectLikeByUsernameWithLimit(String likeQuery, String username, int offset, int count) throws DAOException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_BY_USERNAME_WITH_LIMIT)) {
+            likeQuery = createGlobalLikePattern(likeQuery);
+            statement.setString(1, username);
+            statement.setString(2, likeQuery);
+            statement.setString(3, likeQuery);
+            statement.setInt(4, offset);
+            statement.setInt(5, count);
+
+            return executeStatementAndParseResultSetToList(statement);
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+    }
+
+    @Override
     public int selectCount() throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_COUNT);
@@ -107,6 +148,28 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
             } else {
                 logger.error("Cannot select question count, empty result set.");
                 throw new DAOException("Cannot select question count");
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+    }
+
+    @Override
+    public int selectLikeCount(String likeQuery) throws DAOException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_COUNT)) {
+            likeQuery = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likeQuery);
+            statement.setString(2, likeQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    logger.error("Cannot select question count, empty result set.");
+                    throw new DAOException("Cannot select question count");
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -136,6 +199,29 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
     }
 
     @Override
+    public int selectLikeCountByUsername(String likeQuery, String username) throws DAOException {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_COUNT_BY_USERNAME)) {
+            likeQuery = createGlobalLikePattern(likeQuery);
+            statement.setString(1, username);
+            statement.setString(2, likeQuery);
+            statement.setString(3, likeQuery);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    logger.error("Cannot select question count, empty result set.");
+                    throw new DAOException("Cannot select question count");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        } catch (PoolException e) {
+            throw new DAOException("Cannot get connection\n", e);
+        }
+    }
+
+    @Override
     public void update(Question updatedEntity) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE)) {
@@ -145,7 +231,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
 
             statement.executeUpdate();
 
-            Question reselectedEntity = selectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
+            Question reselectedEntity = executeSelectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
             updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -156,7 +242,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
 
     @Override
     public void delete(long id) throws DAOException {
-        delete(QUERY_DELETE, id);
+        executeDelete(QUERY_DELETE, id);
     }
 
     @Override

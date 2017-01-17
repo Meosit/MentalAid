@@ -1,6 +1,5 @@
 package by.mksn.epam.mentalaid.dao.impl;
 
-import by.mksn.epam.mentalaid.dao.BaseDAO;
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.dao.pool.ConnectionPool;
 import by.mksn.epam.mentalaid.dao.pool.exception.PoolException;
@@ -13,12 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
+
 /**
- * Base DAO with some equal and useful methods for other DAO's
+ * class with some useful methods for other DAO's to avoid code duplication
  *
  * @param <E> Entity of concrete DAO
  */
-abstract class AbstractBaseDAO<E extends Entity> implements BaseDAO<E> {
+abstract class AbstractBaseDAO<E extends Entity> {
 
     /**
      * Selects entity with specified id
@@ -29,7 +30,7 @@ abstract class AbstractBaseDAO<E extends Entity> implements BaseDAO<E> {
      * @return {@link Entity} with specified ID or {@code null} if entity with such ID not found
      * @throws SQLException if something went wrong
      */
-    E selectById(Connection connection, String selectQuery, long id) throws SQLException {
+    E executeSelectById(Connection connection, String selectQuery, long id) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
             statement.setLong(1, id);
             return executeStatementAndParseResultSet(statement);
@@ -43,7 +44,7 @@ abstract class AbstractBaseDAO<E extends Entity> implements BaseDAO<E> {
      * @param id          id of an entity
      * @throws DAOException if something went wrong
      */
-    void delete(String deleteQuery, long id) throws DAOException {
+    void executeDelete(String deleteQuery, long id) throws DAOException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
             statement.setLong(1, id);
@@ -104,6 +105,26 @@ abstract class AbstractBaseDAO<E extends Entity> implements BaseDAO<E> {
         }
         questions.trimToSize();
         return questions;
+    }
+
+    /**
+     * Creates patten for LIKE query from the specified string.
+     * Also escapes LIKE special chars.
+     *
+     * @param query query to create pattern
+     * @return LIKE pattern
+     */
+    String createGlobalLikePattern(String query) {
+        if (!isNullOrEmpty(query)) {
+            query = query
+                    .replace("!", "!!")
+                    .replace("%", "!%")
+                    .replace("_", "!_")
+                    .replace("[", "![");
+            return "%" + query + "%";
+        } else {
+            return "%";
+        }
     }
 
 
