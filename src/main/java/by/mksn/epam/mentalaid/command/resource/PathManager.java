@@ -18,7 +18,7 @@ public class PathManager {
     /**
      * Path of question list page, to this page user forwarded at first
      */
-    public static final String QUESTION_LIST = "page.question_list";
+    public static final String HOME = "page.home";
     /**
      * Path of single question page
      */

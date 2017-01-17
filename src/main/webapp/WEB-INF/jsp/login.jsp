@@ -14,7 +14,6 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="true"/>
-    <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
   </jsp:include>
   <div class="container">
     <div class="wrapper">
@@ -22,7 +21,7 @@
         <h3 class="form-signin-heading"><fmt:message key="welcomeBack"/></h3>
         <hr class="colorgraph">
         <br>
-        <input type="hidden" name="from" value="${requestScope.fromUrl}">
+        <input type="hidden" name="from" value="${param.from}">
         <input type="text" class="form-control" id="username" name="username" placeholder="Username" required
                autofocus/>
         <input type="password" class="form-control" id="password" name="password" placeholder="Password"
@@ -35,7 +34,7 @@
       <div class="alert alert-success">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         <fmt:message key="register_hint.message"/>
-        <a href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(ms:backRedirectUrl(pageContext.request))}"/>"><fmt:message
+        <a href="<c:url value="/controller?cmd=register&from=${ms:encodeUrl(param.from)}"/>"><fmt:message
             key="register_hint.link"/></a>.
       </div>
       <div id="error-alert" class="alert alert-danger hidden">

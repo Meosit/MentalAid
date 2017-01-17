@@ -29,7 +29,7 @@ public class MarkServiceImpl implements MarkService {
                 markDAO.insert(mark);
             } else {
                 oldMark.setValue(mark.getValue());
-                markDAO.update(mark);
+                markDAO.update(oldMark);
             }
         } catch (DAOException e) {
             throw new ServiceException(e);

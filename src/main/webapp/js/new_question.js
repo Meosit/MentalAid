@@ -42,7 +42,7 @@ $('#question-title-input').focusout(function () {
             if (isBlank(inputVal)) {
                 return STRINGS.question_title_empty;
             } else if (inputVal.length > MAX_QUESTION_TITLE_LENGTH) {
-                return STRINGS.question_title_too_long;
+                return STRINGS.question_title_too_long + inputVal.length;
             } else {
                 return null;
             }
@@ -56,7 +56,7 @@ $('#question-description-input').focusout(function () {
             if (isBlank(inputVal)) {
                 return STRINGS.question_description_empty;
             } else if (inputVal.length > MAX_QUESTION_DESCRIPTION_LENGTH) {
-                return STRINGS.question_description_too_long;
+                return STRINGS.question_description_too_long + inputVal.length;
             } else {
                 return null;
             }
@@ -95,7 +95,7 @@ function validateInputByCondition(inputElement, getErrorStringFunction) {
         if (document.getElementById(inputElement.id + "-error-div") == null) {
             addErrorMessageDiv(inputElement.id + "-error-div", errorMessageString);
         } else {
-            removeErrorMessageDiv(inputElement.id);
+            removeErrorMessageDiv(inputElement.id + "-error-div");
             addErrorMessageDiv(inputElement.id + "-error-div", errorMessageString);
         }
     }

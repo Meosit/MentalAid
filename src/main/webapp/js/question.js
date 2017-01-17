@@ -133,7 +133,7 @@ $('#question-description-edit').focusout(function () {
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.question_description_too_long
+                STRINGS.question_description_too_long + $(this).val().length
             );
     } else {
         $('#question-result-alert-container').html('');
@@ -156,7 +156,7 @@ $('#question-title-edit').focusout(function () {
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.question_title_too_long
+                STRINGS.question_title_too_long + $(this).val().length
             );
     } else {
         $('#question-result-alert-container').html('');
@@ -297,7 +297,7 @@ $(document).on('focusout', '.answer-text-input', function () {
             .addResultAlert(
                 false,
                 STRINGS.error_alert,
-                STRINGS.answer_text_too_long
+                STRINGS.answer_text_too_long + answrTextInput.val().length
             );
     } else {
         answerRoot.find('.answer-result-alert-container').html('');
@@ -305,8 +305,11 @@ $(document).on('focusout', '.answer-text-input', function () {
     }
 });
 
-$('#new-answer-text-input').focusout(function () {
-    if (isBlank($(this).val())) {
+$('#new-answer-form').on('submit', function (e) {
+    e.preventDefault();
+    var isValidInput = true;
+    var answrTextInput = $('#new-answer-text-input');
+    if (isBlank(answrTextInput.val())) {
         isValidInput = false;
         $('#new-answer-alert-container')
             .addResultAlert(
@@ -314,15 +317,18 @@ $('#new-answer-text-input').focusout(function () {
                 STRINGS.error_alert,
                 STRINGS.answer_text_empty
             );
+    } else if (answrTextInput.val().length > MAX_ANSWER_TEXT_LENGTH) {
+        isValidInput = false;
+        $('#new-answer-alert-container')
+            .addResultAlert(
+                false,
+                STRINGS.error_alert,
+                STRINGS.answer_text_too_long + answrTextInput.val().length
+            );
     } else {
         $('#new-answer-alert-container').html('');
         isValidInput = true;
     }
-});
-
-
-$('#new-answer-form').on('submit', function (e) {
-    e.preventDefault();
     if (isValidInput) {
         $.ajax({
             url: 'controller?cmd=async_answer_add',
@@ -331,6 +337,7 @@ $('#new-answer-form').on('submit', function (e) {
             data: $('#new-answer-form').serialize(),
             success: function (response) {
                 if (response.isResultSuccess) {
+                    var newAnswerTextInput = $('#new-answer-text-input');
                     var newAnswerElement = $('#new-answer-template').find('.answer').clone();
                     newAnswerElement.attr('id', 'answer-' + response.answerId);
                     newAnswerElement.find('.answer-creator-username').text(response.creatorUsername);
@@ -338,11 +345,12 @@ $('#new-answer-form').on('submit', function (e) {
                     newAnswerElement.find('.answer-modified-date').text(response.createdAt);
                     newAnswerElement.find('.answer-id-input').val(response.answerId);
                     newAnswerElement.find('.answer-text')
-                        .text($('#new-answer-text-input').val())
+                        .text(newAnswerTextInput.val())
                         .collapseTextNewLinesAndTrim();
                     newAnswerElement.appendTo('.answers');
                     switchNewAnswerMode('answer-exists');
-                    updateAnswerCountLabel(1)
+                    updateAnswerCountLabel(1);
+                    newAnswerTextInput.val('');
                 } else {
                     $('#new-answer-alert-container')
                         .addResultAlert(
@@ -361,7 +369,6 @@ $('#new-answer-form').on('submit', function (e) {
                     );
             }
         });
-        isValidInput = true;
     }
 });
 
@@ -477,84 +484,4 @@ function updateAnswerCountLabel(delta) {
         answerCount.text(count + " " + STRINGS.answer_count_multiple);
     }
 
-}
-if ($('meta[name=authorized]').attr('content') == 'true') {
-    $(document)
-        .on('mouseenter', '.cfi.cfi--star.stars__out', function () {
-            $(this).find('.stars__in').width('100%');
-            $(this).prevAll().each(function () {
-                $(this).find('.stars__in').width("100%");
-            });
-            $(this).nextAll().each(function () {
-                $(this).find('.stars__in').width("0%");
-            });
-        })
-        .on('mouseleave', '.cfi.cfi--star.stars__out', function () {
-            $(this).siblings().each(function () {
-                var initVal = $(this).attr('data-init-value');
-                $(this).find('.stars__in').width(initVal + "%");
-            });
-            $(this).find('.stars__in').width($(this).attr('data-init-value') + "%");
-        })
-        .on('click', '.cfi.cfi--star.stars__out', function () {
-            $(this).attr('data-init-value', '100');
-            $(this).prevAll().each(function () {
-                $(this).attr('data-init-value', '100');
-            });
-            $(this).nextAll().each(function () {
-                $(this).attr('data-init-value', '0');
-            });
-            var value = $(this).attr('data-index');
-            var answerId = extractAnswerId($(this).closest('.answer'));
-            var element = $(this).closest('.stars').find('.cfi.status');
-            $.ajax({
-                url: 'controller?cmd=async_mark_add',
-                type: 'POST',
-                dataType: 'text json',
-                data: 'answer_id=' + answerId + '&value=' + value,
-                success: function (response) {
-                    showAddMarkResult(element, response.resultStatus);
-                },
-                error: function () {
-                    showAddMarkResult(element, 'error');
-                }
-            });
-        });
-}
-
-function showAddMarkResult(statusElement, result) {
-    statusElement.removeClass('cfi-status-success cfi-status-failed ' +
-        'glyphicon-ok-circle glyphicon-ban-circle glyphicon-remove-circle');
-    switch (result) {
-        case 'ok':
-            statusElement
-                .fadeIn()
-                .addClass('cfi-status-spark')
-                .delay(300)
-                .removeClass('cfi-status-spark')
-                .addClass('cfi-status-success glyphicon-ok-circle')
-                .delay(1000)
-                .fadeOut(2000);
-            break;
-        case 'denied':
-            statusElement
-                .fadeIn()
-                .addClass('cfi-status-spark')
-                .delay(300)
-                .removeClass('cfi-status-spark')
-                .addClass('cfi-status-failed glyphicon-ban-circle')
-                .delay(1000)
-                .fadeOut(2000);
-            break;
-        case 'error':
-            statusElement
-                .fadeIn()
-                .addClass('cfi-status-spark')
-                .delay(300)
-                .removeClass('cfi-status-spark')
-                .addClass('cfi-status-failed glyphicon-remove-circle')
-                .delay(1000)
-                .fadeOut(2000);
-            break;
-    }
 }

@@ -6,7 +6,6 @@ import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
-import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.LOCALE_ATTRIBUTE;
 import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.util.UrlUtil.getBackRedirectUrl;
 
 /**
  * Changes site content locale and saves it in database if user is signed in
@@ -42,6 +42,6 @@ public class SetLocaleCommand implements Command {
         }
         logger.debug("Locale was set to \"" + newLocale + "\"");
 
-        Command.sendRedirect(UrlUtil.getBackRedirectUrl(request), response);
+        Command.sendRedirect(getBackRedirectUrl(request), response);
     }
 }

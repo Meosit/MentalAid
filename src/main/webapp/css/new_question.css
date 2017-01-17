@@ -6,3 +6,7 @@ label {
     display: initial;
     font-weight: initial;
 }
+
+.well {
+    margin-top: 20px;
+}

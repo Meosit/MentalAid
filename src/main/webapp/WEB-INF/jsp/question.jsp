@@ -16,7 +16,6 @@
     <body>
       <jsp:include page="template/navbar.jsp">
         <jsp:param name="isNavbarLess" value="false"/>
-        <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
       </jsp:include>
       <div class="container">
         <c:set var="isQuestionOwner"
@@ -46,8 +45,8 @@
             </div>
           </c:if>
           <h5 class="text-right">
-            <fmt:message key="question.askedBy"/> <a class="${isQuestionOwner ? 'owner' : ''}"
-                                                     href="#">${requestScope.question.creatorUsername}</a>
+            <fmt:message key="question.by"/> <a class="${isQuestionOwner ? 'owner' : ''}"
+                                                href="#">${requestScope.question.creatorUsername}</a>
             <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span> <fmt:formatDate
               value="${requestScope.question.createdAt}" type="both" dateStyle="long" timeStyle="short"/>
           </h5>
@@ -127,7 +126,8 @@
                   </c:if>
                   <div>
                     <div class="col-md-6 text-left">
-                      <ms:starRating value="${answer.averageMark}"/>
+                      <ms:starRating value="${answer.averageMark}" markCount="${answer.markCount}"
+                                     canVote="${(empty sessionScope.user or isAnswerOwner) ? false : true}"/>
                     </div>
                     <h5 class="media-heading col-md-6 text-right">
                       <fmt:message key="answer.by"/> <a class="${isAnswerOwner ? 'owner' : ''}"
@@ -182,7 +182,7 @@
                 </div>
                 <div>
                   <div class="col-md-6 text-left">
-                    <ms:starRating value="0"/>
+                    <ms:starRating value="0" markCount="0"/>
                   </div>
                   <h5 class="media-heading col-md-6 text-right">
                     <fmt:message key="answer.by"/> <a class="answer-creator-username owner" href="#"></a>
@@ -255,6 +255,7 @@
       <jsp:include page="template/footer.jsp"/>
       <script src="<c:url value="/js/lib/bootbox.js"/>"></script>
       <script src="<c:url value="/js/question.js"/>"></script>
+      <script src="<c:url value="/js/stars.js"/>"></script>
     </body>
   </html>
 </fmt:bundle>

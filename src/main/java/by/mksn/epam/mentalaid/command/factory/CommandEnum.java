@@ -22,9 +22,9 @@ public enum CommandEnum {
      */
     LOGIN(new GetLoginPageCommand()),
     /**
-     * This command provides questions list page
+     * This command provides home page with question list
      */
-    QUESTIONS(new GetQuestionListPageCommand()),
+    HOME(new GetHomePageCommand()),
     /**
      * This command provides question page
      */

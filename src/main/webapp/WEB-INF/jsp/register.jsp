@@ -14,14 +14,13 @@
   <body>
   <jsp:include page="template/navbar.jsp">
     <jsp:param name="isNavbarLess" value="true"/>
-    <jsp:param name="fromUrl" value="${ms:encodeUrl(ms:fullRequestUrl(pageContext.request))}"/>
   </jsp:include>
   <div class="container">
     <div class="wrapper">
       <fieldset>
         <h2 class="text-center"><fmt:message key="header"/></h2>
         <form class="form-horizontal" id="registration-form">
-          <input type="hidden" name="from" value="${requestScope.fromUrl}">
+          <input type="hidden" name="from" value="${param.from}">
           <div class="form-group">
             <label class="control-label col-sm-offset-2 col-sm-2 required-mark" for="username"><fmt:message
                 key="username.label"/></label>
@@ -63,13 +62,13 @@
                 <fmt:message key="button.register"/></button>
             </div>
           </div>
-          <div class="col-sm-offset-2 col-sm-8 login-hint alert alert-success">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <fmt:message key="login_hint.message"/> <a
-              href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(ms:backRedirectUrl(pageContext.request))}"/>"><fmt:message
-              key="login_hint.link"/></a>.
-          </div>
         </form>
+        <div class="login-hint alert alert-success">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <fmt:message key="login_hint.message"/> <a
+            href="<c:url value="/controller?cmd=login&from=${ms:encodeUrl(param.from)}"/>"><fmt:message
+            key="login_hint.link"/></a>.
+        </div>
         <div id="error-div">
           <div id="error-alert" class="alert alert-danger hidden">
             <strong id="error-title"></strong> <span id="error-message"></span>

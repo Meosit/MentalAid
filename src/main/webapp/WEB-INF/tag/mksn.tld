@@ -10,7 +10,7 @@
   <uri>http://epam.mksn.by/MentalAid/tag/msTags</uri>
   <tag>
     <name>bootstrapPagination</name>
-    <tag-class>by.mksn.epam.mentalaid.tag.BootstrapPaginationBlockTag</tag-class>
+    <tag-class>by.mksn.epam.mentalaid.tag.PaginationBlockTag</tag-class>
     <body-content>empty</body-content>
     <attribute>
       <name>baseUrl</name>
@@ -36,11 +36,25 @@
       <name>value</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>float</type>
     </attribute>
     <attribute>
       <name>starCount</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+    <attribute>
+      <name>markCount</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+    <attribute>
+      <name>canVote</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
     </attribute>
   </tag>
   <function>
@@ -51,10 +65,10 @@
     </function-signature>
   </function>
   <function>
-    <name>backRedirectUrl</name>
+    <name>servletPath</name>
     <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
     <function-signature>
-      java.lang.String getBackRedirectUrl(javax.servlet.http.HttpServletRequest)
+      java.lang.String getServletUrl(javax.servlet.http.HttpServletRequest)
     </function-signature>
   </function>
   <function>

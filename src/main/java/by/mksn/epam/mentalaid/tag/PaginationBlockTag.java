@@ -8,12 +8,11 @@ import javax.servlet.jsp.SkipPageException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
-/**
- * Tag to format price, more simple and shorter than fmt:numberFormat
- */
-public class BootstrapPaginationBlockTag extends SimpleTagSupport {
+import static by.mksn.epam.mentalaid.command.resource.Constants.PAGE_INDEX_PARAMETER;
 
-    private static final Logger logger = Logger.getLogger(BootstrapPaginationBlockTag.class);
+public class PaginationBlockTag extends SimpleTagSupport {
+
+    private static final Logger logger = Logger.getLogger(PaginationBlockTag.class);
 
     private static final String BLOCK_HEADER = "<nav aria-label='Page navigation'><ul class='pagination'>";
     private static final String BLOCK_FOOTER = "</ul></nav>";
@@ -64,6 +63,8 @@ public class BootstrapPaginationBlockTag extends SimpleTagSupport {
     }
 
     public void setBaseUrl(String baseUrl) {
+        baseUrl = baseUrl.replaceAll(PAGE_INDEX_PARAMETER + "=[^&]*?&?", "");
+        baseUrl += PAGE_INDEX_PARAMETER + "=";
         this.baseUrl = baseUrl;
     }
 

@@ -64,7 +64,7 @@ public final class UrlUtil {
      */
     public static String encodeUrl(String string) {
         try {
-            return URLEncoder.encode(string, URL_CHARSET);
+            return URLEncoder.encode(isNullDefault(string, ""), URL_CHARSET);
         } catch (UnsupportedEncodingException e) {
             logger.error("Unsupported character encoding: " + URL_CHARSET);
         }
@@ -79,7 +79,7 @@ public final class UrlUtil {
      */
     public static String decodeUrl(String string) {
         try {
-            return URLDecoder.decode(string, URL_CHARSET);
+            return URLDecoder.decode(isNullDefault(string, ""), URL_CHARSET);
         } catch (UnsupportedEncodingException e) {
             logger.error("Unsupported character encoding: " + URL_CHARSET);
         }
@@ -90,7 +90,7 @@ public final class UrlUtil {
      * Get's parameter with name {@link Constants#FROM_URL_PARAMETER} and
      * decodes them for future back redirecting.<br>
      * If there is no {@link Constants#FROM_URL_PARAMETER} in this request,
-     * {@link #getRequestUrl(HttpServletRequest)} of this request will be returned.
+     * result of {@link #getServletUrl(HttpServletRequest)} will be returned.
      *
      * @param request {@link HttpServletRequest} from where url will be taken
      * @return url for back-redirecting
@@ -99,9 +99,9 @@ public final class UrlUtil {
         String fromParameter = request.getParameter(Constants.FROM_URL_PARAMETER);
         String redirectUrl;
         if (!StringUtil.isNullOrEmpty(fromParameter)) {
-            redirectUrl = decodeUrl(fromParameter);
+            redirectUrl = fromParameter;
         } else {
-            redirectUrl = getRequestUrl(request);
+            redirectUrl = getServletUrl(request);
         }
         return redirectUrl;
     }

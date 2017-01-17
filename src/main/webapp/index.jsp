@@ -5,6 +5,6 @@
     <title></title>
   </head>
   <body>
-    <jsp:forward page="/controller?cmd=questions"/>
+    <jsp:forward page="/controller?cmd=home"/>
   </body>
 </html>

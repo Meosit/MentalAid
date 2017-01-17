@@ -26,7 +26,7 @@ public class DeleteQuestionCommand implements Command {
     private static final String REDIRECT_URL_NAME = "redirectUrl";
 
     private static String getRedirectUrl(HttpServletRequest request) {
-        return UrlUtil.getServletUrl(request) + "?question_deleted=success";
+        return UrlUtil.getBackRedirectUrl(request) + "?question_deleted=success";
     }
 
     @Override
