@@ -2,16 +2,14 @@ package by.mksn.epam.mentalaid.dao.impl;
 
 import by.mksn.epam.mentalaid.dao.QuestionDAO;
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
-import by.mksn.epam.mentalaid.dao.pool.ConnectionPool;
-import by.mksn.epam.mentalaid.dao.pool.exception.PoolException;
 import by.mksn.epam.mentalaid.entity.Question;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import static by.mksn.epam.mentalaid.util.caller.JDBCCaller.tryCallJDBC;
 
 /**
  * MySQL implementation of {@link QuestionDAO}
@@ -34,8 +32,7 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
 
     @Override
     public Question insert(Question entity) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        return tryCallJDBC(QUERY_INSERT, (connection, statement) -> {
             statement.setLong(1, entity.getCreatorId());
             statement.setString(2, entity.getTitle());
             statement.setString(3, entity.getDescription());
@@ -44,125 +41,83 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 if (keys.next()) {
                     long insertedId = keys.getLong(1);
-                    entity = executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
+                    return executeSelectById(connection, QUERY_SELECT_BY_ID, insertedId);
                 } else {
                     throw new DAOException("Generated keys set is empty");
                 }
             }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
-        return entity;
+        });
     }
 
     @Override
     public Question selectById(long id) throws DAOException {
-        Question question;
-        try (Connection connection = ConnectionPool.getInstance().getConnection()) {
-            question = executeSelectById(connection, QUERY_SELECT_BY_ID, id);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
-        return question;
+        return executeSelectById(QUERY_SELECT_BY_ID, id);
     }
 
     @Override
     public List<Question> selectWithLimit(int offset, int count) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_WITH_LIMIT)) {
+        return tryCallJDBC(QUERY_SELECT_WITH_LIMIT, statement -> {
             statement.setInt(1, offset);
             statement.setInt(2, count);
-
             return executeStatementAndParseResultSetToList(statement);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public List<Question> selectLikeWithLimit(String likeQuery, int offset, int count) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_WITH_LIMIT)) {
-            likeQuery = createGlobalLikePattern(likeQuery);
-            statement.setString(1, likeQuery);
-            statement.setString(2, likeQuery);
+        return tryCallJDBC(QUERY_SELECT_LIKE_WITH_LIMIT, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likePattern);
+            statement.setString(2, likePattern);
             statement.setInt(3, offset);
             statement.setInt(4, count);
-
             return executeStatementAndParseResultSetToList(statement);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public List<Question> selectByUsernameWithLimit(String username, int offset, int count) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_BY_USERNAME_WITH_LIMIT)) {
+        return tryCallJDBC(QUERY_SELECT_BY_USERNAME_WITH_LIMIT, statement -> {
             statement.setString(1, username);
             statement.setInt(2, offset);
             statement.setInt(3, count);
-
             return executeStatementAndParseResultSetToList(statement);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public List<Question> selectLikeByUsernameWithLimit(String likeQuery, String username, int offset, int count) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_BY_USERNAME_WITH_LIMIT)) {
-            likeQuery = createGlobalLikePattern(likeQuery);
+        return tryCallJDBC(QUERY_SELECT_LIKE_BY_USERNAME_WITH_LIMIT, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
             statement.setString(1, username);
-            statement.setString(2, likeQuery);
-            statement.setString(3, likeQuery);
+            statement.setString(2, likePattern);
+            statement.setString(3, likePattern);
             statement.setInt(4, offset);
             statement.setInt(5, count);
-
             return executeStatementAndParseResultSetToList(statement);
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public int selectCount() throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_COUNT);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            } else {
-                logger.error("Cannot select question count, empty result set.");
-                throw new DAOException("Cannot select question count");
+        return tryCallJDBC(QUERY_SELECT_COUNT, statement -> {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    logger.error("Cannot select question count, empty result set.");
+                    throw new DAOException("Cannot select question count");
+                }
             }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public int selectLikeCount(String likeQuery) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_COUNT)) {
-            likeQuery = createGlobalLikePattern(likeQuery);
-            statement.setString(1, likeQuery);
-            statement.setString(2, likeQuery);
+        return tryCallJDBC(QUERY_SELECT_LIKE_COUNT, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likePattern);
+            statement.setString(2, likePattern);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getInt(1);
@@ -171,17 +126,12 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
                     throw new DAOException("Cannot select question count");
                 }
             }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public int selectCountByUsername(String username) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_COUNT_BY_USERNAME)) {
+        return tryCallJDBC(QUERY_SELECT_COUNT_BY_USERNAME, statement -> {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -191,21 +141,16 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
                     throw new DAOException("Cannot select question count");
                 }
             }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public int selectLikeCountByUsername(String likeQuery, String username) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LIKE_COUNT_BY_USERNAME)) {
-            likeQuery = createGlobalLikePattern(likeQuery);
+        return tryCallJDBC(QUERY_SELECT_LIKE_COUNT_BY_USERNAME, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
             statement.setString(1, username);
-            statement.setString(2, likeQuery);
-            statement.setString(3, likeQuery);
+            statement.setString(2, likePattern);
+            statement.setString(3, likePattern);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getInt(1);
@@ -214,30 +159,20 @@ public class MySqlQuestionDAO extends AbstractBaseDAO<Question> implements Quest
                     throw new DAOException("Cannot select question count");
                 }
             }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     @Override
     public void update(Question updatedEntity) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(QUERY_UPDATE)) {
+        tryCallJDBC(QUERY_UPDATE, ((connection, statement) -> {
             statement.setString(1, updatedEntity.getTitle());
             statement.setString(2, updatedEntity.getDescription());
             statement.setLong(3, updatedEntity.getId());
-
             statement.executeUpdate();
 
             Question reselectedEntity = executeSelectById(connection, QUERY_SELECT_BY_ID, updatedEntity.getId());
             updatedEntity.setModifiedAt(reselectedEntity.getModifiedAt());
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        }));
     }
 
     @Override

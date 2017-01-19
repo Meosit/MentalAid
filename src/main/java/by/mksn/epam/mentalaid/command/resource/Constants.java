@@ -9,6 +9,7 @@ public final class Constants {
     public static final String LOCALE_ATTRIBUTE = "locale";
     public static final String USER_ATTRIBUTE = "user";
 
+    public static final String QUESTION_ID_PARAMETER = "quid";
     public static final String QUESTION_LIST_ATTRIBUTE = "questions";
     public static final String PAGE_INDEX_PARAMETER = "page";
     public static final String PAGE_COUNT_ATTRIBUTE = "pageCount";
@@ -62,5 +63,8 @@ public final class Constants {
 
     public static final String ERROR_TITLE_ANSWER_EXISTS = "answer.exists.title";
     public static final String ERROR_MESSAGE_ANSWER_EXISTS = "answer.exists.message";
+
+    public static final String ERROR_TITLE_PROFILE_NOT_FOUND = "profile.notFound.title";
+    public static final String ERROR_MESSAGE_PROFILE_NOT_FOUND = "profile.notFound.message";
 
 }

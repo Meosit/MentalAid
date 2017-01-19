@@ -10,6 +10,16 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 public interface UserService {
 
     /**
+     * Returns user with specified username, or {@code null}
+     * if user not found
+     *
+     * @param username username of a user to get
+     * @return {@link User} entity with specified username or {@code null} if entity not found
+     * @throws ServiceException if error happens during execution
+     */
+    User getByUsername(String username) throws ServiceException;
+
+    /**
      * Creates new user with the specified credentials
      *
      * @param username username of user, must be unique
@@ -28,7 +38,7 @@ public interface UserService {
      * @param username username of a user
      * @param password password of a user
      * @return - {@code null} if user with the given credentials does not exists <br>
-     *         - {@link User} entity of authorized user.
+     * - {@link User} entity of authorized user.
      * @throws UserServiceException if password does not match (cause code: {@link UserServiceException#INCORRECT_PASSWORD})<br>
      *                              - if such user does not exists (cause code: {@link UserServiceException#USER_NOT_EXIST})
      * @throws ServiceException     if error happens during execution

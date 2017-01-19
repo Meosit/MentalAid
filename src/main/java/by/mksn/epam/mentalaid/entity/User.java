@@ -48,13 +48,17 @@ public class User extends Entity {
      * Selected from `mark` page
      */
     private float averageMark;
+    /**
+     * Selected from `mark` page
+     */
+    private int markCount;
 
     public User() {
     }
 
     public User(long id, String email, String username,
                 String passHash, int role, Timestamp createdAt,
-                Timestamp modifiedAt, int status, String locale, String imageUrl, String website, float averageMark) {
+                Timestamp modifiedAt, int status, String locale, String imageUrl, String website, float averageMark, int markCount) {
         super(id);
         this.email = email;
         this.username = username;
@@ -67,6 +71,7 @@ public class User extends Entity {
         this.imageUrl = imageUrl;
         this.website = website;
         this.averageMark = averageMark;
+        this.markCount = markCount;
     }
 
     public String getEmail() {
@@ -157,6 +162,14 @@ public class User extends Entity {
         this.averageMark = averageMark;
     }
 
+    public int getMarkCount() {
+        return markCount;
+    }
+
+    public void setMarkCount(int markCount) {
+        this.markCount = markCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -167,6 +180,7 @@ public class User extends Entity {
         return super.equals(o) &&
                 role == user.role &&
                 status == user.status &&
+                markCount == user.markCount &&
                 Float.compare(averageMark, user.averageMark) == 0 &&
                 nullableEquals(email, user.getEmail()) &&
                 nullableEquals(username, user.getUsername()) &&
@@ -193,6 +207,7 @@ public class User extends Entity {
         result = 31 * result + nullableHashCode(imageUrl);
         result = 17 * result + nullableHashCode(website);
         result = 31 * result + (averageMark != +0.0f ? Float.floatToIntBits(averageMark) : 0);
+        result = 17 * result + markCount;
         return result;
     }
 
@@ -210,6 +225,7 @@ public class User extends Entity {
                 "; imageUrl=" + imageUrl +
                 "; website=" + website +
                 "; averageMark=" + averageMark +
+                "; markCount=" + markCount +
                 "]";
     }
 }

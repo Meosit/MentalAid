@@ -1,37 +1,37 @@
-package by.mksn.epam.mentalaid.service.impl;
+package by.mksn.epam.mentalaid.util.caller;
 
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 /**
- * Provides wrapper for DAO call from the service.
+ * Provides wrapper methods for DAO call from the service.
  * Useful for remove code duplicating.
  */
-class DAOCaller {
+public class DAOCaller {
 
     /**
-     * Wrap passed {@link DAOFunction} with exception handling
+     * Calls specified delegate in {@link DAOException} handling scope
      *
-     * @param daoFunction delegate to call
+     * @param function delegate to call
      * @param <R>         return type of DAO call
      * @return result of dao call
-     * @throws ServiceException if DAO exception occurs during execution {@code daoFunction}
+     * @throws ServiceException if DAO exception occurs during execution {@code function}
      */
-    static <R> R tryCallDAO(DAOFunction<R> daoFunction) throws ServiceException {
+    public static <R> R tryCallDAO(ServiceFunction<R> function) throws ServiceException {
         try {
-            return daoFunction.apply();
+            return function.apply();
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }
 
     /**
-     * Wrap passed {@link DAOFunction} with exception handling
+     * Calls specified delegate in {@link DAOException} handling scope
      *
      * @param daoFunction delegate to call
      * @throws ServiceException if DAO exception occurs during execution {@code daoFunction}
      */
-    static void tryCallDAO(VoidDAOFunction daoFunction) throws ServiceException {
+    public static void tryCallDAO(ServiceVoidFunction daoFunction) throws ServiceException {
         try {
             daoFunction.apply();
         } catch (DAOException e) {
@@ -40,24 +40,24 @@ class DAOCaller {
     }
 
     /**
-     * Dao delegate which accepts no parameter and returns object.
+     * Service delegate which accepts no parameter and returns object.
      * If error happens during execution, {@link DAOException} will be thrown.<br>
      * May be thrown {@link ServiceException} as well.
      *
-     * @param <R> return type of
+     * @param <R> return type of delegate
      */
     @FunctionalInterface
-    interface DAOFunction<R> {
+    public interface ServiceFunction<R> {
         R apply() throws DAOException, ServiceException;
     }
 
     /**
-     * Dao delegate which accepts no parameter and not return anything.
+     * Service delegate which accepts no parameter and returns nothing.
      * If error happens during execution, {@link DAOException} will be thrown.<br>
      * May be thrown {@link ServiceException} as well.
      */
     @FunctionalInterface
-    interface VoidDAOFunction {
+    public interface ServiceVoidFunction {
         void apply() throws DAOException, ServiceException;
     }
 

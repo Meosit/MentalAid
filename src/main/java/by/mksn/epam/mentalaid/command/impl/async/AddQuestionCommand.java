@@ -2,6 +2,7 @@ package by.mksn.epam.mentalaid.command.impl.async;
 
 import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
+import by.mksn.epam.mentalaid.command.factory.CommandEnum;
 import by.mksn.epam.mentalaid.entity.Question;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.QuestionService;
@@ -28,7 +29,9 @@ public class AddQuestionCommand implements Command {
     private static final String REDIRECT_URL_NAME = "redirectUrl";
 
     private static String getRedirectUrl(HttpServletRequest request, long questionId) {
-        return UrlUtil.getServletUrl(request) + "?cmd=question&quid=" + questionId;
+        return UrlUtil.getServletUrl(request) + "?" +
+                COMMAND_PARAMETER + "=" + CommandEnum.QUESTION.name().toLowerCase() +
+                "&" + QUESTION_ID_PARAMETER + "=" + questionId;
     }
 
     @Override

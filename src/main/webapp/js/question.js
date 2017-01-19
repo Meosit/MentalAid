@@ -1,4 +1,6 @@
 var isValidInput = true;
+var isAjaxRequestSent = false;
+
 const MAX_QUESTION_TITLE_LENGTH = 200;
 const MAX_QUESTION_DESCRIPTION_LENGTH = 2000;
 const MAX_ANSWER_TEXT_LENGTH = 2000;
@@ -22,45 +24,50 @@ $('#question-apply-btn').on('click', function (e) {
     if (isValidInput) {
         if ($('#question-title').text() !== $('#question-title-edit').val() ||
             $('#question-description').text() !== $('#question-description-edit').val()) {
-            $.ajax({
-                url: 'controller?cmd=async_question_edit',
-                type: 'POST',
-                dataType: 'text json',
-                data: $('#question-edit-form').serialize(),
-                success: function (response) {
-                    if (response.isResultSuccess) {
-                        $('#question-title').text($('#question-title-edit').val());
-                        $('#question-description')
-                            .text($('#question-description-edit').val())
-                            .collapseTextNewLinesAndTrim();
-                        $('#question-edit-date-container').showElem();
-                        $('#question-edit-date').text(response.modifiedAt);
+            if (!isAjaxRequestSent) {
+                isAjaxRequestSent = true;
+                $.ajax({
+                    url: 'controller?cmd=async_question_edit',
+                    type: 'POST',
+                    dataType: 'text json',
+                    data: $('#question-edit-form').serialize(),
+                    success: function (response) {
+                        if (response.isResultSuccess) {
+                            $('#question-title').text($('#question-title-edit').val());
+                            $('#question-description')
+                                .text($('#question-description-edit').val())
+                                .collapseTextNewLinesAndTrim();
+                            $('#question-edit-date-container').showElem();
+                            $('#question-edit-date').text(response.modifiedAt);
+                            $('#question-result-alert-container')
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    STRINGS.success_alert,
+                                    STRINGS.question_edit_success_message
+                                );
+                            $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
+                            $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
+                        } else {
+                            $('#question-result-alert-container')
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    response.errorTitle,
+                                    response.errorMessage
+                                );
+                        }
+                        isAjaxRequestSent = false;
+                    },
+                    error: function (xhr, status, error) {
                         $('#question-result-alert-container')
                             .addResultAlert(
-                                response.isResultSuccess,
-                                STRINGS.success_alert,
-                                STRINGS.question_edit_success_message
+                                false,
+                                status ? status : STRINGS.error_alert,
+                                error ? error : xhr.statusText
                             );
-                        $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
-                        $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
-                    } else {
-                        $('#question-result-alert-container')
-                            .addResultAlert(
-                                response.isResultSuccess,
-                                response.errorTitle,
-                                response.errorMessage
-                            );
+                        isAjaxRequestSent = false;
                     }
-                },
-                error: function (xhr, status, error) {
-                    $('#question-result-alert-container')
-                        .addResultAlert(
-                            false,
-                            status ? status : STRINGS.error_alert,
-                            error ? error : xhr.statusText
-                        );
-                }
-            });
+                });
+            }
         } else {
             $('#question-edit-btn, #question-delete-btn, #question-div').showElem();
             $('#question-apply-btn, #question-cancel-btn, #question-edit-div').hideElem();
@@ -86,7 +93,8 @@ $('#question-delete-btn').on('click', function (e) {
         },
         className: 'v-center',
         callback: function (result) {
-            if (result) {
+            if (result && !isAjaxRequestSent) {
+                isAjaxRequestSent = true;
                 $.ajax({
                     url: "controller?cmd=async_question_delete",
                     type: 'POST',
@@ -103,6 +111,7 @@ $('#question-delete-btn').on('click', function (e) {
                                     response.errorMessage
                                 );
                         }
+                        isAjaxRequestSent = false;
                     },
                     error: function (xhr, status, error) {
                         $('#question-result-alert-container')
@@ -111,6 +120,7 @@ $('#question-delete-btn').on('click', function (e) {
                                 status ? status : STRINGS.error_alert,
                                 error ? error : xhr.statusText
                             );
+                        isAjaxRequestSent = false;
                     }
                 })
             }
@@ -183,43 +193,48 @@ $(document).on('click', '.answer-apply-btn', function (e) {
     var answerRoot = $(this).closest('.answer');
     if (isValidInput) {
         if (answerRoot.find('.answer-text').text() !== answerRoot.find('.answer-text-input').val()) {
-            $.ajax({
-                url: 'controller?cmd=async_answer_edit',
-                type: 'POST',
-                dataType: 'text json',
-                data: answerRoot.find('.answer-edit-form').serialize(),
-                success: function (response) {
-                    if (response.isResultSuccess) {
-                        answerRoot.find('.answer-text')
-                            .text(answerRoot.find('.answer-text-input').val())
-                            .collapseTextNewLinesAndTrim();
-                        answerRoot.find('.answer-modified-date-container').showElem();
-                        answerRoot.find('.answer-modified-date').text(response.modifiedAt);
+            if (!isAjaxRequestSent) {
+                isAjaxRequestSent = true;
+                $.ajax({
+                    url: 'controller?cmd=async_answer_edit',
+                    type: 'POST',
+                    dataType: 'text json',
+                    data: answerRoot.find('.answer-edit-form').serialize(),
+                    success: function (response) {
+                        if (response.isResultSuccess) {
+                            answerRoot.find('.answer-text')
+                                .text(answerRoot.find('.answer-text-input').val())
+                                .collapseTextNewLinesAndTrim();
+                            answerRoot.find('.answer-modified-date-container').showElem();
+                            answerRoot.find('.answer-modified-date').text(response.modifiedAt);
+                            answerRoot.find('.answer-result-alert-container')
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    STRINGS.success_alert,
+                                    STRINGS.answer_edit_success_message
+                                );
+                            switchAnswerMode(answerRoot, false);
+                        } else {
+                            answerRoot.find('.answer-result-alert-container')
+                                .addResultAlert(
+                                    response.isResultSuccess,
+                                    response.errorTitle,
+                                    response.errorMessage
+                                );
+                        }
+                        isAjaxRequestSent = false;
+                    },
+                    error: function (xhr, status, error) {
                         answerRoot.find('.answer-result-alert-container')
                             .addResultAlert(
-                                response.isResultSuccess,
-                                STRINGS.success_alert,
-                                STRINGS.answer_edit_success_message
+                                false,
+                                status ? status : STRINGS.error_alert,
+                                error ? error : xhr.statusText
                             );
-                        switchAnswerMode(answerRoot, false);
-                    } else {
-                        answerRoot.find('.answer-result-alert-container')
-                            .addResultAlert(
-                                response.isResultSuccess,
-                                response.errorTitle,
-                                response.errorMessage
-                            );
+                        isAjaxRequestSent = false;
                     }
-                },
-                error: function (xhr, status, error) {
-                    answerRoot.find('.answer-result-alert-container')
-                        .addResultAlert(
-                            false,
-                            status ? status : STRINGS.error_alert,
-                            error ? error : xhr.statusText
-                        );
-                }
-            });
+                });
+            }
         } else {
             switchAnswerMode(answerRoot, false);
         }
@@ -247,7 +262,8 @@ $(document).on('click', '.answer-delete-btn', function (e) {
         },
         className: 'v-center',
         callback: function (result) {
-            if (result) {
+            if (result && !isAjaxRequestSent) {
+                isAjaxRequestSent = true;
                 $.ajax({
                     url: "controller?cmd=async_answer_delete",
                     type: 'POST',
@@ -266,6 +282,7 @@ $(document).on('click', '.answer-delete-btn', function (e) {
                                     response.errorMessage
                                 );
                         }
+                        isAjaxRequestSent = false;
                     },
                     error: function (xhr, status, error) {
                         answerRoot.find('.answer-result-alert-container')
@@ -274,6 +291,7 @@ $(document).on('click', '.answer-delete-btn', function (e) {
                                 status ? status : STRINGS.error_alert,
                                 error ? error : xhr.statusText
                             );
+                        isAjaxRequestSent = false;
                     }
                 })
             }
@@ -329,7 +347,8 @@ $('#new-answer-form').on('submit', function (e) {
         $('#new-answer-alert-container').html('');
         isValidInput = true;
     }
-    if (isValidInput) {
+    if (isValidInput && !isAjaxRequestSent) {
+        isAjaxRequestSent = true;
         $.ajax({
             url: 'controller?cmd=async_answer_add',
             type: 'POST',
@@ -359,6 +378,7 @@ $('#new-answer-form').on('submit', function (e) {
                             response.errorMessage
                         );
                 }
+                isAjaxRequestSent = false;
             },
             error: function (xhr, status, error) {
                 $('#new-answer-alert-container')
@@ -367,6 +387,7 @@ $('#new-answer-form').on('submit', function (e) {
                         status ? status : STRINGS.error_alert,
                         error ? error : xhr.statusText
                     );
+                isAjaxRequestSent = false;
             }
         });
     }

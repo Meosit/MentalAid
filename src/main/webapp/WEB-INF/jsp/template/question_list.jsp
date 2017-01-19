@@ -87,7 +87,7 @@
             </div>
             <div>
               <p><span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a ${aClass}
-                  href="#">${question.creatorUsername}</a></span>
+                  href="<c:url value="/controller?cmd=profile&username=${question.creatorUsername}"/>">${question.creatorUsername}</a></span>
                 <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
                     value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
                 <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}

@@ -2,10 +2,12 @@ const MAX_QUESTION_TITLE_LENGTH = 200;
 const MAX_QUESTION_DESCRIPTION_LENGTH = 2000;
 
 var isValidInput = true;
+var isAjaxRequestSent = false;
 
 $('#new-question-form').submit(function (e) {
     e.preventDefault();
-    if ($('.alert-ui').length == 0) {
+    if ($('.alert-ui').length == 0 && !isAjaxRequestSent) {
+        isAjaxRequestSent = true;
         $.ajax({
             url: "controller?cmd=async_question_add",
             type: 'POST',
@@ -21,6 +23,7 @@ $('#new-question-form').submit(function (e) {
                             response.errorMessage
                         );
                 }
+                isAjaxRequestSent = false;
             },
             error: function (xhr, status, error) {
                 $('#error-div')
@@ -28,12 +31,12 @@ $('#new-question-form').submit(function (e) {
                         status ? status : STRINGS.error_alert,
                         error ? error : xhr.statusText
                     );
+                isAjaxRequestSent = false;
             }
         });
         isValidInput = true;
     }
-})
-;
+});
 
 $('#question-title-input').focusout(function () {
     var inputVal = $(this).val();

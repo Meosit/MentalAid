@@ -6,12 +6,13 @@ import by.mksn.epam.mentalaid.entity.Question;
 import by.mksn.epam.mentalaid.service.QuestionService;
 import by.mksn.epam.mentalaid.service.exception.QuestionServiceException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
+import by.mksn.epam.mentalaid.util.caller.DAOCaller;
 import org.apache.log4j.Logger;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.service.impl.DAOCaller.tryCallDAO;
 import static by.mksn.epam.mentalaid.util.StringUtil.*;
+import static by.mksn.epam.mentalaid.util.caller.DAOCaller.tryCallDAO;
 
 public class QuestionServiceImpl implements QuestionService {
 
@@ -124,6 +125,12 @@ public class QuestionServiceImpl implements QuestionService {
         QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         int questionCount = tryCallDAO(() -> questionDAO.selectCountByUsername(username));
         return calculatePageCount(questionCount, questionsPerPage);
+    }
+
+    @Override
+    public int getUserQuestionCount(String username) throws ServiceException {
+        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
+        return tryCallDAO(() -> questionDAO.selectCountByUsername(username));
     }
 
     @Override

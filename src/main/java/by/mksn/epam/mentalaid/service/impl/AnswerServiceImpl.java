@@ -9,8 +9,8 @@ import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 import java.util.List;
 
-import static by.mksn.epam.mentalaid.service.impl.DAOCaller.tryCallDAO;
 import static by.mksn.epam.mentalaid.util.StringUtil.*;
+import static by.mksn.epam.mentalaid.util.caller.DAOCaller.tryCallDAO;
 
 public class AnswerServiceImpl implements AnswerService {
 
@@ -34,6 +34,12 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer getById(long id) throws ServiceException {
         AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
         return tryCallDAO(() -> answerDAO.selectById(id));
+    }
+
+    @Override
+    public int getCountByUserId(long userId) throws ServiceException {
+        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
+        return tryCallDAO(() -> answerDAO.selectCountByUserId(userId));
     }
 
     @Override

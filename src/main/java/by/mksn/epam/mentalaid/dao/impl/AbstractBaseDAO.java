@@ -1,8 +1,6 @@
 package by.mksn.epam.mentalaid.dao.impl;
 
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
-import by.mksn.epam.mentalaid.dao.pool.ConnectionPool;
-import by.mksn.epam.mentalaid.dao.pool.exception.PoolException;
 import by.mksn.epam.mentalaid.entity.Entity;
 
 import java.sql.Connection;
@@ -13,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.caller.JDBCCaller.tryCallJDBC;
 
 /**
  * class with some useful methods for other DAO's to avoid code duplication
@@ -22,7 +21,8 @@ import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 abstract class AbstractBaseDAO<E extends Entity> {
 
     /**
-     * Selects entity with specified id
+     * Selects entity with specified id using specified connection.<br>
+     *     Useful for operations with several accesses to the database.
      *
      * @param connection  connection to database
      * @param selectQuery select SQL query for concrete database
@@ -38,6 +38,21 @@ abstract class AbstractBaseDAO<E extends Entity> {
     }
 
     /**
+     * Selects entity from the database with the specified id
+     *
+     * @param query select SQL query for concrete database
+     * @param id    id of an entity to select
+     * @return entity with specified id, or {@code null} if entity not found
+     * @throws DAOException if something went wrong
+     */
+    E executeSelectById(String query, long id) throws DAOException {
+        return tryCallJDBC(query, statement -> {
+            statement.setLong(1, id);
+            return executeStatementAndParseResultSet(statement);
+        });
+    }
+
+    /**
      * Deletes entity from database
      *
      * @param deleteQuery delete SQL query for concrete database
@@ -45,16 +60,10 @@ abstract class AbstractBaseDAO<E extends Entity> {
      * @throws DAOException if something went wrong
      */
     void executeDelete(String deleteQuery, long id) throws DAOException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+        tryCallJDBC(deleteQuery, statement -> {
             statement.setLong(1, id);
-
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        } catch (PoolException e) {
-            throw new DAOException("Cannot get connection\n", e);
-        }
+        });
     }
 
     /**

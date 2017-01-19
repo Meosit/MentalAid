@@ -26,6 +26,10 @@ public enum CommandEnum {
      */
     HOME(new GetHomePageCommand()),
     /**
+     * This command provides user profile page
+     */
+    PROFILE(new GetProfilePageCommand()),
+    /**
      * This command provides question page
      */
     QUESTION(new GetQuestionPageCommand()),

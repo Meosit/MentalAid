@@ -19,7 +19,6 @@ import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 public class GetQuestionPageCommand implements Command {
 
-    private static final String QUESTION_ID_PARAMETER = "quid";
     private static final String QUESTION_ATTRIBUTE = "question";
     private static final String ANSWER_LIST_ATTRIBUTE = "answers";
 

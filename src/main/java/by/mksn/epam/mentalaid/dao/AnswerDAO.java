@@ -40,6 +40,16 @@ public interface AnswerDAO extends BaseDAO<Answer> {
     List<Answer> selectByQuestionId(long id) throws DAOException;
 
     /**
+     * Selects count of all answers which belongs to the
+     * user with specified ID
+     *
+     * @param id id of a user to select answer count
+     * @return count of all answers which belongs to the user with specified ID
+     * @throws DAOException if something went wrong
+     */
+    int selectCountByUserId(long id) throws DAOException;
+
+    /**
      * Updates answer in the database with the updated one.
      * Updating by {@link Answer#id}.<br>
      * This method can affect only on {@link Answer#text} property

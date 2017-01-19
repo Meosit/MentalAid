@@ -1,24 +1,31 @@
+var isAjaxRequestSent = false;
+
 $('#login-form').submit(function (e) {
-    $.ajax({
-        url: 'controller?cmd=async_login',
-        type: 'POST',
-        dataType: 'text json',
-        data: $('#login-form').serialize(),
-        success: function (response) {
-            if (response.isResultSuccess) {
-                window.location.replace(decodeURI(response.redirectUrl));
-            } else {
+    if (!isAjaxRequestSent) {
+        isAjaxRequestSent = true;
+        $.ajax({
+            url: 'controller?cmd=async_login',
+            type: 'POST',
+            dataType: 'text json',
+            data: $('#login-form').serialize(),
+            success: function (response) {
+                if (response.isResultSuccess) {
+                    window.location.replace(decodeURI(response.redirectUrl));
+                } else {
+                    $('#error-alert').removeClass('hidden');
+                    $('#error-title').text(response.errorTitle);
+                    $('#error-message').text(response.errorMessage);
+                }
+                isAjaxRequestSent = false;
+            },
+            error: function (request, status, error) {
                 $('#error-alert').removeClass('hidden');
-                $('#error-title').text(response.errorTitle);
-                $('#error-message').text(response.errorMessage);
+                $('#error-title').text(status);
+                $('#error-message').text(error);
+                isAjaxRequestSent = false;
             }
-        },
-        error: function (request, status, error) {
-            $('#error-alert').removeClass('hidden');
-            $('#error-title').text(status);
-            $('#error-message').text(error);
-        }
-    });
+        });
+    }
     e.preventDefault();
     return false;
 });

@@ -5,8 +5,8 @@ import by.mksn.epam.mentalaid.dao.MarkDAO;
 import by.mksn.epam.mentalaid.dao.QuestionDAO;
 import by.mksn.epam.mentalaid.dao.UserDAO;
 import by.mksn.epam.mentalaid.dao.factory.DAOFactory;
-import by.mksn.epam.mentalaid.dao.impl.MarkDAOImpl;
 import by.mksn.epam.mentalaid.dao.impl.MySqlAnswerDAO;
+import by.mksn.epam.mentalaid.dao.impl.MySqlMarkDAO;
 import by.mksn.epam.mentalaid.dao.impl.MySqlQuestionDAO;
 import by.mksn.epam.mentalaid.dao.impl.MySqlUserDAO;
 
@@ -25,7 +25,7 @@ public class MySqlDAOFactory extends DAOFactory {
         userDAO = new MySqlUserDAO();
         questionDAO = new MySqlQuestionDAO();
         answerDAO = new MySqlAnswerDAO();
-        markDAO = new MarkDAOImpl();
+        markDAO = new MySqlMarkDAO();
     }
 
     public static MySqlDAOFactory getInstance() {

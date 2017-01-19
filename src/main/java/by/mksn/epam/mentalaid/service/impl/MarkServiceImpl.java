@@ -7,8 +7,8 @@ import by.mksn.epam.mentalaid.service.MarkService;
 import by.mksn.epam.mentalaid.service.exception.MarkServiceException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
-import static by.mksn.epam.mentalaid.service.impl.DAOCaller.tryCallDAO;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.caller.DAOCaller.tryCallDAO;
 
 public class MarkServiceImpl implements MarkService {
 

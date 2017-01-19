@@ -46,7 +46,7 @@
           </c:if>
           <h5 class="text-right">
             <fmt:message key="question.by"/> <a class="${isQuestionOwner ? 'owner' : ''}"
-                                                href="#">${requestScope.question.creatorUsername}</a>
+                                                href="<c:url value="/controller?cmd=profile&username=${requestScope.question.creatorUsername}"/>">${requestScope.question.creatorUsername}</a>
             <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span> <fmt:formatDate
               value="${requestScope.question.createdAt}" type="both" dateStyle="long" timeStyle="short"/>
           </h5>
@@ -131,7 +131,7 @@
                     </div>
                     <h5 class="media-heading col-md-6 text-right">
                       <fmt:message key="answer.by"/> <a class="${isAnswerOwner ? 'owner' : ''}"
-                                                        href="#">${answer.creatorUsername}</a>
+                                                        href="<c:url value="/controller?cmd=profile&username=${answer.creatorUsername}"/>">${answer.creatorUsername}</a>
                       <fmt:message key="at"/> <span class="glyphicon glyphicon-time"></span>
                       <span class="answer-created-date create-date">
                         <fmt:formatDate value="${answer.createdAt}" type="both" dateStyle="long" timeStyle="short"/>

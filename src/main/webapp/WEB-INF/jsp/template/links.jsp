@@ -9,4 +9,5 @@
 <script src="<c:url value="/js/lib/jquery-3.1.1.js"/>"></script>
 <script src="<c:url value="/js/lib/bootstrap.js"/>"></script>
 <script src="<c:url value="/js/localization/${sessionScope.locale}.js"/>"></script>
+<script src="<c:url value="/js/main.js"/>"></script>
 

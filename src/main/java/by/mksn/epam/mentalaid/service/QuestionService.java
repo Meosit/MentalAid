@@ -191,6 +191,15 @@ public interface QuestionService {
     }
 
     /**
+     * Return count of questions of the user with specified username
+     *
+     * @param username username of user
+     * @return count of user questions
+     * @throws ServiceException if error happens during execution
+     */
+    int getUserQuestionCount(String username) throws ServiceException;
+
+    /**
      * Returns page count, calculated on base of {@code questionPerPage} parameter
      * and on count of all questions for the specified search query
      * which belongs to user with specified username

@@ -20,6 +20,10 @@ public class PathManager {
      */
     public static final String HOME = "page.home";
     /**
+     * Path of user profile page
+     */
+    public static final String PROFILE = "page.profile";
+    /**
      * Path of single question page
      */
     public static final String QUESTION = "page.question";

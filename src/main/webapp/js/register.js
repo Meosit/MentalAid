@@ -1,3 +1,5 @@
+var isAjaxRequestSent = false;
+
 $("#username").focusout(function () {
     validateInputByRegex(this,
         STRINGS.register_username_constraints,
@@ -36,21 +38,31 @@ $("#email").focusout(function () {
 
 document.getElementById("registration-form").addEventListener("submit", function (e) {
     if (document.getElementById("error-div").childElementCount <= 1) {
-        $.ajax({
-            url: 'controller?cmd=async_register',
-            type: 'POST',
-            dataType: 'text json',
-            data: $('#registration-form').serialize(),
-            success: function (response) {
-                if (response.isResultSuccess) {
-                    window.location.replace(decodeURI(response.redirectUrl));
-                } else {
+        if (!isAjaxRequestSent) {
+            isAjaxRequestSent = true;
+            $.ajax({
+                url: 'controller?cmd=async_register',
+                type: 'POST',
+                dataType: 'text json',
+                data: $('#registration-form').serialize(),
+                success: function (response) {
+                    if (response.isResultSuccess) {
+                        window.location.replace(decodeURI(response.redirectUrl));
+                    } else {
+                        $('#error-alert').removeClass('hidden');
+                        $('#error-title').text(response.errorTitle);
+                        $('#error-message').text(response.errorMessage);
+                    }
+                    isAjaxRequestSent = false;
+                },
+                error: function (xhr, status, error) {
                     $('#error-alert').removeClass('hidden');
-                    $('#error-title').text(response.errorTitle);
-                    $('#error-message').text(response.errorMessage);
+                    $('#error-title').text(status ? status : STRINGS.error_alert);
+                    $('#error-message').text(error ? error : xhr.statusText);
+                    isAjaxRequestSent = false;
                 }
-            }
-        });
+            });
+        }
     }
     e.preventDefault();
     return false;

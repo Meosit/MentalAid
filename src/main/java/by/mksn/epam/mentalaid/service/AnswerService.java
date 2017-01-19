@@ -31,6 +31,15 @@ public interface AnswerService {
     Answer getById(long id) throws ServiceException;
 
     /**
+     * Returns count of answers which was created by user with specified username
+     *
+     * @param userId id of a user this answers belongs
+     * @return count of answers which belongs to the specified user
+     * @throws ServiceException if error happens during execution
+     */
+    int getCountByUserId(long userId) throws ServiceException;
+
+    /**
      * Returns all answers for the question with specified ID
      *
      * @param questionId id of a question this answers belongs to

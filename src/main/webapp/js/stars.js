@@ -1,3 +1,5 @@
+var isAjaxRequestSent = false;
+
 $(document)
     .on('mouseenter', '.cfi.cfi--star.stars__out.can-vote', function () {
         $(this).find('.stars__in').width('100%');
@@ -16,33 +18,36 @@ $(document)
         $(this).find('.stars__in').width($(this).attr('data-init-value') + "%");
     })
     .on('click', '.cfi.cfi--star.stars__out.can-vote', function () {
-        var thisHandler = this;
-        var value = $(this).attr('data-index');
-        var answerId = extractAnswerId($(this).closest('.answer'));
-        var element = $(this).closest('.stars').find('.cfi.status');
-        $.ajax({
-            url: 'controller?cmd=async_mark_add',
-            type: 'POST',
-            dataType: 'text json',
-            data: 'answer_id=' + answerId + '&value=' + value,
-            success: function (response) {
-                if (response.resultStatus == 'ok') {
-                    $(thisHandler).attr('data-init-value', '100');
-                    $(thisHandler).prevAll().each(function () {
+        if (!isAjaxRequestSent) {
+            isAjaxRequestSent = true;
+            var thisHandler = this;
+            var value = $(this).attr('data-index');
+            var answerId = extractAnswerId($(this).closest('.answer'));
+            var element = $(this).closest('.stars').find('.cfi.status');
+            $.ajax({
+                url: 'controller?cmd=async_mark_add',
+                type: 'POST',
+                dataType: 'text json',
+                data: 'answer_id=' + answerId + '&value=' + value,
+                success: function (response) {
+                    if (response.resultStatus == 'ok') {
                         $(thisHandler).attr('data-init-value', '100');
-                    });
-                    $(thisHandler).nextAll().each(function () {
-                        $(thisHandler).attr('data-init-value', '0');
-                    });
+                        $(thisHandler).prevAll().each(function () {
+                            $(thisHandler).attr('data-init-value', '100');
+                        });
+                        $(thisHandler).nextAll().each(function () {
+                            $(thisHandler).attr('data-init-value', '0');
+                        });
+                    }
+                    showAddMarkResult(element, response.resultStatus);
+                    isAjaxRequestSent = false;
+                },
+                error: function () {
+                    showAddMarkResult(element, 'error');
+                    isAjaxRequestSent = false;
                 }
-
-                showAddMarkResult(element, response.resultStatus);
-
-            },
-            error: function () {
-                showAddMarkResult(element, 'error');
-            }
-        });
+            });
+        }
     });
 
 function showAddMarkResult(statusElement, result) {

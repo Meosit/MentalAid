@@ -9,9 +9,9 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.util.HashUtil;
 import org.apache.log4j.Logger;
 
-import static by.mksn.epam.mentalaid.service.impl.DAOCaller.tryCallDAO;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.caller.DAOCaller.tryCallDAO;
 
 public class UserServiceImpl implements UserService {
 
@@ -25,6 +25,15 @@ public class UserServiceImpl implements UserService {
 
     private static boolean isValidUsername(String username) {
         return !isNullOrEmpty(username) && username.matches(USERNAME_REGEX);
+    }
+
+    @Override
+    public User getByUsername(String username) throws ServiceException {
+        if (isNullOrEmpty(username)) {
+            return null;
+        }
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
+        return tryCallDAO(() -> userDAO.selectByUsername(username));
     }
 
     @Override

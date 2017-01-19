@@ -23,8 +23,7 @@
           <c:if test="${not param.isNavbarLess}">
             <c:if test="${not empty sessionScope.user}">
               <li class="${sessionScope.user.status eq 0 ? 'disabled' :''} ${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}">
-                <a
-                    href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
+                <a href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
                   <fmt:message key="button.newQuestion"/></a></li>
             </c:if>
             <c:if test="${sessionScope.user.role eq 1}">
