@@ -24,6 +24,10 @@ const STRINGS = {
     answer_delete_button_cancel: "Отмена",
     answer_count_multiple: "Ответов",
     answer_count_alter: "Ответа",
-    answer_count_single: "Ответ"
+    answer_count_single: "Ответ",
+    profile_button_ban: "Заблокировать",
+    profile_button_unban: "Разблокировать",
+    profile_ban_success_message: "Пользователь успешно заблокирован.",
+    profile_unban_success_message: "Пользователь успешно разблокирован."
 };
 Object.freeze(STRINGS);

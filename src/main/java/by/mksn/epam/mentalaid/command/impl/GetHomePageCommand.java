@@ -15,6 +15,8 @@ import java.util.List;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.UrlUtil.getRequestUrl;
+import static by.mksn.epam.mentalaid.util.UrlUtil.removeParameterFromUrl;
 
 /**
  * Returns to client home page
@@ -22,6 +24,12 @@ import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 public class GetHomePageCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(GetHomePageCommand.class);
+
+    private String getBaseUrl(HttpServletRequest request) {
+        String baseUrl = getRequestUrl(request);
+        baseUrl = removeParameterFromUrl(baseUrl, SEARCH_QUERY_PARAMETER);
+        return removeParameterFromUrl(baseUrl, PAGE_INDEX_PARAMETER);
+    }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -55,6 +63,7 @@ public class GetHomePageCommand implements Command {
             throw new CommandException(e);
         }
 
+        request.setAttribute(SEARCH_BASE_URL_ATTRIBUTE, getBaseUrl(request));
         request.setAttribute(CURRENT_PAGE_ATTRIBUTE, pageIndex);
         request.setAttribute(QUESTION_LIST_ATTRIBUTE, questions);
         request.setAttribute(PAGE_COUNT_ATTRIBUTE, pageCount);

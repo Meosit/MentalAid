@@ -26,6 +26,9 @@ public final class UrlUtil {
      * Attribute which contains client uri (in jsp page request object)
      */
     private static final String JSP_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
+    /**
+     * Attribute which contains servlet path in (jsp page request object)
+     */
     private static final String JSP_SERVLET_PATH_ATTRIBUTE = "javax.servlet.forward.servlet_path";
 
     private UrlUtil() {
@@ -112,16 +115,32 @@ public final class UrlUtil {
      *
      * @param url           url where parameter will be removed
      * @param parameterName name of the parameter to remove
-     * @return url without parameter;
+     * @return url without parameter
      */
     public static String removeParameterFromUrl(String url, String parameterName) {
         if (!isNullOrEmpty(url)) {
-            return url
-                    .replaceAll(parameterName + "=[^&]*?[&]?", "")
-                    .replace("&&", "&");
-        } else {
-            return "";
+            url = url.replaceAll("&?" + parameterName + "=[^&]*[&]?", "")
+                    .replaceAll("\\?$", "");
         }
+        return url;
+    }
+
+    /**
+     * Adds GET parameter to the url query string
+     *
+     * @param url            url to add new parameter
+     * @param parameterName  name of new parameter
+     * @param parameterValue new parameter value
+     * @return url with added parameter
+     */
+    public static String addParameterToUrl(String url, String parameterName, String parameterValue) {
+        if (!isNullOrEmpty(url)) {
+            url += url.contains("?")
+                    ? (url.trim().charAt(url.length() - 1) != '?') ? "&" : ""
+                    : "?";
+            url += parameterName + "=" + parameterValue;
+        }
+        return url;
     }
 
 }

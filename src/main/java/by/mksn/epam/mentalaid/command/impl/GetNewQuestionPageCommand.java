@@ -4,6 +4,7 @@ import by.mksn.epam.mentalaid.command.Command;
 import by.mksn.epam.mentalaid.command.exception.CommandException;
 import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.User;
+import by.mksn.epam.mentalaid.util.UrlUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,12 +28,10 @@ public class GetNewQuestionPageCommand implements Command {
                 request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_USER_BANNED);
                 pagePath = PathManager.getProperty(PathManager.ERROR);
             }
+            Command.dispatchRequest(pagePath, false, request, response);
         } else {
-            request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_ACCESS_DENIED);
-            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE_ACCESS_DENIED);
-            pagePath = PathManager.getProperty(PathManager.ERROR);
+            Command.sendRedirect(UrlUtil.getServletUrl(request), response);
         }
 
-        Command.dispatchRequest(pagePath, false, request, response);
     }
 }

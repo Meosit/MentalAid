@@ -9,7 +9,7 @@
     <div id="custom-search-input">
       <form class="input-group" action="<c:url value="/controller"/>" method="get">
         <input type="hidden" name="cmd" value="search">
-        <input type="hidden" name="baseUrl" value="${ms:fullRequestUrl(pageContext.request)}">
+        <input type="hidden" name="baseUrl" value="${requestScope.baseUrl}">
         <c:choose>
           <c:when test="${not empty param.query}">
             <input type="text" name="query" class="form-control input-lg"
@@ -32,7 +32,7 @@
   <c:if test="${not empty param.query}">
     <c:set var="resultCount" value="${fn:length(requestScope.questions)}"/>
     <div class="row search-info">
-      <strong><a href="${ms:fullRequestUrl(pageContext.request)}"
+      <strong><a href="${requestScope.baseUrl}"
                  class="media-bottom btn btn-custom btn-dang"><fmt:message key="search.reset"/></a>
         <c:choose>
           <c:when test="${resultCount eq 1}">
@@ -62,19 +62,10 @@
     <c:choose>
       <c:when test="${not empty requestScope.questions}">
         <c:forEach var="question" items="${requestScope.questions}">
-          <c:choose>
-            <c:when test="${(not empty sessionScope.user) and (sessionScope.user.id eq question.creatorId)}">
-              <c:set var="aClass" value="class='owner'"/>
-            </c:when>
-            <c:otherwise>
-              <c:set var="aClass" value="class=''"/>
-            </c:otherwise>
-          </c:choose>
-
           <div class="question">
             <div>
               <h4>
-                <strong><a ${aClass}
+                <strong><a
                     href="<c:url value="/controller?cmd=question&quid=${question.id}&from=${requestScope.fullUrl}"/>"><c:out
                     value="${question.title}"/></a>
                 </strong>
@@ -86,11 +77,12 @@
               </p>
             </div>
             <div>
-              <p><span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a ${aClass}
+              <p><span class="text-nowrap"><span class="glyphicon glyphicon-user"></span> <a
+                  class="${(not empty sessionScope.user) and (sessionScope.user.id eq question.creatorId) ? 'owner' : ''}"
                   href="<c:url value="/controller?cmd=profile&username=${question.creatorUsername}"/>">${question.creatorUsername}</a></span>
                 <span class="text-nowrap">| <span class="glyphicon glyphicon-calendar"></span> <fmt:formatDate
                     value="${question.createdAt}" pattern="dd MMMM, yyyy HH:mm"/></span>
-                <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a ${aClass}
+                <span class="text-nowrap">| <span class="glyphicon glyphicon-comment"></span> <a
                     href="<c:url value="/controller?cmd=question&quid=${question.id}&from=${requestScope.fullUrl}#answers"/>">${question.answerCount} <c:choose>
                   <c:when test="${question.answerCount eq 1}">
                     <fmt:message key="question.answers.single"/>

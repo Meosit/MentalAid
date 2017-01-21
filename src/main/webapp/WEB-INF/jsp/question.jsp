@@ -8,7 +8,7 @@
   <c:set var="isAdmin" value="${(not empty sessionScope.user) and (sessionScope.user.role eq 1)}"/>
   <html lang="${sessionScope.locale}">
     <head>
-      <title><c:out value="${requestScope.question.title}"/> | Mental Aid</title>
+      <title><c:out value="${requestScope.question.title}"/> | MentalAid</title>
       <jsp:include page="template/links.jsp"/>
       <link rel="stylesheet" href="<c:url value="/css/question.css"/>">
       <link rel="stylesheet" href="<c:url value="/css/stars.css"/>">

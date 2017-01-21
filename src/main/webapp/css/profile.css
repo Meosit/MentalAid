@@ -3,6 +3,28 @@
     width: 160px;
 }
 
+.profile-label {
+    color: #55b7aa;
+}
+
+.profile-value {
+    color: #5590cc;
+    font-weight: bold;
+}
+
+.profile-nickname {
+    color: #698192;
+}
+
 .well {
     margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.h3, .h4, .h5 {
+    margin-top: initial;
+}
+
+.btn-custom {
+    width: 150px;
 }

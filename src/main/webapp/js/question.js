@@ -99,7 +99,7 @@ $('#question-delete-btn').on('click', function (e) {
                     url: "controller?cmd=async_question_delete",
                     type: 'POST',
                     dataType: 'text json',
-                    data: 'question_id=' + $('#question-id').val(),
+                    data: 'question_id=' + $('#question-id').val() + "&from=" + getUrlVars()['from'],
                     success: function (response) {
                         if (response.isResultSuccess) {
                             window.location.replace(decodeURI(response.redirectUrl));

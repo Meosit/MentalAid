@@ -24,6 +24,10 @@ const STRINGS = {
     answer_delete_button_cancel: "Cancel",
     answer_count_multiple: "Answers",
     answer_count_alter: "Answers",
-    answer_count_single: "Answer"
+    answer_count_single: "Answer",
+    profile_button_ban: "Ban this user",
+    profile_button_unban: "Unban this user",
+    profile_ban_success_message: "User successfully banned.",
+    profile_unban_success_message: "User successfully unbanned."
 };
 Object.freeze(STRINGS);

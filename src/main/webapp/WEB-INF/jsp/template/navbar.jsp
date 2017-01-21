@@ -23,7 +23,8 @@
           <c:if test="${not param.isNavbarLess}">
             <c:if test="${not empty sessionScope.user}">
               <li class="${sessionScope.user.status eq 0 ? 'disabled' :''} ${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}">
-                <a href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
+                <a class="${sessionScope.user.status eq 0 ? 'disabled' :''}"
+                   href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
                   <fmt:message key="button.newQuestion"/></a></li>
             </c:if>
             <c:if test="${sessionScope.user.role eq 1}">
@@ -41,8 +42,9 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
                       class="glyphicon glyphicon-user"></span> ${sessionScope.user.username} <b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> <fmt:message
-                        key="button.profile"/></a>
+                    <li><a href="<c:url value="/controller?cmd=profile&username=${sessionScope.user.username}"/>"><span
+                        class="glyphicon glyphicon-user"></span>
+                      <fmt:message key="button.profile"/></a>
                     </li>
                     <li><a href="#"><span class="glyphicon glyphicon-cog"></span> <fmt:message
                         key="button.settings"/></a>

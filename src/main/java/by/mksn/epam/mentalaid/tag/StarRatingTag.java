@@ -21,6 +21,7 @@ public class StarRatingTag extends SimpleTagSupport {
     private int markCount;
     private int starCount = 5;
     private boolean canVote = false;
+    private boolean showLabel = true;
 
     public void setValue(float value) {
         rating = value < 0 ? 0 : value;
@@ -38,6 +39,10 @@ public class StarRatingTag extends SimpleTagSupport {
         this.canVote = canVote;
     }
 
+    public void setShowLabel(boolean showLabel) {
+        this.showLabel = showLabel;
+    }
+
     @Override
     public void doTag() throws JspException, IOException {
         try {
@@ -47,7 +52,9 @@ public class StarRatingTag extends SimpleTagSupport {
                 for (int i = 1; i <= starCount; i++) {
                     out.write(getStarElement(i - rating <= 0 ? 1 : rating - i + 1, i));
                 }
-                out.write(getNumericElement(rating));
+                if (showLabel) {
+                    out.write(getNumericElement(rating));
+                }
                 out.write(STATUS_ELEMENT);
                 out.write(BLOCK_FOOTER);
             }

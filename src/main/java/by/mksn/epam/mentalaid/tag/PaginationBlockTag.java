@@ -9,6 +9,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.PAGE_INDEX_PARAMETER;
+import static by.mksn.epam.mentalaid.util.UrlUtil.addParameterToUrl;
 import static by.mksn.epam.mentalaid.util.UrlUtil.removeParameterFromUrl;
 
 public class PaginationBlockTag extends SimpleTagSupport {
@@ -65,7 +66,6 @@ public class PaginationBlockTag extends SimpleTagSupport {
 
     public void setBaseUrl(String baseUrl) {
         baseUrl = removeParameterFromUrl(baseUrl, PAGE_INDEX_PARAMETER);
-        baseUrl += "&" + PAGE_INDEX_PARAMETER + "=";
         this.baseUrl = baseUrl;
     }
 
@@ -94,18 +94,20 @@ public class PaginationBlockTag extends SimpleTagSupport {
     private String getPageNumberBlock(int pageIndex) {
         String block = BLOCK_PAGE_NUMBER_TEMPLATE.replace("#number", pageIndex + "");
         block = block.replace("#active", (currentPageIndex == pageIndex) ? "class='active'" : "");
-        return block.replace("#url", baseUrl + pageIndex);
+        return block.replace("#url", addParameterToUrl(baseUrl, PAGE_INDEX_PARAMETER, String.valueOf(pageIndex)));
     }
 
     private String getPrevBlock() {
-        String url = baseUrl + ((currentPageIndex == 1) ? 1 : (currentPageIndex - 1));
+        String pageIndex = String.valueOf(((currentPageIndex == 1) ? 1 : (currentPageIndex - 1)));
+        String url = addParameterToUrl(baseUrl, PAGE_INDEX_PARAMETER, pageIndex);
         String block = BLOCK_PREV_TEMPLATE.replace("#url", url);
         block = block.replace("#visible", (currentPageIndex == 1) ? "class='invisible'" : "");
         return block;
     }
 
     private String getNextBlock() {
-        String url = baseUrl + ((currentPageIndex == pageCount) ? pageCount : (currentPageIndex + 1));
+        String pageIndex = String.valueOf(((currentPageIndex == pageCount) ? pageCount : (currentPageIndex + 1)));
+        String url = addParameterToUrl(baseUrl, PAGE_INDEX_PARAMETER, pageIndex);
         String block = BLOCK_NEXT_TEMPLATE.replace("#url", url);
         block = block.replace("#visible", (currentPageIndex == pageCount) ? "class='invisible'" : "");
         return block;

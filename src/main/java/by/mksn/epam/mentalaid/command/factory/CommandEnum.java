@@ -8,11 +8,6 @@ import by.mksn.epam.mentalaid.command.impl.async.*;
  * Represents full list of commands, used in factory
  */
 public enum CommandEnum {
-
-    /**
-     * This command provides site entry point page
-     */
-    INDEX(new GetIndexPageCommand()),
     /**
      * This command provides page with registration form
      */
@@ -57,6 +52,10 @@ public enum CommandEnum {
      * Registers new user on site
      */
     ASYNC_REGISTER(new RegisterCommand()),
+    /**
+     * Bans or unbans user (depends of current user status)
+     */
+    ASYNC_BAN(new BanUserCommand()),
     /**
      * Changes question data
      */

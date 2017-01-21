@@ -33,7 +33,7 @@ public class CommandFactory {
             }
         } else {
             if (isNull(actionName)) {
-                resultCommand = CommandEnum.INDEX.getCommand();
+                resultCommand = CommandEnum.HOME.getCommand();
             } else {
                 logger.warn("Command name is empty (value: \"" + actionName + "\")");
             }

@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
         user = tryCallDAO(() -> userDAO.selectByUsername(username));
-        if (user != null) {
+        if (!isNull(user)) {
             logger.debug("This username \"" + username + "\" is already exists.");
             throw new UserServiceException("User with that username is already exists", UserServiceException.USER_EXISTS);
         }
 
         user = tryCallDAO(() -> userDAO.selectByEmail(email));
-        if (user != null) {
+        if (!isNull(user)) {
             logger.debug("This email \"" + email + "\" is already exists.");
             throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
         }

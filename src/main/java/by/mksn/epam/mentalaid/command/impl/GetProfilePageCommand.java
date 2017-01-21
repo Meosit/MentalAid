@@ -20,6 +20,8 @@ import java.util.List;
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
+import static by.mksn.epam.mentalaid.util.UrlUtil.getRequestUrl;
+import static by.mksn.epam.mentalaid.util.UrlUtil.removeParameterFromUrl;
 
 public class GetProfilePageCommand implements Command {
 
@@ -27,6 +29,12 @@ public class GetProfilePageCommand implements Command {
     private static final String USERNAME_PARAMETER = "username";
     private static final String QUESTION_COUNT_ATTRIBUTE = "questionCount";
     private static final String ANSWER_COUNT_ATTRIBUTE = "answerCount";
+
+    private String getBaseUrl(HttpServletRequest request) {
+        String baseUrl = getRequestUrl(request);
+        baseUrl = removeParameterFromUrl(baseUrl, SEARCH_QUERY_PARAMETER);
+        return removeParameterFromUrl(baseUrl, PAGE_INDEX_PARAMETER);
+    }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -62,7 +70,7 @@ public class GetProfilePageCommand implements Command {
                 }
             }
 
-            if (!isNull(user)) {
+            if (!isNull(user) && user.getStatus() != User.STATUS_DELETED) {
                 List<Question> questions;
                 int pageCount;
                 int questionCount;
@@ -83,6 +91,7 @@ public class GetProfilePageCommand implements Command {
                 } catch (ServiceException e) {
                     throw new CommandException(e);
                 }
+                request.setAttribute(SEARCH_BASE_URL_ATTRIBUTE, getBaseUrl(request));
                 request.setAttribute(USER_ATTRIBUTE, user);
                 request.setAttribute(QUESTION_COUNT_ATTRIBUTE, questionCount);
                 request.setAttribute(ANSWER_COUNT_ATTRIBUTE, answerCount);

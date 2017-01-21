@@ -11,7 +11,8 @@ public interface UserService {
 
     /**
      * Returns user with specified username, or {@code null}
-     * if user not found
+     * if user not found.<br>
+     * <strong>Warning:</strong> user may have status {@link User#STATUS_DELETED}
      *
      * @param username username of a user to get
      * @return {@link User} entity with specified username or {@code null} if entity not found
@@ -37,8 +38,7 @@ public interface UserService {
      *
      * @param username username of a user
      * @param password password of a user
-     * @return - {@code null} if user with the given credentials does not exists <br>
-     * - {@link User} entity of authorized user.
+     * @return {@link User} entity of authorized user.
      * @throws UserServiceException if password does not match (cause code: {@link UserServiceException#INCORRECT_PASSWORD})<br>
      *                              - if such user does not exists (cause code: {@link UserServiceException#USER_NOT_EXIST})
      * @throws ServiceException     if error happens during execution

@@ -153,7 +153,15 @@ body {
 }
 
 .owner {
-    color: #22bf22;
+    color: white;
+    border-radius: 3px;
+    background-color: #22bf22;
+}
+
+.owner:hover {
+    background-color: #fac423;
+    color: white;
+    text-decoration: none;
 }
 
 a.anchor {

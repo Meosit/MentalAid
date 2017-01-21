@@ -8,7 +8,6 @@ import by.mksn.epam.mentalaid.service.QuestionService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 import by.mksn.epam.mentalaid.service.factory.ServiceFactory;
 import by.mksn.epam.mentalaid.util.MapUtil;
-import by.mksn.epam.mentalaid.util.UrlUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
 import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
+import static by.mksn.epam.mentalaid.util.UrlUtil.addParameterToUrl;
+import static by.mksn.epam.mentalaid.util.UrlUtil.getBackRedirectUrl;
 
 public class DeleteQuestionCommand implements Command {
 
@@ -26,7 +27,8 @@ public class DeleteQuestionCommand implements Command {
     private static final String REDIRECT_URL_NAME = "redirectUrl";
 
     private static String getRedirectUrl(HttpServletRequest request) {
-        return UrlUtil.getBackRedirectUrl(request) + "?question_deleted=success";
+        String redirectUrl = getBackRedirectUrl(request);
+        return addParameterToUrl(redirectUrl, "question_deleted", "success");
     }
 
     @Override
