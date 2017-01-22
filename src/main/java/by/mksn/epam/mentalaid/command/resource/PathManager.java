@@ -40,6 +40,10 @@ public class PathManager {
      */
     public static final String REGISTER = "page.register";
     /**
+     * Path of page with some user settings
+     */
+    public static final String SETTINGS = "page.settings";
+    /**
      * Jsp page which generates JSON object with redirect url if operation is succeed
      * or with error information otherwise
      */

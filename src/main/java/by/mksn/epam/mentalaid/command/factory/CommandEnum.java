@@ -25,6 +25,10 @@ public enum CommandEnum {
      */
     PROFILE(new GetProfilePageCommand()),
     /**
+     * This command provides user settings page
+     */
+    SETTINGS(new GetSettingsPageCommand()),
+    /**
      * This command provides question page
      */
     QUESTION(new GetQuestionPageCommand()),

@@ -1,9 +1,3 @@
-.required-mark::after {
-    display: inline;
-    content: "*";
-    color: red;
-}
-
 .btn-register {
     width: 250px;
 }

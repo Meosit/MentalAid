@@ -206,3 +206,10 @@ a.anchor {
 .btn-conf:hover {
     background-color: #b9f2f7;
 }
+
+.required-mark::after {
+    display: inline;
+    content: "*";
+    color: red;
+}
+

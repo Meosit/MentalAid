@@ -20,7 +20,7 @@ public class SearchRedirectCommand implements Command {
         String queryParameter = request.getParameter(SEARCH_QUERY_PARAMETER);
 
         if (!isNullOrEmpty(queryParameter)) {
-            baseUrlParameter += addParameterToUrl(baseUrlParameter, SEARCH_QUERY_PARAMETER, encodeUrl(queryParameter));
+            baseUrlParameter = addParameterToUrl(baseUrlParameter, SEARCH_QUERY_PARAMETER, encodeUrl(queryParameter));
         }
 
         Command.sendRedirect(baseUrlParameter, response);

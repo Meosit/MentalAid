@@ -1,5 +1,8 @@
 package by.mksn.epam.mentalaid.service.exception;
 
+/**
+ * Thrown to indicate that something wrong with mark logic
+ */
 public class MarkServiceException extends ServiceException {
 
     /**

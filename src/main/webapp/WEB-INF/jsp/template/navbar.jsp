@@ -46,7 +46,8 @@
                         class="glyphicon glyphicon-user"></span>
                       <fmt:message key="button.profile"/></a>
                     </li>
-                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span> <fmt:message
+                    <li><a href="<c:url value="/controller?cmd=settings"/>"><span
+                        class="glyphicon glyphicon-cog"></span> <fmt:message
                         key="button.settings"/></a>
                     </li>
                     <li class="divider"></li>

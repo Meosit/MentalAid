@@ -1,6 +1,7 @@
 package by.mksn.epam.mentalaid.util.caller;
 
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
+import by.mksn.epam.mentalaid.service.exception.ServiceDaoException;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
 
 /**
@@ -15,13 +16,13 @@ public class DAOCaller {
      * @param function delegate to call
      * @param <R>         return type of DAO call
      * @return result of dao call
-     * @throws ServiceException if DAO exception occurs during execution {@code function}
+     * @throws ServiceDaoException if DAO exception occurs during execution {@code function}
      */
     public static <R> R tryCallDAO(ServiceFunction<R> function) throws ServiceException {
         try {
             return function.apply();
         } catch (DAOException e) {
-            throw new ServiceException(e);
+            throw new ServiceDaoException(e);
         }
     }
 
@@ -29,13 +30,13 @@ public class DAOCaller {
      * Calls specified delegate in {@link DAOException} handling scope
      *
      * @param daoFunction delegate to call
-     * @throws ServiceException if DAO exception occurs during execution {@code daoFunction}
+     * @throws ServiceDaoException if DAO exception occurs during execution {@code daoFunction}
      */
     public static void tryCallDAO(ServiceVoidFunction daoFunction) throws ServiceException {
         try {
             daoFunction.apply();
         } catch (DAOException e) {
-            throw new ServiceException(e);
+            throw new ServiceDaoException(e);
         }
     }
 
