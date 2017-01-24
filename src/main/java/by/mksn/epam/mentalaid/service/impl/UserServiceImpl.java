@@ -9,6 +9,8 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 import by.mksn.epam.mentalaid.util.HashUtil;
 import org.apache.log4j.Logger;
 
+import java.util.List;
+
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 import static by.mksn.epam.mentalaid.util.caller.DAOCaller.tryCallDAO;
@@ -18,6 +20,16 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
     private static final String EMAIL_REGEX = "^[a-zA-Z_0-9]+@[a-zA-Z_0-9]+\\.[a-zA-Z_0-9]+$";
     private static final String USERNAME_REGEX = "^[a-zA-Z_0-9]{3,45}$";
+
+    private static int calculatePageCount(int questionCount, int itemCount) {
+        int pageCount;
+        if ((questionCount % itemCount == 0) && (questionCount != 0)) {
+            pageCount = questionCount / itemCount;
+        } else {
+            pageCount = questionCount / itemCount + 1;
+        }
+        return pageCount;
+    }
 
     private static boolean isValidEmail(String email) {
         return !isNullOrEmpty(email) && email.matches(EMAIL_REGEX);
@@ -108,5 +120,33 @@ public class UserServiceImpl implements UserService {
             logger.debug("Incorrect old password for user \"" + user.getUsername() + "\"");
             throw new UserServiceException(UserServiceException.INCORRECT_PASSWORD);
         }
+    }
+
+    @Override
+    public ItemsPage<User> getPage(int index, int itemsPerPage) throws ServiceException {
+        if ((index - 1) * itemsPerPage < 0) {
+            index = 1;
+        }
+        int offset = (index - 1) * itemsPerPage;
+
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
+        List<User> items = tryCallDAO(() -> userDAO.selectWithLimit(offset, itemsPerPage));
+        int questionCount = tryCallDAO(userDAO::selectCount);
+        int pageCount = calculatePageCount(questionCount, itemsPerPage);
+        return new ItemsPage<>(items, pageCount, index);
+    }
+
+    @Override
+    public ItemsPage<User> getSearchPage(int index, int itemsPerPage, String searchQuery) throws ServiceException {
+        if ((index - 1) * itemsPerPage < 0) {
+            index = 1;
+        }
+        int offset = (index - 1) * itemsPerPage;
+
+        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
+        List<User> items = tryCallDAO(() -> userDAO.selectLikeWithLimit(searchQuery, offset, itemsPerPage));
+        int questionCount = tryCallDAO(() -> userDAO.selectLikeCount(searchQuery));
+        int pageCount = calculatePageCount(questionCount, itemsPerPage);
+        return new ItemsPage<>(items, pageCount, index);
     }
 }

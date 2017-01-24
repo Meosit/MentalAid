@@ -3,9 +3,11 @@ package by.mksn.epam.mentalaid.dao.impl;
 import by.mksn.epam.mentalaid.dao.UserDAO;
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.entity.User;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static by.mksn.epam.mentalaid.util.caller.JDBCCaller.tryCallJDBC;
 
@@ -14,12 +16,19 @@ import static by.mksn.epam.mentalaid.util.caller.JDBCCaller.tryCallJDBC;
  */
 public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
 
+    private static final Logger logger = Logger.getLogger(MySqlUserDAO.class);
     private static final String QUERY_SELECT_BY_ID = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS averageMark, (SELECT COUNT(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS markCount FROM `user` " +
             "WHERE `id` = ?;";
     private static final String QUERY_SELECT_BY_USERNAME = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS averageMark, (SELECT COUNT(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS markCount FROM `user` " +
             "WHERE (`username` = ?);";
     private static final String QUERY_SELECT_BY_EMAIL = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS averageMark, (SELECT COUNT(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS markCount FROM `user` " +
             "WHERE (`email` = ?);";
+    private static final String QUERY_SELECT_WITH_LIMIT = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS averageMark, (SELECT COUNT(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS markCount FROM `user` " +
+            "WHERE `user`.`status` != -1 ORDER BY `user`.`username` LIMIT ?, ?;";
+    private static final String QUERY_SELECT_LIKE_WITH_LIMIT = "SELECT `user`.`id`, `user`.`email`, `user`.`username`, `user`.`pass_hash`, `user`.`role`, `user`.`created_at`, `user`.`modified_at`, `user`.`status`, `user`.`locale`, `user`.`image_url`, `user`.`website`, (SELECT AVG(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS averageMark, (SELECT COUNT(`mark`.`value`) FROM `mark` INNER JOIN `answer` ON `mark`.`answer_id` = `answer`.`id` WHERE `answer`.`creator_id` = `user`.`id`) AS markCount FROM `user` " +
+            "WHERE (`user`.`status` != -1) AND (LOWER(`username`) LIKE LOWER(?)) ORDER BY `user`.`username` LIMIT ?, ?;";
+    private static final String QUERY_SELECT_COUNT = "SELECT COUNT(`user`.`id`) FROM `user` WHERE (`user`.`status` != -1) ;";
+    private static final String QUERY_SELECT_LIKE_COUNT = "SELECT COUNT(`user`.`id`) FROM `user` WHERE (`user`.`status` != -1) AND (LOWER(`username`) LIKE LOWER(?));";
     private static final String QUERY_UPDATE = "UPDATE `user` SET `email` = ?, `username` = ?, `pass_hash` = ?, `status` = ?, `locale` = ?, `image_url` = ?, `website` = ? WHERE (`id` = ?) AND (`status` != -1);";
     private static final String QUERY_INSERT = "INSERT INTO `user` (`email`, `username`, `pass_hash`) VALUES (?, ?, ?)";
     private static final String QUERY_DELETE = "UPDATE `user` SET `status` = -1 WHERE (`id` = ?) AND (`status` != -1);";
@@ -56,6 +65,56 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
     @Override
     public User selectByEmail(String email) throws DAOException {
         return selectWithStringParameter(QUERY_SELECT_BY_EMAIL, email);
+    }
+
+    @Override
+    public List<User> selectWithLimit(int offset, int count) throws DAOException {
+        return tryCallJDBC(QUERY_SELECT_WITH_LIMIT, statement -> {
+            statement.setInt(1, offset);
+            statement.setInt(2, count);
+            return executeStatementAndParseResultSetToList(statement);
+        });
+    }
+
+    @Override
+    public List<User> selectLikeWithLimit(String likeQuery, int offset, int count) throws DAOException {
+        return tryCallJDBC(QUERY_SELECT_LIKE_WITH_LIMIT, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likePattern);
+            statement.setInt(2, offset);
+            statement.setInt(3, count);
+            return executeStatementAndParseResultSetToList(statement);
+        });
+    }
+
+    @Override
+    public int selectCount() throws DAOException {
+        return tryCallJDBC(QUERY_SELECT_COUNT, statement -> {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    logger.error("Cannot select question count, empty result set.");
+                    throw new DAOException("Cannot select question count");
+                }
+            }
+        });
+    }
+
+    @Override
+    public int selectLikeCount(String likeQuery) throws DAOException {
+        return tryCallJDBC(QUERY_SELECT_LIKE_COUNT, statement -> {
+            String likePattern = createGlobalLikePattern(likeQuery);
+            statement.setString(1, likePattern);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    logger.error("Cannot select question count, empty result set.");
+                    throw new DAOException("Cannot select question count");
+                }
+            }
+        });
     }
 
     @Override
@@ -107,5 +166,4 @@ public class MySqlUserDAO extends AbstractBaseDAO<User> implements UserDAO {
         user.setMarkCount(resultSet.getInt(13));
         return user;
     }
-
 }

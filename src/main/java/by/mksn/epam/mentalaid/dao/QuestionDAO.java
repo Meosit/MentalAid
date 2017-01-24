@@ -6,7 +6,7 @@ import by.mksn.epam.mentalaid.entity.User;
 
 import java.util.List;
 
-public interface QuestionDAO extends BaseDAO<Question> {
+public interface QuestionDAO extends BaseDAO<Question>, EntityListDAO<Question> {
 
     /**
      * Inserts new question into database
@@ -18,6 +18,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return {@link Question} entity with all filled properties
      * @throws DAOException if something went wrong
      */
+    @Override
     Question insert(Question entity) throws DAOException;
 
     /**
@@ -27,6 +28,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return - {@link Question} with the specified id <br> - {@code null} if entity not found or deleted
      * @throws DAOException if something went wrong
      */
+    @Override
     Question selectById(long id) throws DAOException;
 
     /**
@@ -39,6 +41,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return list of {@link Question} with the specified limit
      * @throws DAOException if something went wrong
      */
+    @Override
     List<Question> selectWithLimit(int offset, int count) throws DAOException;
 
     /**
@@ -53,6 +56,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return list of {@link Question} with the specified limit
      * @throws DAOException if something went wrong
      */
+    @Override
     List<Question> selectLikeWithLimit(String likeQuery, int offset, int count) throws DAOException;
 
     /**
@@ -91,6 +95,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return count of all non-deleted questions
      * @throws DAOException if something went wrong
      */
+    @Override
     int selectCount() throws DAOException;
 
     /**
@@ -101,6 +106,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @return count of all non-deleted questions
      * @throws DAOException if something went wrong
      */
+    @Override
     int selectLikeCount(String likeQuery) throws DAOException;
 
     /**
@@ -131,6 +137,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @param updatedEntity entity to update
      * @throws DAOException if something went wrong
      */
+    @Override
     void update(Question updatedEntity) throws DAOException;
 
     /**
@@ -139,6 +146,7 @@ public interface QuestionDAO extends BaseDAO<Question> {
      * @param id id of a question to delete
      * @throws DAOException if something went wrong
      */
+    @Override
     void delete(long id) throws DAOException;
 
 }

@@ -2,13 +2,10 @@ var isAjaxRequestSent = false;
 
 $(document)
     .on('mouseenter', '.cfi.cfi--star.stars__out.can-vote', function () {
-        $(this).find('.stars__in').width('100%');
-        $(this).prevAll().each(function () {
-            $(this).find('.stars__in').width("100%");
-        });
-        $(this).nextAll().each(function () {
+        $(this).siblings().each(function () {
             $(this).find('.stars__in').width("0%");
         });
+        $(this).find('.stars__in').width("100%");
     })
     .on('mouseleave', '.cfi.cfi--star.stars__out.can-vote', function () {
         $(this).siblings().each(function () {
@@ -31,13 +28,30 @@ $(document)
                 data: 'answer_id=' + answerId + '&value=' + value,
                 success: function (response) {
                     if (response.resultStatus == 'ok') {
-                        $(thisHandler).attr('data-init-value', '100');
+                        var starsDiv = $(thisHandler).closest('.stars');
+                        var markCount = parseInt(starsDiv.attr('data-mark-count'));
+                        var currentMark = parseFloat(starsDiv.find('.cfi.value').text());
+                        var newValue = markCount * currentMark;
+                        if (response.markDelta == 6) {
+                            markCount += 1;
+                            newValue += parseInt(value);
+                        } else {
+                            newValue -= response.markDelta
+                        }
+                        newValue /= markCount;
+                        starsDiv.find('.cfi.value').text(newValue.toFixed(1));
                         $(thisHandler).prevAll().each(function () {
-                            $(thisHandler).attr('data-init-value', '100');
+                            $(this).attr('data-init-value', '100');
                         });
                         $(thisHandler).nextAll().each(function () {
-                            $(thisHandler).attr('data-init-value', '0');
+                            $(this).attr('data-init-value', '0');
                         });
+                        $(thisHandler).attr('data-init-value', '100');
+                        $(thisHandler).siblings().each(function () {
+                            var initVal = $(this).attr('data-init-value');
+                            $(this).find('.stars__in').width(initVal + "%");
+                        });
+                        $(thisHandler).find('.stars__in').width($(this).attr('data-init-value') + "%");
                     }
                     showAddMarkResult(element, response.resultStatus);
                     isAjaxRequestSent = false;

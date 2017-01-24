@@ -52,8 +52,8 @@ document.getElementById("registration-form").addEventListener("submit", function
                         $('#error-alert').removeClass('hidden');
                         $('#error-title').text(response.errorTitle);
                         $('#error-message').text(response.errorMessage);
+                        isAjaxRequestSent = false;
                     }
-                    isAjaxRequestSent = false;
                 },
                 error: function (xhr, status, error) {
                     $('#error-alert').removeClass('hidden');

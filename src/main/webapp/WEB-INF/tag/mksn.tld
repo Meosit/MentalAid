@@ -91,4 +91,11 @@
       java.lang.String decodeUrl(java.lang.String)
     </function-signature>
   </function>
+  <function>
+    <name>baseUrl</name>
+    <function-class>by.mksn.epam.mentalaid.util.UrlUtil</function-class>
+    <function-signature>
+      java.lang.String getBaseUrl(javax.servlet.http.HttpServletRequest)
+    </function-signature>
+  </function>
 </taglib>

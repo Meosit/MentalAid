@@ -7,7 +7,7 @@ import by.mksn.epam.mentalaid.service.exception.UserServiceException;
 /**
  * Service which provides all needed user methods.
  */
-public interface UserService {
+public interface UserService extends ItemPageService<User> {
 
     /**
      * Returns user with specified username, or {@code null}

@@ -21,6 +21,10 @@ public enum CommandEnum {
      */
     HOME(new GetHomePageCommand()),
     /**
+     * This command provides admin-only page with user list
+     */
+    USERS(new GetUserListPageCommand()),
+    /**
      * This command provides user profile page
      */
     PROFILE(new GetProfilePageCommand()),

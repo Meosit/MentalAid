@@ -1,0 +1,42 @@
+.profile-img {
+    object-fit: cover;
+    height: 100px;
+    width: 100px;
+    border-radius: 10px;
+}
+
+.profile-label {
+    color: #55b7aa;
+}
+
+.profile-value {
+    color: #5590cc;
+    font-weight: bold;
+}
+
+.profile-nickname {
+    color: #698192;
+}
+
+.admin-label {
+    color: #ab6363;
+    vertical-align: text-bottom;
+}
+
+.well {
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.media-left, .media > .pull-left {
+    padding-right: 0;
+}
+
+.h3, .h4, .h5 {
+    margin-top: initial;
+}
+
+.btn-custom {
+    width: 150px;
+}

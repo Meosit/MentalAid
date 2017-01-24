@@ -6,6 +6,7 @@ import by.mksn.epam.mentalaid.command.resource.PathManager;
 import by.mksn.epam.mentalaid.entity.Question;
 import by.mksn.epam.mentalaid.entity.User;
 import by.mksn.epam.mentalaid.service.AnswerService;
+import by.mksn.epam.mentalaid.service.ItemPageService;
 import by.mksn.epam.mentalaid.service.QuestionService;
 import by.mksn.epam.mentalaid.service.UserService;
 import by.mksn.epam.mentalaid.service.exception.ServiceException;
@@ -15,13 +16,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
-import static by.mksn.epam.mentalaid.util.UrlUtil.getRequestUrl;
-import static by.mksn.epam.mentalaid.util.UrlUtil.removeParametersFromUrl;
 
 public class GetProfilePageCommand implements Command {
 
@@ -29,14 +27,6 @@ public class GetProfilePageCommand implements Command {
     private static final String USERNAME_PARAMETER = "username";
     private static final String QUESTION_COUNT_ATTRIBUTE = "questionCount";
     private static final String ANSWER_COUNT_ATTRIBUTE = "answerCount";
-
-    private String getBaseUrl(HttpServletRequest request) {
-        String baseUrl = getRequestUrl(request);
-        return removeParametersFromUrl(baseUrl,
-                SEARCH_QUERY_PARAMETER,
-                QUESTION_DELETED_PARAMETER,
-                PAGE_INDEX_PARAMETER);
-    }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
@@ -48,9 +38,6 @@ public class GetProfilePageCommand implements Command {
         if (!isNullOrEmpty(pageParameter)) {
             try {
                 pageIndex = Integer.parseInt(pageParameter);
-                if ((pageIndex - 1) * QuestionService.QUESTIONS_PER_PAGE < 0) {
-                    pageIndex = 1;
-                }
             } catch (NumberFormatException e) {
                 logger.trace("Invalid page parameter passed (" + pageParameter + ")");
             }
@@ -73,18 +60,15 @@ public class GetProfilePageCommand implements Command {
             }
 
             if (!isNull(user) && user.getStatus() != User.STATUS_DELETED) {
-                List<Question> questions;
-                int pageCount;
+                ItemPageService.ItemsPage<Question> questionsPage;
                 int questionCount;
                 int answerCount;
                 try {
                     QuestionService questionService = ServiceFactory.getInstance().getQuestionService();
                     if (isNullOrEmpty(searchQuery)) {
-                        pageCount = questionService.getPageCountForUserQuestions(user.getUsername());
-                        questions = questionService.getPageForUserQuestions(user.getUsername(), pageIndex);
+                        questionsPage = questionService.getPageForUser(user.getUsername(), pageIndex);
                     } else {
-                        pageCount = questionService.getSearchPageCountForUserQuestions(searchQuery, user.getUsername());
-                        questions = questionService.getSearchPageForUserQuestions(searchQuery, user.getUsername(), pageIndex);
+                        questionsPage = questionService.getSearchPageForUser(user.getUsername(), pageIndex, searchQuery);
                     }
 
                     questionCount = questionService.getUserQuestionCount(user.getUsername());
@@ -93,13 +77,12 @@ public class GetProfilePageCommand implements Command {
                 } catch (ServiceException e) {
                     throw new CommandException(e);
                 }
-                request.setAttribute(SEARCH_BASE_URL_ATTRIBUTE, getBaseUrl(request));
                 request.setAttribute(USER_ATTRIBUTE, user);
                 request.setAttribute(QUESTION_COUNT_ATTRIBUTE, questionCount);
                 request.setAttribute(ANSWER_COUNT_ATTRIBUTE, answerCount);
-                request.setAttribute(QUESTION_LIST_ATTRIBUTE, questions);
-                request.setAttribute(PAGE_COUNT_ATTRIBUTE, pageCount);
-                request.setAttribute(CURRENT_PAGE_ATTRIBUTE, pageIndex);
+                request.setAttribute(QUESTION_LIST_ATTRIBUTE, questionsPage.getItems());
+                request.setAttribute(PAGE_COUNT_ATTRIBUTE, questionsPage.getPageCount());
+                request.setAttribute(CURRENT_PAGE_ATTRIBUTE, questionsPage.getCurrentIndex());
                 pagePath = PathManager.getProperty(PathManager.PROFILE);
             } else {
                 request.setAttribute(ERROR_TITLE_ATTRIBUTE, ERROR_TITLE_PROFILE_NOT_FOUND);

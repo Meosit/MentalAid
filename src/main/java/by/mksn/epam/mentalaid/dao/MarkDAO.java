@@ -15,6 +15,7 @@ public interface MarkDAO extends BaseDAO<Mark> {
      * @return {@link Mark} full entity of inserted row
      * @throws DAOException if something went wrong
      */
+    @Override
     Mark insert(Mark entity) throws DAOException;
 
     /**
@@ -24,6 +25,7 @@ public interface MarkDAO extends BaseDAO<Mark> {
      * @return - {@link Mark} with the specified id <br> - {@code null} if entity not found
      * @throws DAOException if something went wrong
      */
+    @Override
     Mark selectById(long id) throws DAOException;
 
     /**
@@ -44,6 +46,7 @@ public interface MarkDAO extends BaseDAO<Mark> {
      * @param updatedEntity entity to update
      * @throws DAOException if something went wrong
      */
+    @Override
     void update(Mark updatedEntity) throws DAOException;
 
     /**
@@ -52,5 +55,6 @@ public interface MarkDAO extends BaseDAO<Mark> {
      * @param id id of an entity to delete
      * @throws DAOException if something went wrong
      */
+    @Override
     void delete(long id) throws DAOException;
 }

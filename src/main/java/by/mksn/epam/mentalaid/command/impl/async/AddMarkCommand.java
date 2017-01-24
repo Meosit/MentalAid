@@ -27,6 +27,7 @@ public class AddMarkCommand implements Command {
     private static final String ANSWER_ID_PARAMETER = "answer_id";
     private static final String VALUE_PARAMETER = "value";
     private static final String RESULT_STATUS_NAME = "resultStatus";
+    private static final String MARK_DELTA_NAME = "markDelta";
     private static final String RESULT_STATUS_OK = "ok";
     private static final String RESULT_STATUS_DENIED = "denied";
     private static final String RESULT_STATUS_ERROR = "error";
@@ -51,10 +52,12 @@ public class AddMarkCommand implements Command {
                         mark.setAnswerId(answerId);
                         mark.setValue(value);
                         mark.setUserId(user.getId());
-                        markService.add(mark);
+                        int delta = markService.add(mark);
                         logger.debug("Added mark " + mark);
-                        setSuccessResponse(request,
-                                MapUtil.<String, Object>builder().put(RESULT_STATUS_NAME, RESULT_STATUS_OK).build());
+                        setSuccessResponse(request, MapUtil.<String, Object>builder()
+                                .put(RESULT_STATUS_NAME, RESULT_STATUS_OK)
+                                .put(MARK_DELTA_NAME, delta)
+                                .build());
                     } else {
                         logger.debug("User " + user.getUsername() + " trying to add mark to his own answer");
                         setSuccessResponse(request,

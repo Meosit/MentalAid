@@ -7,7 +7,7 @@
 <fmt:bundle basename="pagecontent" prefix="settings.">
   <html lang="${sessionScope.locale}">
     <head>
-      <title>Settings | MentalAid</title>
+      <title><fmt:message key="title"/></title>
       <jsp:include page="template/links.jsp"/>
       <link rel="stylesheet" href="<c:url value="/css/settings.css"/>">
       <link rel="stylesheet" href="<c:url value="/css/stars.css"/>">
@@ -16,38 +16,39 @@
       <jsp:include page="template/navbar.jsp"/>
       <div class="container">
         <div>
-          <h3 class="text-center">Change password</h3>
+          <h3 class="text-center"><fmt:message key="changePassword.title"/></h3>
           <form class="form-horizontal" id="change-password-form">
             <div class="form-group">
-              <label class="control-label col-sm-offset-2 col-sm-2" for="old-password">Old
-                password</label>
+              <label class="control-label col-sm-offset-2 col-sm-2" for="old-password"><fmt:message
+                  key="changePassword.current.label"/></label>
               <div class="col-sm-6">
                 <input required type="password" class="form-control" id="old-password" name="old_password"
-                       title="Old password"
-                       placeholder="Old password">
+                       title="<fmt:message key="changePassword.current.title"/>"
+                       placeholder="<fmt:message key="changePassword.current.placeholder"/>">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-offset-2 col-sm-2" for="new-password">New
-                password</label>
+              <label class="control-label col-sm-offset-2 col-sm-2" for="new-password"><fmt:message
+                  key="changePassword.new.label"/></label>
               <div class="col-sm-6">
                 <input required type="password" class="form-control" id="new-password" name="new_password"
-                       title="New password"
-                       placeholder="New password">
+                       title="<fmt:message key="changePassword.new.title"/>"
+                       placeholder="<fmt:message key="changePassword.new.placeholder"/>">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-offset-2 col-sm-2" for="new-password-confirm">New
-                password again</label>
+              <label class="control-label col-sm-offset-2 col-sm-2" for="new-password-confirm"><fmt:message
+                  key="changePassword.new.confirm.label"/></label>
               <div class="col-sm-6">
                 <input required type="password" class="form-control" id="new-password-confirm"
-                       title="New password again"
-                       placeholder="New password again">
+                       title="<fmt:message key="changePassword.new.confirm.title"/>"
+                       placeholder="<fmt:message key="changePassword.new.confirm.placeholder"/>">
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-4">
-                <button class="btn btn-settings btn-lg btn-primary" type="submit">Change password</button>
+                <button class="btn btn-settings btn-lg btn-primary" type="submit"><fmt:message
+                    key="changePassword.button"/></button>
               </div>
             </div>
           </form>
@@ -57,29 +58,32 @@
           </div>
         </div>
         <div>
-          <h3 class="text-center">Profile settings</h3>
+          <h3 class="text-center"><fmt:message key="profileSettings.title"/></h3>
           <form class="form-horizontal" id="profile-update-form">
             <div class="form-group">
-              <label class="control-label col-sm-offset-2 col-sm-2" for="image-url">Avatar url</label>
+              <label class="control-label col-sm-offset-2 col-sm-2" for="image-url"><fmt:message
+                  key="profileSettings.imageUrl.label"/></label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" id="image-url" name="image_url"
                        value="${sessionScope.user.imageUrl}"
-                       title="Avatar image link"
-                       placeholder="Avatar image link">
+                       title="<fmt:message key="profileSettings.imageUrl.title"/>"
+                       placeholder="<fmt:message key="profileSettings.imageUrl.placeholder"/>">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-sm-offset-2 col-sm-2" for="website-url">Website</label>
+              <label class="control-label col-sm-offset-2 col-sm-2" for="website-url"><fmt:message
+                  key="profileSettings.website.label"/></label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" id="website-url" name="website"
                        value="${sessionScope.user.website}"
-                       title="Website"
-                       placeholder="Website">
+                       title="<fmt:message key="profileSettings.website.title"/>"
+                       placeholder="<fmt:message key="profileSettings.website.placeholder"/>">
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-4">
-                <button class="btn btn-settings btn-lg btn-primary" type="submit">Save changes</button>
+                <button class="btn btn-settings btn-lg btn-primary" type="submit"><fmt:message
+                    key="profileSettings.button"/></button>
               </div>
             </div>
             <img class="preview-img col-sm-offset-4"

@@ -17,20 +17,24 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
-    public void add(Mark mark) throws ServiceException {
+    public int add(Mark mark) throws ServiceException {
         if (isMarkValueOutOfRange(mark.getValue())) {
             throw new MarkServiceException("Invalid mark value passed", MarkServiceException.WRONG_INPUT);
         }
 
         MarkDAO markDAO = DAOFactory.getDAOFactory().getMarkDAO();
-        tryCallDAO(() -> {
+        return tryCallDAO(() -> {
             Mark oldMark = markDAO.selectByUserAndAnswerId(mark.getUserId(), mark.getAnswerId());
+            int delta;
             if (isNull(oldMark)) {
+                delta = MAX_MARK_VALUE + 1;
                 markDAO.insert(mark);
             } else {
+                delta = oldMark.getValue() - mark.getValue();
                 oldMark.setValue(mark.getValue());
                 markDAO.update(oldMark);
             }
+            return delta;
         });
     }
 

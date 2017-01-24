@@ -44,6 +44,10 @@ public class PathManager {
      */
     public static final String SETTINGS = "page.settings";
     /**
+     * Path of page with user list
+     */
+    public static final String USER_LIST = "page.user_list";
+    /**
      * Jsp page which generates JSON object with redirect url if operation is succeed
      * or with error information otherwise
      */

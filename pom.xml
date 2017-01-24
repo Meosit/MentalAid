@@ -71,6 +71,12 @@
       <artifactId>org.liveSense.scripting.jsp.taglib.jsonatg</artifactId>
       <version>1.0.5</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.ocpsoft.prettytime</groupId>
+      <artifactId>prettytime</artifactId>
+      <version>3.2.7.Final</version>
+    </dependency>
   </dependencies>
 
   <build>

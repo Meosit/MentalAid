@@ -35,44 +35,6 @@ hr {
     border-top: 1px solid #336699;
 }
 
-#custom-search-input {
-    margin: 10px;
-    padding: 3px;
-    border: solid 1px #336699;
-    border-radius: 6px;
-    background-color: #fff;
-}
-
-#custom-search-input input {
-    border: 0;
-    box-shadow: none;
-}
-
-#custom-search-input button {
-    margin: 2px 0 0 0;
-    background: none;
-    box-shadow: none;
-    border: 0;
-    color: #336699;
-    padding: 0 8px 0 10px;
-    border-left: solid 1px #336699;
-}
-
-#custom-search-input button:focus {
-    outline: none;
-}
-
-#custom-search-input button:hover {
-    border: 0;
-    box-shadow: none;
-    color: #ffc423;
-    border-left: solid 1px #336699;
-}
-
-#custom-search-input .glyphicon-search {
-    font-size: 23px;
-}
-
 p span span.glyphicon {
     color: grey;
 }

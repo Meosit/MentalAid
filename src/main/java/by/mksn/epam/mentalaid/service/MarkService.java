@@ -15,9 +15,10 @@ public interface MarkService {
      *             <br> - {@link Mark#userId}
      *             <br> - {@link Mark#answerId}
      *             <br> - {@link Mark#value}
+     * @return {@link #MAX_MARK_VALUE}{@code +1} if new mark added, or delta between old and new value if mark was modified
      * @throws MarkServiceException if negative or grater than {@link #MAX_MARK_VALUE} value  passed (cause code: {@link MarkServiceException#WRONG_INPUT});
      * @throws ServiceException     if error happens during execution
      */
-    void add(Mark mark) throws ServiceException;
+    int add(Mark mark) throws ServiceException;
 
 }

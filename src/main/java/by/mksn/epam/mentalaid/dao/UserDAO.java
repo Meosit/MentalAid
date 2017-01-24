@@ -3,7 +3,7 @@ package by.mksn.epam.mentalaid.dao;
 import by.mksn.epam.mentalaid.dao.exception.DAOException;
 import by.mksn.epam.mentalaid.entity.User;
 
-public interface UserDAO extends BaseDAO<User> {
+public interface UserDAO extends BaseDAO<User>, EntityListDAO<User> {
 
     /**
      * Inserts user into the database
@@ -15,6 +15,7 @@ public interface UserDAO extends BaseDAO<User> {
      * @return {@link User} full entity of inserted row
      * @throws DAOException if something went wrong
      */
+    @Override
     User insert(User entity) throws DAOException;
 
     /**
@@ -24,6 +25,7 @@ public interface UserDAO extends BaseDAO<User> {
      * @return - {@link User} with the specified id <br> - {@code null} if entity not found
      * @throws DAOException if something went wrong
      */
+    @Override
     User selectById(long id) throws DAOException;
 
     /**
@@ -54,6 +56,7 @@ public interface UserDAO extends BaseDAO<User> {
      * @param updatedEntity entity to update
      * @throws DAOException if something went wrong
      */
+    @Override
     void update(User updatedEntity) throws DAOException;
 
     /**
@@ -62,6 +65,7 @@ public interface UserDAO extends BaseDAO<User> {
      * @param id id of an entity to delete
      * @throws DAOException if something went wrong
      */
+    @Override
     void delete(long id) throws DAOException;
 
 }

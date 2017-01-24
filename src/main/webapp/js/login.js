@@ -15,8 +15,8 @@ $('#login-form').submit(function (e) {
                     $('#error-alert').removeClass('hidden');
                     $('#error-title').text(response.errorTitle);
                     $('#error-message').text(response.errorMessage);
+                    isAjaxRequestSent = false;
                 }
-                isAjaxRequestSent = false;
             },
             error: function (request, status, error) {
                 $('#error-alert').removeClass('hidden');

@@ -18,6 +18,7 @@ public interface AnswerDAO extends BaseDAO<Answer> {
      * @return {@link Answer} entity with all filled properties
      * @throws DAOException if something went wrong
      */
+    @Override
     Answer insert(Answer entity) throws DAOException;
 
     /**
@@ -27,6 +28,7 @@ public interface AnswerDAO extends BaseDAO<Answer> {
      * @return - {@link Answer} with the specified id <br> - {@code null} if entity not found or deleted
      * @throws DAOException if something went wrong
      */
+    @Override
     Answer selectById(long id) throws DAOException;
 
     /**
@@ -57,6 +59,7 @@ public interface AnswerDAO extends BaseDAO<Answer> {
      * @param updatedEntity entity to update
      * @throws DAOException if something went wrong
      */
+    @Override
     void update(Answer updatedEntity) throws DAOException;
 
     /**
@@ -65,5 +68,6 @@ public interface AnswerDAO extends BaseDAO<Answer> {
      * @param id id of a question to delete
      * @throws DAOException if something went wrong
      */
+    @Override
     void delete(long id) throws DAOException;
 }

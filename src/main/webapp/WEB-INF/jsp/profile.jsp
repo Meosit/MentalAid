@@ -53,7 +53,7 @@
                   </c:when>
                   <c:when test="${(requestScope.user.markCount % 10) eq 1}">
                     <c:choose>
-                      <c:when test="${requestScope.locale eq 'ru'}}">
+                      <c:when test="${sessionScope.locale eq 'ru'}}">
                         <fmt:message key="mark.votes.single"/>)
                       </c:when>
                       <c:otherwise>

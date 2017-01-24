@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
+import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNullDefault;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
@@ -128,7 +129,7 @@ public final class UrlUtil {
     /**
      * Removes GET parameters from the url
      *
-     * @param url            url where parameters will be removed
+     * @param url           url where parameters will be removed
      * @param parameterNames array of parameter names to remove
      * @return url without parameters
      */
@@ -155,6 +156,23 @@ public final class UrlUtil {
             url += parameterName + "=" + parameterValue;
         }
         return url;
+    }
+
+    /**
+     * Removes temp parameters such as <br>{@link Constants#PAGE_INDEX_PARAMETER},
+     * <br>{@link Constants#SEARCH_QUERY_PARAMETER},
+     * <br>{@link Constants#QUESTION_DELETED_PARAMETER}
+     * <br>from the specified url
+     *
+     * @param request request from which url will be generated
+     * @return base url
+     */
+    public static String getBaseUrl(HttpServletRequest request) {
+        String baseUrl = getRequestUrl(request);
+        return removeParametersFromUrl(baseUrl,
+                SEARCH_QUERY_PARAMETER,
+                QUESTION_DELETED_PARAMETER,
+                PAGE_INDEX_PARAMETER);
     }
 
 }
