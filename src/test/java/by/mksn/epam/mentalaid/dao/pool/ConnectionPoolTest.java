@@ -4,7 +4,6 @@ import by.mksn.epam.mentalaid.dao.manager.DatabaseManager;
 import by.mksn.epam.mentalaid.dao.pool.exception.PoolException;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -18,16 +17,15 @@ public class ConnectionPoolTest {
 
     private static final Logger logger = Logger.getLogger(ConnectionPoolTest.class);
 
-    private ConnectionPool poolToTest;
-
-    @Before
-    public void setUp() {
-        poolToTest = ConnectionPool.getInstance();
+    @AfterClass
+    public static void tearDown() {
+        ConnectionPool poolToTest = ConnectionPool.getInstance();
+        poolToTest.releasePool();
     }
 
     @Test(expected = PoolException.class)
     public void returnExternalConnectionTest() throws PoolException {
-        logger.debug("TEST returnExternalConnection");
+        ConnectionPool poolToTest = ConnectionPool.getInstance();
         try {
             int expectedConnectionCount = poolToTest.getAvailableConnectionsCount();
             Connection externalConnection = DriverManager.getConnection(
@@ -44,10 +42,9 @@ public class ConnectionPoolTest {
         }
     }
 
-
     @Test
     public void closeConnectionOutsideFromPoolTest() {
-        logger.debug("TEST closeConnectionOutsideFromPool");
+        ConnectionPool poolToTest = ConnectionPool.getInstance();
         try {
             Connection connection = poolToTest.getConnection();
             connection.close();
@@ -62,7 +59,7 @@ public class ConnectionPoolTest {
 
     @Test
     public void getAndReturnConnectionTest() {
-        logger.debug("TEST getAndReturnConnection");
+        ConnectionPool poolToTest = ConnectionPool.getInstance();
         Connection connection = null;
         try {
             connection = poolToTest.getConnection();
@@ -77,11 +74,6 @@ public class ConnectionPoolTest {
             logger.error("Cannot return connection to pool\n", e);
             fail("Cannot return connection from pool");
         }
-    }
-
-    @AfterClass
-    public void tearDown() {
-        poolToTest.releasePool();
     }
 
 }

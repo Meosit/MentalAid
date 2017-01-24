@@ -50,7 +50,7 @@ public final class NullUtil {
      * @param defaultValue will be returned if object is null
      * @return object if it not null, defaultValue otherwise
      */
-    public static <T> T isNullDefault(T object, T defaultValue) {
+    public static <T> T ifNullDefault(T object, T defaultValue) {
         return (object == null) ? defaultValue : object;
     }
 

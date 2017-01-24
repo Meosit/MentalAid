@@ -9,8 +9,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
+import static by.mksn.epam.mentalaid.util.NullUtil.ifNullDefault;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
-import static by.mksn.epam.mentalaid.util.NullUtil.isNullDefault;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 
 /**
@@ -44,7 +44,7 @@ public final class UrlUtil {
     public static String getRequestUrl(HttpServletRequest request) {
         String parameters = request.getQueryString();
         String uri = (String) request.getAttribute(JSP_REQUEST_URI_ATTRIBUTE);
-        uri = isNullDefault(uri, request.getRequestURI());
+        uri = ifNullDefault(uri, request.getRequestURI());
         return uri + (isNull(parameters) ? "" : ("?" + parameters));
     }
 
@@ -57,7 +57,7 @@ public final class UrlUtil {
      */
     public static String getServletUrl(HttpServletRequest request) {
         String url = request.getContextPath();
-        url += isNullDefault((String) request.getAttribute(JSP_SERVLET_PATH_ATTRIBUTE), request.getServletPath());
+        url += ifNullDefault((String) request.getAttribute(JSP_SERVLET_PATH_ATTRIBUTE), request.getServletPath());
         return url;
     }
 
@@ -69,7 +69,7 @@ public final class UrlUtil {
      */
     public static String encodeUrl(String string) {
         try {
-            return URLEncoder.encode(isNullDefault(string, ""), URL_CHARSET);
+            return URLEncoder.encode(ifNullDefault(string, ""), URL_CHARSET);
         } catch (UnsupportedEncodingException e) {
             logger.error("Unsupported character encoding: " + URL_CHARSET);
         }
@@ -84,7 +84,7 @@ public final class UrlUtil {
      */
     public static String decodeUrl(String string) {
         try {
-            return URLDecoder.decode(isNullDefault(string, ""), URL_CHARSET);
+            return URLDecoder.decode(ifNullDefault(string, ""), URL_CHARSET);
         } catch (UnsupportedEncodingException e) {
             logger.error("Unsupported character encoding: " + URL_CHARSET);
         }
@@ -121,6 +121,7 @@ public final class UrlUtil {
     public static String removeParameterFromUrl(String url, String parameterName) {
         if (!isNullOrEmpty(url)) {
             url = url.replaceAll("&?" + parameterName + "=[^&]*", "")
+                    .replaceAll("\\?&", "?")
                     .replaceAll("\\?$", "");
         }
         return url;
