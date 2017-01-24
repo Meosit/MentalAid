@@ -30,6 +30,10 @@ public class QuestionServiceImpl implements QuestionService {
         return pageCount;
     }
 
+    private QuestionDAO getQuestionDAO() {
+        return DAOFactory.getDAOFactory().getQuestionDAO();
+    }
+
     @Override
     public Question add(Question question) throws ServiceException {
         if (isNullOrEmpty(question.getTitle())) {
@@ -48,20 +52,17 @@ public class QuestionServiceImpl implements QuestionService {
         question.setDescription(normalizedDescription);
 
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        return tryCallDAO(() -> questionDAO.insert(question));
+        return tryCallDAO(() -> getQuestionDAO().insert(question));
     }
 
     @Override
     public Question getById(long id) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        return tryCallDAO(() -> questionDAO.selectById(id));
+        return tryCallDAO(() -> getQuestionDAO().selectById(id));
     }
 
     @Override
     public int getUserQuestionCount(String username) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        return tryCallDAO(() -> questionDAO.selectCountByUsername(username));
+        return tryCallDAO(() -> getQuestionDAO().selectCountByUsername(username));
     }
 
     @Override
@@ -70,9 +71,8 @@ public class QuestionServiceImpl implements QuestionService {
             index = 1;
         }
         int offset = (index - 1) * ITEMS_PER_PAGE;
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        List<Question> items = tryCallDAO(() -> questionDAO.selectByUsernameWithLimit(username, offset, ITEMS_PER_PAGE));
-        int questionCount = tryCallDAO(() -> questionDAO.selectCountByUsername(username));
+        List<Question> items = tryCallDAO(() -> getQuestionDAO().selectByUsernameWithLimit(username, offset, ITEMS_PER_PAGE));
+        int questionCount = tryCallDAO(() -> getQuestionDAO().selectCountByUsername(username));
         int pageCount = calculatePageCount(questionCount, ITEMS_PER_PAGE);
         return new ItemsPage<>(items, pageCount, index);
     }
@@ -83,10 +83,9 @@ public class QuestionServiceImpl implements QuestionService {
             index = 1;
         }
         int offset = (index - 1) * ITEMS_PER_PAGE;
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
         List<Question> items = tryCallDAO(() ->
-                questionDAO.selectLikeByUsernameWithLimit(searchQuery, username, offset, ITEMS_PER_PAGE));
-        int questionCount = tryCallDAO(() -> questionDAO.selectLikeCountByUsername(searchQuery, username));
+                getQuestionDAO().selectLikeByUsernameWithLimit(searchQuery, username, offset, ITEMS_PER_PAGE));
+        int questionCount = tryCallDAO(() -> getQuestionDAO().selectLikeCountByUsername(searchQuery, username));
         int pageCount = calculatePageCount(questionCount, ITEMS_PER_PAGE);
         return new ItemsPage<>(items, pageCount, index);
     }
@@ -108,14 +107,12 @@ public class QuestionServiceImpl implements QuestionService {
         normalizedDescription = truncateToSize(normalizedDescription, DESCRIPTION_MAX_LENGTH);
         updatedQuestion.setDescription(normalizedDescription);
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        tryCallDAO(() -> questionDAO.update(updatedQuestion));
+        tryCallDAO(() -> getQuestionDAO().update(updatedQuestion));
     }
 
     @Override
     public void delete(long id) throws ServiceException {
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        DAOCaller.tryCallDAO(() -> questionDAO.delete(id));
+        DAOCaller.tryCallDAO(() -> getQuestionDAO().delete(id));
     }
 
     @Override
@@ -125,9 +122,8 @@ public class QuestionServiceImpl implements QuestionService {
         }
         int offset = (index - 1) * itemsPerPage;
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        List<Question> items = tryCallDAO(() -> questionDAO.selectWithLimit(offset, itemsPerPage));
-        int questionCount = tryCallDAO(questionDAO::selectCount);
+        List<Question> items = tryCallDAO(() -> getQuestionDAO().selectWithLimit(offset, itemsPerPage));
+        int questionCount = tryCallDAO(getQuestionDAO()::selectCount);
         int pageCount = calculatePageCount(questionCount, itemsPerPage);
         return new ItemsPage<>(items, pageCount, index);
     }
@@ -139,9 +135,8 @@ public class QuestionServiceImpl implements QuestionService {
         }
         int offset = (index - 1) * itemsPerPage;
 
-        QuestionDAO questionDAO = DAOFactory.getDAOFactory().getQuestionDAO();
-        List<Question> items = tryCallDAO(() -> questionDAO.selectLikeWithLimit(searchQuery, offset, itemsPerPage));
-        int questionCount = tryCallDAO(() -> questionDAO.selectLikeCount(searchQuery));
+        List<Question> items = tryCallDAO(() -> getQuestionDAO().selectLikeWithLimit(searchQuery, offset, itemsPerPage));
+        int questionCount = tryCallDAO(() -> getQuestionDAO().selectLikeCount(searchQuery));
         int pageCount = calculatePageCount(questionCount, itemsPerPage);
         return new ItemsPage<>(items, pageCount, index);
     }

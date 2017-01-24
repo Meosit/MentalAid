@@ -39,13 +39,16 @@ public class UserServiceImpl implements UserService {
         return !isNullOrEmpty(username) && username.matches(USERNAME_REGEX);
     }
 
+    private UserDAO getUserDAO() {
+        return DAOFactory.getDAOFactory().getUserDAO();
+    }
+
     @Override
     public User getByUsername(String username) throws ServiceException {
         if (isNullOrEmpty(username)) {
             return null;
         }
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-        return tryCallDAO(() -> userDAO.selectByUsername(username));
+        return tryCallDAO(() -> getUserDAO().selectByUsername(username));
     }
 
     @Override
@@ -60,15 +63,14 @@ public class UserServiceImpl implements UserService {
         }
 
         String passwordHash = HashUtil.hashString(password);
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
-        user = tryCallDAO(() -> userDAO.selectByUsername(username));
+        user = tryCallDAO(() -> getUserDAO().selectByUsername(username));
         if (!isNull(user)) {
             logger.debug("This username \"" + username + "\" is already exists.");
             throw new UserServiceException("User with that username is already exists", UserServiceException.USER_EXISTS);
         }
 
-        user = tryCallDAO(() -> userDAO.selectByEmail(email));
+        user = tryCallDAO(() -> getUserDAO().selectByEmail(email));
         if (!isNull(user)) {
             logger.debug("This email \"" + email + "\" is already exists.");
             throw new UserServiceException("User with that email is already exists", UserServiceException.EMAIL_EXISTS);
@@ -79,14 +81,13 @@ public class UserServiceImpl implements UserService {
         newUser.setEmail(email);
         newUser.setPassHash(passwordHash);
 
-        return tryCallDAO(() -> userDAO.insert(newUser));
+        return tryCallDAO(() -> getUserDAO().insert(newUser));
     }
 
     @Override
     public User login(String username, String password) throws ServiceException {
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         User user;
-        user = tryCallDAO(() -> userDAO.selectByUsername(username));
+        user = tryCallDAO(() -> getUserDAO().selectByUsername(username));
         if (!isNull(user) && (user.getStatus() != User.STATUS_DELETED)) {
             if (!HashUtil.isValidHash(password, user.getPassHash())) {
                 logger.debug("Incorrect password for username \"" + username + "\"");
@@ -101,8 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User updatedUser) throws ServiceException {
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-        tryCallDAO(() -> userDAO.update(updatedUser));
+        tryCallDAO(() -> getUserDAO().update(updatedUser));
     }
 
     @Override
@@ -114,8 +114,7 @@ public class UserServiceImpl implements UserService {
 
         if (HashUtil.isValidHash(oldPassword, user.getPassHash())) {
             user.setPassHash(HashUtil.hashString(newPassword));
-            UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-            tryCallDAO(() -> userDAO.update(user));
+            tryCallDAO(() -> getUserDAO().update(user));
         } else {
             logger.debug("Incorrect old password for user \"" + user.getUsername() + "\"");
             throw new UserServiceException(UserServiceException.INCORRECT_PASSWORD);
@@ -129,9 +128,8 @@ public class UserServiceImpl implements UserService {
         }
         int offset = (index - 1) * itemsPerPage;
 
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-        List<User> items = tryCallDAO(() -> userDAO.selectWithLimit(offset, itemsPerPage));
-        int questionCount = tryCallDAO(userDAO::selectCount);
+        List<User> items = tryCallDAO(() -> getUserDAO().selectWithLimit(offset, itemsPerPage));
+        int questionCount = tryCallDAO(getUserDAO()::selectCount);
         int pageCount = calculatePageCount(questionCount, itemsPerPage);
         return new ItemsPage<>(items, pageCount, index);
     }
@@ -143,9 +141,8 @@ public class UserServiceImpl implements UserService {
         }
         int offset = (index - 1) * itemsPerPage;
 
-        UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
-        List<User> items = tryCallDAO(() -> userDAO.selectLikeWithLimit(searchQuery, offset, itemsPerPage));
-        int questionCount = tryCallDAO(() -> userDAO.selectLikeCount(searchQuery));
+        List<User> items = tryCallDAO(() -> getUserDAO().selectLikeWithLimit(searchQuery, offset, itemsPerPage));
+        int questionCount = tryCallDAO(() -> getUserDAO().selectLikeCount(searchQuery));
         int pageCount = calculatePageCount(questionCount, itemsPerPage);
         return new ItemsPage<>(items, pageCount, index);
     }

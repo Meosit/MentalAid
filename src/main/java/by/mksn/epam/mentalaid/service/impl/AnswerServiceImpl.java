@@ -16,6 +16,10 @@ public class AnswerServiceImpl implements AnswerService {
 
     private static final int TEXT_MAX_LENGTH = 2000;
 
+    private AnswerDAO getAnswerDao() {
+        return DAOFactory.getDAOFactory().getAnswerDAO();
+    }
+
     @Override
     public Answer add(Answer answer) throws ServiceException {
         if (isNullOrEmpty(answer.getText())) {
@@ -26,26 +30,23 @@ public class AnswerServiceImpl implements AnswerService {
         normalizedText = truncateToSize(normalizedText, TEXT_MAX_LENGTH);
         answer.setText(normalizedText);
 
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        return tryCallDAO(() -> answerDAO.insert(answer));
+        return tryCallDAO(() -> getAnswerDao().insert(answer));
     }
 
     @Override
     public Answer getById(long id) throws ServiceException {
         AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        return tryCallDAO(() -> answerDAO.selectById(id));
+        return tryCallDAO(() -> getAnswerDao().selectById(id));
     }
 
     @Override
     public int getCountByUserId(long userId) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        return tryCallDAO(() -> answerDAO.selectCountByUserId(userId));
+        return tryCallDAO(() -> getAnswerDao().selectCountByUserId(userId));
     }
 
     @Override
     public List<Answer> getAnswersForQuestion(long questionId) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        return tryCallDAO(() -> answerDAO.selectByQuestionId(questionId));
+        return tryCallDAO(() -> getAnswerDao().selectByQuestionId(questionId));
     }
 
     @Override
@@ -58,13 +59,11 @@ public class AnswerServiceImpl implements AnswerService {
         normalizedText = truncateToSize(normalizedText, TEXT_MAX_LENGTH);
         updatedAnswer.setText(normalizedText);
 
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        tryCallDAO(() -> answerDAO.update(updatedAnswer));
+        tryCallDAO(() -> getAnswerDao().update(updatedAnswer));
     }
 
     @Override
     public void delete(long id) throws ServiceException {
-        AnswerDAO answerDAO = DAOFactory.getDAOFactory().getAnswerDAO();
-        tryCallDAO(() -> answerDAO.delete(id));
+        tryCallDAO(() -> getAnswerDao().delete(id));
     }
 }
