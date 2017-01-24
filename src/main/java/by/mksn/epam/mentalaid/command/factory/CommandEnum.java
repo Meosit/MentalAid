@@ -61,6 +61,14 @@ public enum CommandEnum {
      */
     ASYNC_BAN(new BanUserCommand()),
     /**
+     * Changes user password
+     */
+    ASYNC_CHANGE_PASSWORD(new ChangePasswordCommand()),
+    /**
+     * Updates user profile records, such as website or avatar image
+     */
+    ASYNC_UPDATE_PROFILE(new UpdateProfileCommand()),
+    /**
      * Changes question data
      */
     ASYNC_QUESTION_EDIT(new EditQuestionCommand()),

@@ -119,8 +119,22 @@ public final class UrlUtil {
      */
     public static String removeParameterFromUrl(String url, String parameterName) {
         if (!isNullOrEmpty(url)) {
-            url = url.replaceAll("&?" + parameterName + "=[^&]*[&]?", "")
+            url = url.replaceAll("&?" + parameterName + "=[^&]*", "")
                     .replaceAll("\\?$", "");
+        }
+        return url;
+    }
+
+    /**
+     * Removes GET parameters from the url
+     *
+     * @param url            url where parameters will be removed
+     * @param parameterNames array of parameter names to remove
+     * @return url without parameters
+     */
+    public static String removeParametersFromUrl(String url, String... parameterNames) {
+        for (String parameterName : parameterNames) {
+            url = removeParameterFromUrl(url, parameterName);
         }
         return url;
     }

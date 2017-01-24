@@ -14,9 +14,7 @@
       <link rel="stylesheet" href="<c:url value="/css/stars.css"/>">
     </head>
     <body>
-      <jsp:include page="template/navbar.jsp">
-        <jsp:param name="isNavbarLess" value="false"/>
-      </jsp:include>
+      <jsp:include page="template/navbar.jsp"/>
       <div class="container">
         <c:set var="isQuestionOwner"
                value="${(not empty sessionScope.user) and (requestScope.question.creatorId eq sessionScope.user.id)}"/>

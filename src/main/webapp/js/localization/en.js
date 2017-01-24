@@ -28,6 +28,9 @@ const STRINGS = {
     profile_button_ban: "Ban this user",
     profile_button_unban: "Unban this user",
     profile_ban_success_message: "User successfully banned.",
-    profile_unban_success_message: "User successfully unbanned."
+    profile_unban_success_message: "User successfully unbanned.",
+    change_password_success_message: "Password successfully changed.",
+    change_password_duplicate_message: "New and current passwords are the same.",
+    profile_update_success_message: "Data successfully saved."
 };
 Object.freeze(STRINGS);

@@ -13,23 +13,22 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="<c:url value="/"/>"><img id="logo-image" src="<c:url value="/img/logo.png"/>"></a>
+        <a class="navbar-brand" href="<c:url value="/"/>">
+          <span><img class="logo-image" id="logo-image" src="<c:url value="/img/logo.png"/>"></span>
+          <fmt:message key="app.name"/>
+        </a>
       </div>
       <div class="collapse navbar-collapse" id="nav">
         <ul class="nav navbar-nav">
-          <li>
-            <a class="logo-label" href="<c:url value="/"/>"><fmt:message key="app.name"/></a>
-          </li>
           <c:if test="${not param.isNavbarLess}">
             <c:if test="${not empty sessionScope.user}">
-              <li class="${sessionScope.user.status eq 0 ? 'disabled' :''} ${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/new_question.jsp' ? 'active' : ''}">
+              <li class="${sessionScope.user.status eq 0 ? 'disabled' :''}">
                 <a class="${sessionScope.user.status eq 0 ? 'disabled' :''}"
                    href="<c:url value="/controller?cmd=new_question"/>"><span class="glyphicon glyphicon-edit"></span>
                   <fmt:message key="button.newQuestion"/></a></li>
             </c:if>
             <c:if test="${sessionScope.user.role eq 1}">
-              <li class="${pageContext.request.requestURI eq '/BidBuy/WEB-INF/jsp/user_list.jsp' ? 'active' : ''}"><a
-                  href="<c:url value="/controller?cmd=users"/>"><span class="glyphicon glyphicon-list-alt"></span>
+              <li><a href="<c:url value="/controller?cmd=users"/>"><span class="glyphicon glyphicon-list-alt"></span>
                 <fmt:message key="button.userList"/></a></li>
             </c:if>
           </c:if>

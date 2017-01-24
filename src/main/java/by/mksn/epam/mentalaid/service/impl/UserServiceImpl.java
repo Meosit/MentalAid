@@ -92,4 +92,21 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
         tryCallDAO(() -> userDAO.update(updatedUser));
     }
+
+    @Override
+    public void updateUserPassword(User user, String oldPassword, String newPassword) throws ServiceException {
+        if (isNullOrEmpty(newPassword)) {
+            logger.debug("Null or empty new password for user \"" + user.getUsername() + "\"");
+            throw new UserServiceException("Null or empty new password", UserServiceException.WRONG_INPUT);
+        }
+
+        if (HashUtil.isValidHash(oldPassword, user.getPassHash())) {
+            user.setPassHash(HashUtil.hashString(newPassword));
+            UserDAO userDAO = DAOFactory.getDAOFactory().getUserDAO();
+            tryCallDAO(() -> userDAO.update(user));
+        } else {
+            logger.debug("Incorrect old password for user \"" + user.getUsername() + "\"");
+            throw new UserServiceException(UserServiceException.INCORRECT_PASSWORD);
+        }
+    }
 }

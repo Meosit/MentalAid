@@ -11,9 +11,7 @@
     <link rel="stylesheet" href="<c:url value="/css/question_list.css"/>">
   </head>
   <body>
-  <jsp:include page="template/navbar.jsp">
-    <jsp:param name="isNavbarLess" value="false"/>
-  </jsp:include>
+    <jsp:include page="template/navbar.jsp"/>
   <div class="container">
     <jsp:include page="template/question_list.jsp"/>
   </div>

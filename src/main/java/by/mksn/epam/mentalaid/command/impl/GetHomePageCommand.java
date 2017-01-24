@@ -16,7 +16,7 @@ import java.util.List;
 import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.StringUtil.isNullOrEmpty;
 import static by.mksn.epam.mentalaid.util.UrlUtil.getRequestUrl;
-import static by.mksn.epam.mentalaid.util.UrlUtil.removeParameterFromUrl;
+import static by.mksn.epam.mentalaid.util.UrlUtil.removeParametersFromUrl;
 
 /**
  * Returns to client home page
@@ -27,8 +27,10 @@ public class GetHomePageCommand implements Command {
 
     private String getBaseUrl(HttpServletRequest request) {
         String baseUrl = getRequestUrl(request);
-        baseUrl = removeParameterFromUrl(baseUrl, SEARCH_QUERY_PARAMETER);
-        return removeParameterFromUrl(baseUrl, PAGE_INDEX_PARAMETER);
+        return removeParametersFromUrl(baseUrl,
+                SEARCH_QUERY_PARAMETER,
+                QUESTION_DELETED_PARAMETER,
+                PAGE_INDEX_PARAMETER);
     }
 
     @Override

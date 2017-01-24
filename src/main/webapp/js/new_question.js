@@ -6,35 +6,42 @@ var isAjaxRequestSent = false;
 
 $('#new-question-form').submit(function (e) {
     e.preventDefault();
-    if ($('.alert-ui').length == 0 && !isAjaxRequestSent) {
-        isAjaxRequestSent = true;
-        $.ajax({
-            url: "controller?cmd=async_question_add",
-            type: 'POST',
-            dataType: 'text json',
-            data: $('#new-question-form').serialize(),
-            success: function (response) {
-                if (response.isResultSuccess) {
-                    window.location.replace(decodeURI(response.redirectUrl));
-                } else {
+    if ($('.alert-ui').length == 0) {
+        console.log("before send");
+        if (!isAjaxRequestSent) {
+            isAjaxRequestSent = true;
+            console.log("flag set");
+            $.ajax({
+                url: "controller?cmd=async_question_add",
+                type: 'POST',
+                dataType: 'text json',
+                data: $('#new-question-form').serialize(),
+                success: function (response) {
+                    if (response.isResultSuccess) {
+                        window.location.replace(decodeURI(response.redirectUrl));
+                    } else {
+                        $('#error-div')
+                            .addErrorAlert(
+                                response.errorTitle,
+                                response.errorMessage
+                            );
+                        isAjaxRequestSent = false;
+                    }
+
+                    console.log("flag reset");
+                },
+                error: function (xhr, status, error) {
                     $('#error-div')
                         .addErrorAlert(
-                            response.errorTitle,
-                            response.errorMessage
+                            status ? status : STRINGS.error_alert,
+                            error ? error : xhr.statusText
                         );
+                    isAjaxRequestSent = false;
+                    console.log("flag reset");
                 }
-                isAjaxRequestSent = false;
-            },
-            error: function (xhr, status, error) {
-                $('#error-div')
-                    .addErrorAlert(
-                        status ? status : STRINGS.error_alert,
-                        error ? error : xhr.statusText
-                    );
-                isAjaxRequestSent = false;
-            }
-        });
-        isValidInput = true;
+            });
+            isValidInput = true;
+        }
     }
 });
 

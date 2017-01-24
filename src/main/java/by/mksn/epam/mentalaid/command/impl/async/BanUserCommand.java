@@ -23,6 +23,12 @@ public class BanUserCommand implements Command {
     private static final String USERNAME_PARAMETER = "username";
     private static final String IS_USER_BANNED_NAME = "isUserBanned";
 
+    private static boolean canBanUser(User user) {
+        return !isNull(user) &&
+                user.getStatus() != User.STATUS_DELETED &&
+                user.getRole() != User.ROLE_ADMIN;
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws CommandException {
         String usernameParameter = request.getParameter(USERNAME_PARAMETER);
@@ -34,18 +40,25 @@ public class BanUserCommand implements Command {
                 UserService userService = ServiceFactory.getInstance().getUserService();
                 try {
                     User targetUser = userService.getByUsername(usernameParameter);
-                    if (!isNull(targetUser) && user.getStatus() == User.STATUS_DELETED) {
-                        boolean isUserWasBanned = targetUser.getStatus() == User.STATUS_BANNED;
-                        targetUser.setStatus(
-                                isUserWasBanned ? User.STATUS_ACTIVE : User.STATUS_BANNED
-                        );
-                        userService.updateUser(targetUser);
-                        setSuccessResponse(request, MapUtil.<String, Object>builder()
-                                .put(IS_USER_BANNED_NAME, !isUserWasBanned)
-                                .build());
+                    if (!user.equals(targetUser)) {
+                        if (canBanUser(targetUser)) {
+                            boolean isUserWasBanned = targetUser.getStatus() == User.STATUS_BANNED;
+                            targetUser.setStatus(
+                                    isUserWasBanned ? User.STATUS_ACTIVE : User.STATUS_BANNED
+                            );
+                            userService.updateUser(targetUser);
+                            setSuccessResponse(request, MapUtil.<String, Object>builder()
+                                    .put(IS_USER_BANNED_NAME, !isUserWasBanned)
+                                    .build());
+                            logger.debug("User " + targetUser.getUsername() + " " +
+                                    (isUserWasBanned ? "unbanned" : "banned") + " by " + user.getUsername());
+                        } else {
+                            logger.warn("Admin " + user.getUsername() + " trying to ban/unban deleted or not existed user or other admin" +
+                                    " with username " + usernameParameter);
+                            setAccessDeniedResponse(request);
+                        }
                     } else {
-                        logger.warn("Admin " + user.getUsername() + " trying to ban/unban deleted or not existed user" +
-                                " with username " + usernameParameter);
+                        logger.warn("Admin " + user.getUsername() + " trying to ban/unban himself");
                         setAccessDeniedResponse(request);
                     }
                 } catch (ServiceException e) {

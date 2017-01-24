@@ -9,8 +9,9 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.io.IOException;
 
 import static by.mksn.epam.mentalaid.command.resource.Constants.PAGE_INDEX_PARAMETER;
+import static by.mksn.epam.mentalaid.command.resource.Constants.QUESTION_DELETED_PARAMETER;
 import static by.mksn.epam.mentalaid.util.UrlUtil.addParameterToUrl;
-import static by.mksn.epam.mentalaid.util.UrlUtil.removeParameterFromUrl;
+import static by.mksn.epam.mentalaid.util.UrlUtil.removeParametersFromUrl;
 
 public class PaginationBlockTag extends SimpleTagSupport {
 
@@ -65,7 +66,7 @@ public class PaginationBlockTag extends SimpleTagSupport {
     }
 
     public void setBaseUrl(String baseUrl) {
-        baseUrl = removeParameterFromUrl(baseUrl, PAGE_INDEX_PARAMETER);
+        baseUrl = removeParametersFromUrl(baseUrl, PAGE_INDEX_PARAMETER, QUESTION_DELETED_PARAMETER);
         this.baseUrl = baseUrl;
     }
 

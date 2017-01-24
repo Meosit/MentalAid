@@ -148,8 +148,17 @@ body {
     margin: 0;
 }
 
-.navbar-default .navbar-nav > li > a.logo-label:hover {
-    background-color: inherit;
+.logo-image {
+    height: 50px;
+}
+
+.navbar-default .navbar-brand {
+    color: #ffc423;
+    padding-right: 10px;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #fff550;
 }
 
 .owner {

@@ -46,11 +46,24 @@ public interface UserService {
     User login(String username, String password) throws ServiceException;
 
     /**
-     * Updates user data
+     * Updates user data<br>
+     * <strong>Warning:</strong> there is not any validations. Use at your own risk.
      *
      * @param updatedUser updated user entity which will be stored into database
      * @throws ServiceException if error happens during execution
      */
     void updateUser(User updatedUser) throws ServiceException;
+
+    /**
+     * Replaces user password with the new one.
+     *
+     * @param user        {@link User} user where password will be changed.
+     * @param oldPassword old (current) password of the user account (from the client)
+     * @param newPassword new password for replace
+     * @throws UserServiceException - if old password does not match (cause code: {@link UserServiceException#INCORRECT_PASSWORD})
+     *                              <br> - if new password is null or empty (cause code: {@link UserServiceException#WRONG_INPUT})
+     * @throws ServiceException     if error happens during execution
+     */
+    void updateUserPassword(User user, String oldPassword, String newPassword) throws ServiceException;
 
 }

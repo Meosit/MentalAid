@@ -13,10 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static by.mksn.epam.mentalaid.command.resource.Constants.AJAX_IS_RESULT_SUCCESS_ATTRIBUTE;
 import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
-import static by.mksn.epam.mentalaid.util.AjaxUtil.dispatchAjaxRequest;
-import static by.mksn.epam.mentalaid.util.AjaxUtil.setAccessDeniedResponse;
+import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 
 public class DeleteAnswerCommand implements Command {
@@ -39,7 +37,7 @@ public class DeleteAnswerCommand implements Command {
                     if (answer.getCreatorId() == user.getId() || user.getRole() == User.ROLE_ADMIN) {
                         answerService.delete(answer.getId());
                         logger.debug("Answer deleted: \n" + answer);
-                        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
+                        setSuccessResponse(request);
                     } else {
                         logger.warn("User '" + user.getUsername() +
                                 "' trying to delete answer (id=" + idParameter + ") without permission.");

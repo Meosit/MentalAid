@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS `mentalaid`.`user` (
   COMMENT 'Represents current status of user, can be one of specified values:\n-1 - deleted\n 0 - banned\n 1 - active\n(tinyint according this article http://komlenic.com/244/8-reasons-why-mysqls-enum-data-type-is-evil/ )',
   `locale`      CHAR(2)               DEFAULT NULL
   COMMENT 'Time when current user credentials was updated',
-  `image_url`   VARCHAR(255)          DEFAULT NULL
+  `image_url`   VARCHAR(1000)         DEFAULT NULL
   COMMENT 'Avatar of an user',
-  `website`     VARCHAR(255)          DEFAULT NULL
+  `website`     VARCHAR(1000)         DEFAULT NULL
   COMMENT 'Personal website of a user, maybe facebook profile or smth like this',
   PRIMARY KEY (`id`)
 )

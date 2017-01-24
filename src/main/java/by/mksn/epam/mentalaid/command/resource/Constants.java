@@ -9,6 +9,9 @@ public final class Constants {
     public static final String LOCALE_ATTRIBUTE = "locale";
     public static final String USER_ATTRIBUTE = "user";
 
+    public static final String QUESTION_DELETED_PARAMETER = "question_deleted";
+    public static final String QUESTION_DELETED_PARAMETER_VALUE = "success";
+
     public static final String QUESTION_ID_PARAMETER = "quid";
     public static final String QUESTION_LIST_ATTRIBUTE = "questions";
     public static final String PAGE_INDEX_PARAMETER = "page";
@@ -67,5 +70,11 @@ public final class Constants {
 
     public static final String ERROR_TITLE_PROFILE_NOT_FOUND = "profile.notFound.title";
     public static final String ERROR_MESSAGE_PROFILE_NOT_FOUND = "profile.notFound.message";
+
+    public static final String ERROR_TITLE_SETTINGS_INCORRECT_PASSWORD = "settings.passwordChange.incorrectPassword.title";
+    public static final String ERROR_MESSAGE_SETTINGS_INCORRECT_PASSWORD = "settings.passwordChange.incorrectPassword.message";
+
+    public static final String ERROR_TITLE_SETTINGS_WRONG_INPUT = "settings.passwordChange.wrongInput.title";
+    public static final String ERROR_MESSAGE_SETTINGS_WRONG_INPUT = "settings.passwordChange.wrongInput.title";
 
 }

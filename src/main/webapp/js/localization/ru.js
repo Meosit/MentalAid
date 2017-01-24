@@ -28,6 +28,9 @@ const STRINGS = {
     profile_button_ban: "Заблокировать",
     profile_button_unban: "Разблокировать",
     profile_ban_success_message: "Пользователь успешно заблокирован.",
-    profile_unban_success_message: "Пользователь успешно разблокирован."
+    profile_unban_success_message: "Пользователь успешно разблокирован.",
+    change_password_success_message: "Пароль успешно изменён.",
+    change_password_duplicate_message: "Новый и текущий пароли совпадают.",
+    profile_update_success_message: "Данные успешно сохранены."
 };
 Object.freeze(STRINGS);

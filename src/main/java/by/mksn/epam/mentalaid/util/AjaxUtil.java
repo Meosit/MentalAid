@@ -35,6 +35,15 @@ public final class AjaxUtil {
     /**
      * Sets to request ajax success attributes
      *
+     * @param request request where this attributes will be set
+     */
+    public static void setSuccessResponse(HttpServletRequest request) {
+        request.setAttribute(AJAX_IS_RESULT_SUCCESS_ATTRIBUTE, true);
+    }
+
+    /**
+     * Sets to request ajax success attributes
+     *
      * @param request       request where this attributes will be set
      * @param successValues map of success values which will be passed to client through JSON
      */

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static by.mksn.epam.mentalaid.command.resource.Constants.USER_ATTRIBUTE;
+import static by.mksn.epam.mentalaid.command.resource.Constants.*;
 import static by.mksn.epam.mentalaid.util.AjaxUtil.*;
 import static by.mksn.epam.mentalaid.util.NullUtil.isNull;
 import static by.mksn.epam.mentalaid.util.UrlUtil.addParameterToUrl;
@@ -28,7 +28,7 @@ public class DeleteQuestionCommand implements Command {
 
     private static String getRedirectUrl(HttpServletRequest request) {
         String redirectUrl = getBackRedirectUrl(request);
-        return addParameterToUrl(redirectUrl, "question_deleted", "success");
+        return addParameterToUrl(redirectUrl, QUESTION_DELETED_PARAMETER, QUESTION_DELETED_PARAMETER_VALUE);
     }
 
     @Override

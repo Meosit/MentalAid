@@ -14,29 +14,29 @@
       <link rel="stylesheet" href="<c:url value="/css/stars.css"/>">
     </head>
     <body>
-      <jsp:include page="template/navbar.jsp">
-        <jsp:param name="isNavbarLess" value="false"/>
-      </jsp:include>
+      <jsp:include page="template/navbar.jsp"/>
       <div class="container">
         <div class="well">
           <div class="media">
             <span class="pull-left">
             <c:choose>
               <c:when test="${not empty requestScope.user.imageUrl}">
-                <img class="media-object profile-img" src="${requestScope.user.imageUrl}" alt="avatar">
+                <img id="profile-image" class="media-object profile-img" src="${requestScope.user.imageUrl}"
+                     alt="avatar">
               </c:when>
               <c:otherwise>
-                <img class="media-object profile-img" src="<c:url value="/img/default_avatar.png"/>" alt="avatar">
+                <img id="profile-image" class="media-object profile-img" src="<c:url value="/img/default_avatar.png"/>"
+                     alt="avatar">
               </c:otherwise>
             </c:choose>
           </span>
             <div class="media-body container-fluid">
               <div class="row media-heading">
-                <div class="col-xs-10 profile-nickname h3"><span
+                <div class="col-xs-6 profile-nickname h3"><span
                     class="glyphicon glyphicon-user"></span> ${requestScope.user.username}</div>
-                <div class="col-xs-2 h4"><ms:starRating value="${requestScope.user.averageMark}"
-                                                        markCount="${requestScope.user.markCount}"
-                                                        showLabel="false"/></div>
+                <div class="col-xs-6 text-right h4"><ms:starRating value="${requestScope.user.averageMark}"
+                                                                   markCount="${requestScope.user.markCount}"
+                                                                   showLabel="false"/></div>
               </div>
               <h5 class="profile-label"><span class="glyphicon glyphicon-time"></span> <fmt:message
                   key="label.registered"/>
@@ -46,7 +46,29 @@
               <h5 class="profile-label"><span class="glyphicon glyphicon-star"></span> <fmt:message key="label.rating"/>
                 <span class="profile-value"><fmt:formatNumber value="${requestScope.user.averageMark}"
                                                               minFractionDigits="1" maxFractionDigits="1"/></span>
-                (<span class="profile-value">${requestScope.user.markCount}</span> votes)</h5>
+                (<span class="profile-value">${requestScope.user.markCount}</span>
+                <c:choose>
+                  <c:when test="${requestScope.user.markCount eq 1}">
+                    <fmt:message key="mark.votes.single"/>)
+                  </c:when>
+                  <c:when test="${(requestScope.user.markCount % 10) eq 1}">
+                    <c:choose>
+                      <c:when test="${requestScope.locale eq 'ru'}}">
+                        <fmt:message key="mark.votes.single"/>)
+                      </c:when>
+                      <c:otherwise>
+                        <fmt:message key="mark.votes.multiple"/>)
+                      </c:otherwise>
+                    </c:choose>
+                  </c:when>
+                  <c:when
+                      test="${((requestScope.user.markCount % 10) lt 5) and ((requestScope.user.markCount % 10) ne 0)}">
+                    <fmt:message key="mark.votes.alter"/>)
+                  </c:when>
+                  <c:otherwise>
+                    <fmt:message key="mark.votes.multiple"/>)
+                  </c:otherwise>
+                </c:choose></h5>
               <div class="h5 profile-label"><span
                   class="glyphicon glyphicon-question-sign"></span> <fmt:message key="label.questions"/> <span
                   class="profile-value">${requestScope.questionCount}</span></div>
@@ -55,8 +77,8 @@
                   class="profile-value">${requestScope.answerCount}</span></div>
               <c:if test="${not empty requestScope.user.website}">
                 <h5 class="profile-label"><span class="glyphicon glyphicon-link"></span> <fmt:message
-                    key="label.website"/> <a
-                    class="profile-value" href="${requestScope.user.website}">${requestScope.user.website}</a></h5>
+                    key="label.website"/> <a class="profile-value text-nowrap modal-open" target="_blank"
+                                             href="${requestScope.user.website}">${requestScope.user.website}</a></h5>
               </c:if>
             </div>
           </div>
@@ -75,13 +97,13 @@
               <form id="user-ban-form">
                 <input type="hidden" name="username" value="${requestScope.user.username}">
                 <c:choose>
-                  <c:when test="${sessionScope.user.status eq 0}">
+                  <c:when test="${requestScope.user.status eq 0}">
                     <button type="submit" id="user-ban-btn" class="btn btn-custom btn-danger"><fmt:message
-                        key="button.ban"/></button>
+                        key="button.unban"/></button>
                   </c:when>
                   <c:otherwise>
                     <button type="submit" id="user-ban-btn" class="btn btn-custom btn-danger"><fmt:message
-                        key="button.unban"/></button>
+                        key="button.ban"/></button>
                   </c:otherwise>
                 </c:choose>
               </form>

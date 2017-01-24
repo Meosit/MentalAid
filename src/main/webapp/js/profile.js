@@ -19,6 +19,11 @@ $('#user-ban-form').on('submit', function (e) {
                                 ? STRINGS.profile_ban_success_message
                                 : STRINGS.profile_unban_success_message
                         );
+                    $('#user-ban-btn').text(
+                        response.isUserBanned
+                            ? STRINGS.profile_button_unban
+                            : STRINGS.profile_button_ban
+                    );
                 } else {
                     $('#result-alert-container')
                         .addResultAlert(
@@ -26,8 +31,8 @@ $('#user-ban-form').on('submit', function (e) {
                             response.errorTitle,
                             response.errorMessage
                         );
-                    isAjaxRequestSent = false;
                 }
+                isAjaxRequestSent = false;
             },
             error: function (xhr, status, error) {
                 $('#result-alert-container')
@@ -53,3 +58,7 @@ jQuery.fn.addResultAlert = function (isSuccess, resultTitle, resultMessage) {
         $('#result-alert').delay(1000).fadeOut(3000);
     }
 };
+
+$('#profile-image').on('error', function () {
+    $(this).attr('src', 'img/default_avatar.png');
+});

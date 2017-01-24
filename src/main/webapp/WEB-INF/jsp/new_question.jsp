@@ -13,9 +13,7 @@
       <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     </head>
     <body>
-      <jsp:include page="template/navbar.jsp">
-        <jsp:param name="isNavbarLess" value="false"/>
-      </jsp:include>
+      <jsp:include page="template/navbar.jsp"/>
       <div class="container">
         <div class="well center-block">
           <form id="new-question-form">
